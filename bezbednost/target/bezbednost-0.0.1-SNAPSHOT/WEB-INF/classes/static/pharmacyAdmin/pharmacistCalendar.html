@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Home page</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta content="" name="keywords">
+<meta content="" name="description">
+
+<!-- Favicons -->
+<link href="../img/favicon.png" rel="icon">
+<link href="../img/apple-touch-icon.png" rel="apple-touch-icon">
+
+<!-- Google Fonts -->
+<link
+	href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Raleway:300,400,500,700,800|Montserrat:300,400,700"
+	rel="stylesheet">
+
+<!-- Bootstrap CSS File -->
+<link href="../lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Libraries CSS Files -->
+<link href="../lib/font-awesome/css/font-awesome.min.css"
+	rel="stylesheet">
+<link href="../lib/animate/animate.min.css" rel="stylesheet">
+<link href="../lib/ionicons/css/ionicons.min.css" rel="stylesheet">
+<link href="../lib/owlcarousel/assets/owl.carousel.min.css"
+	rel="stylesheet">
+<link href="../lib/magnific-popup/magnific-popup.css" rel="stylesheet">
+<link href="../lib/ionicons/css/ionicons.min.css" rel="stylesheet">
+<link rel="stylesheet" href="css/ml-calendar.css">
+
+
+
+<!-- Main Stylesheet File -->
+<link href="../css/style.css" rel="stylesheet">
+
+
+<!-- =======================================================
+    Theme Name: Reveal
+    Theme URL: https://bootstrapmade.com/reveal-bootstrap-corporate-template/
+    Author: BootstrapMade.com
+    License: https://bootstrapmade.com/license/
+  ======================================================= -->
+</head>
+<style>
+	.txtDisabled{
+		border-color: transparent;
+		background-color: white;
+	}
+	#dayBox{
+		min-height: 4.475em !important;
+	}
+	#dayEvent{
+		font-size: .6rem !important;
+	}
+</style>
+<body id="body">
+	<div id="dermatologist">
+		<!--==========================
+    Top Bar
+  ============================-->
+		 <section id="topbar" class="d-none d-lg-block">
+    <div class="container clearfix">
+      <div class="contact-info float-left">
+        <i class="fa fa-envelope-o"></i> <a href="mailto:contact@example.com">apoteka.isa2021@gmail.com</a>
+        <i class="fa fa-phone"></i> +1 5589 55488 55
+      </div>
+      <div class="social-links float-right">
+        <a href="#" class="twitter"><i class="fa fa-twitter"></i></a>
+        <a href="#" class="facebook"><i class="fa fa-facebook"></i></a>
+        <a href="#" class="instagram"><i class="fa fa-instagram"></i></a>
+        <a href="#" class="google-plus"><i class="fa fa-google-plus"></i></a>
+        <a href="#" class="linkedin"><i class="fa fa-linkedin"></i></a>
+      </div>
+    </div>
+  </section>
+
+  <!--==========================
+    Header
+  ============================-->
+		<header id="header">
+			<div class="container">
+
+				<div id="logo" class="pull-left">
+					<h1>
+						<a href="../pharmacy.html" class="scrollto">Apote<span>ke</span></a>
+					</h1>
+					<!-- Uncomment below if you prefer to use an image logo -->
+					<!-- <a href="#body"><img src="img/logo.png" alt="" title="" /></a>-->
+				</div>
+
+				<nav id="nav-menu-container">
+					<ul class="nav-menu">
+						<li class="menu-active"><a href="../pharmacy.html">Home</a></li>
+						<li class="menu-has-children"><a href="#">Search</a>
+							<ul>
+								<li><a href="../filterDermatologist.html">Dermatologists</a></li>
+								<li><a href="../filterPharmacist.html">Pharmacists</a></li>
+							</ul></li>
+						<li class="menu-has-children"><a href="#">Tools</a>
+							<ul>
+								<li><a href="promotion.html">New Promotion</a></li>
+								<li><a href="newOrder.html">New Order</a></li>
+								<li><a href="managingDermatologists.html">Manage Dermatologists</a></li>
+								<li><a href="managingPharmacists.html">Manage Pharmacists</a></li>
+								<li><a href="managingMedication.html">Manage Medicine</a></li>
+								<li><a href="managingOrders.html">Manage supply offers</a></li>
+								<li><a href="notification.html">Requests for medicine</a></li>
+							</ul></li>
+						<li class="menu-has-children"><a href="#">{{admin.firstName}}
+								{{admin.lastName}}</a>
+							<ul>
+								<li><a href="pharmacyAdminProfile.html"><i class="icon fa-user"></i>&nbsp&nbsp&nbspProfile</a></li>
+								<li @click="logout"><a href="#"><i
+										class="icon fa-sign-out"></i>&nbsp&nbspLog out</a></li>
+							</ul></li>
+							<li><a href="businessReport.html">Business report</a></li>
+					</ul>
+				</nav>
+				<!-- #nav-menu-container -->
+			</div>
+		</header>
+		<!-- #header -->
+
+		<!--==========================
+    Intro Section
+  ============================-->
+
+		<main id="main">
+			<div class="ml-calendar" id="dermatologist" style="max-width: 1100px !important; margin-top:40px">
+		<!--<span v-html="menu"></span>-->
+		<section class="calendar-left">
+			<div class="sidebar">
+				<p class="subheading">{{dateDistance(current, today)}}</p><br/>
+				<h1>{{weekdays[current.getDay()]}}, <br/>{{months[current.getMonth()]}} {{current.getDate()}}{{nth(current.getDate())}} </h1>
+				<h5 class="primary-color">dr&nbsp{{pharm.firstName}}&nbsp{{pharm.lastName}}</h5>
+				<ul class="calendar-events" v-if="getWorkingPeriodByDate(current) == null">
+					<li>
+						<p style="margin-top:5px"><strong >Start time</strong></p>
+						<input type="time" v-model="startTime" style="border-radius: 5px; margin-bottom:5px; border-color: silver; border-style: none; background-color: #f9f9f9; outline: none;">
+					</li>
+					<li>
+						<p><strong>End time</strong></p>
+						<input type="time" v-model="endTime" style="border-radius: 5px; border-color: silver; border-style: none; background-color: #f9f9f9; outline: none;">
+					</li>
+				</ul>
+				<ul class="calendar-events" v-else>
+					<li>
+						<p><strong >Working period</strong></p>
+						<br/><span>{{getWorkingPeriodByDate(current)}}</span>
+					</li>
+				</ul>
+			<p v-if="getWorkingPeriodByDate(current) == null"><a class="calendar-btn" style="cursor: pointer" @click="addNew()"><i class="icon fa-check"></i> Submit entry</a></p>
+			<p v-else><a class="calendar-btn" style="cursor: pointer" @click="deleteWP(current)"><i class="icon fa-close"></i> Delete entry</a></p>
+			</div>
+		</section>
+		<section class="calendar-right">
+			<div class="calendar">
+				<section class="calendar-header">
+					<h2><strong>{{months[days[6].getMonth()]}}</strong> {{days[6].getFullYear()}}</h2>
+					<div class="calendar-nav" style="cursor:pointer">
+						<a v-on:click="prev()"><i class="icon fa-arrow-left"></i></a><a v-on:click="reset()">Today</a><a v-on:click="next()"><i class="icon fa-arrow-right"></i></a>
+					</div>
+				</section>
+				<section class="calendar-row">
+					<div v-for="w in weekdays" class="calendar-day day-name">{{w}}</div>
+				</section>
+				<section class="calendar-row" v-for="index in 6" :key="index">
+					<div class="calendar-day weekend" id="dayBox" v-on:click="setCurrDate(days[index * 6 + index])" :class="[dateDistance(today, days[index * 6 + index]) === 'Today'? 'active' : '']">
+						<span class="calendar-date">{{days[index * 6 + index].getDate()}}</span>
+						<br/><span class="calendar-event" id="dayEvent" v-if="getWorkingPeriod(index * 6 + index) != null">{{getWorkingPeriod(index * 6 + index)}}</span>
+					</div>
+					<div class="calendar-day" id="dayBox" v-on:click="setCurrDate(days[index * 6 + index + 1])" :class="[dateDistance(today, days[index * 6 + index + 1]) === 'Today'? 'active' : '']">
+						<span class="calendar-date">{{days[index * 6 + index + 1].getDate()}}</span>
+						<br/><span class="calendar-event" id="dayEvent" v-if="getWorkingPeriod(index * 6 + index + 1) != null">{{getWorkingPeriod(index * 6 + index + 1)}}</span>
+					</div>
+					<div class="calendar-day" id="dayBox" v-on:click="setCurrDate(days[index * 6 + index + 2])" :class="[dateDistance(today, days[index * 6 + index + 2]) === 'Today'? 'active' : '']">
+						<span class="calendar-date">{{days[index * 6 + index + 2].getDate()}}</span>
+						<br/><span class="calendar-event" id="dayEvent" v-if="getWorkingPeriod(index * 6 + index + 2) != null">{{getWorkingPeriod(index * 6 + index + 2)}}</span>
+					</div>
+					<div class="calendar-day" id="dayBox" v-on:click="setCurrDate(days[index * 6 + index + 3])"  :class="[dateDistance(today, days[index * 6 + index + 3]) === 'Today'? 'active' : '']">
+						<span class="calendar-date">{{days[index * 6 + index + 3].getDate()}}</span>
+						<br/><span class="calendar-event" id="dayEvent" v-if="getWorkingPeriod(index * 6 + index + 3) != null">{{getWorkingPeriod(index * 6 + index + 3)}}</span>
+					</div>
+					<div class="calendar-day" id="dayBox" v-on:click="setCurrDate(days[index * 6 + index + 4])" :class="[dateDistance(today, days[index * 6 + index + 4]) === 'Today'? 'active' : '']">
+						<span class="calendar-date">{{days[index * 6 + index + 4].getDate()}}</span>
+						<br/><span class="calendar-event" id="dayEvent" v-if="getWorkingPeriod(index * 6 + index + 4) != null">{{getWorkingPeriod(index * 6 + index + 4)}}</span>
+					</div>
+					<div class="calendar-day" id="dayBox" v-on:click="setCurrDate(days[index * 6 + index + 5])" :class="[dateDistance(today, days[index * 6 + index + 5]) === 'Today'? 'active' : '']">
+						<span class="calendar-date">{{days[index * 6 + index + 5].getDate()}}</span>
+						<br/><span class="calendar-event" id="dayEvent" v-if="getWorkingPeriod(index * 6 + index + 5) != null">{{getWorkingPeriod(index * 6 + index + 5)}}</span>
+					</div>
+					<div class="calendar-day weekend" id="dayBox" v-on:click="setCurrDate(days[index * 6 + index + 6])" :class="[dateDistance(today, days[index * 6 + index + 6]) === 'Today'? 'active' : '']">
+						<span class="calendar-date">{{days[index * 6 + index + 6].getDate()}}</span>
+						<br/><span class="calendar-event" id="dayEvent" v-if="getWorkingPeriod(index * 6 + index + 6) != null">{{getWorkingPeriod(index * 6 + index + 6)}}</span>
+					</div>
+				</section>
+			</div>
+		</section>
+		<div class="clear"></div>
+	</div>
+		</main>
+
+		<a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+	</div>
+	<!-- JavaScript Libraries -->
+	<script src="../lib/jquery/jquery.min.js"></script>
+	<script src="../lib/jquery/jquery-migrate.min.js"></script>
+	<script src="../lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script src="../lib/easing/easing.min.js"></script>
+	<script src="../lib/superfish/hoverIntent.js"></script>
+	<script src="../lib/superfish/superfish.min.js"></script>
+	<script src="../lib/wow/wow.min.js"></script>
+	<script src="../lib/owlcarousel/owl.carousel.min.js"></script>
+	<script src="../lib/magnific-popup/magnific-popup.min.js"></script>
+	<script src="../lib/sticky/sticky.js"></script>
+
+	<script src="https://npmcdn.com/js-alert/dist/jsalert.min.js"></script>
+	<!-- Contact Form JavaScript File -->
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.18/vue.min.js"></script>
+	<!-- Template Main Javascript File -->
+	<script src="../js/main.js"></script>
+	<script src="../axios.js"></script>
+	<script src="pharmacistCalendar.js"></script>
+
+</body>
+</html>

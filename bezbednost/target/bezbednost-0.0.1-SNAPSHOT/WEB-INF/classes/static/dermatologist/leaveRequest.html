@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Home page</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta content="" name="keywords">
+<meta content="" name="description">
+
+<!-- Favicons -->
+<link href="../img/favicon.png" rel="icon">
+<link href="../img/apple-touch-icon.png" rel="apple-touch-icon">
+
+<!-- Google Fonts -->
+<link
+	href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Raleway:300,400,500,700,800|Montserrat:300,400,700"
+	rel="stylesheet">
+
+<!-- Bootstrap CSS File -->
+<link href="../lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Libraries CSS Files -->
+<link href="../lib/font-awesome/css/font-awesome.min.css"
+	rel="stylesheet">
+<link href="../lib/animate/animate.min.css" rel="stylesheet">
+<link href="../lib/ionicons/css/ionicons.min.css" rel="stylesheet">
+<link href="../lib/owlcarousel/assets/owl.carousel.min.css"
+	rel="stylesheet">
+<link href="../lib/magnific-popup/magnific-popup.css" rel="stylesheet">
+<link href="../lib/ionicons/css/ionicons.min.css" rel="stylesheet">
+<link rel="stylesheet" href="css/ml-calendar.css">
+
+<!-- Main Stylesheet File -->
+<link href="../css/style.css" rel="stylesheet">
+
+
+<!-- =======================================================
+    Theme Name: Reveal
+    Theme URL: https://bootstrapmade.com/reveal-bootstrap-corporate-template/
+    Author: BootstrapMade.com
+    License: https://bootstrapmade.com/license/
+  ======================================================= -->
+</head>
+<style>
+main ::-webkit-scrollbar {
+	width: 8px;
+}
+
+main ::-webkit-scrollbar-button {
+	width: 8px;
+	height: 5px;
+}
+
+main ::-webkit-scrollbar-track {
+	background: #eee;
+	border: thin solid lightgray;
+	box-shadow: 0px 0px 3px #dfdfdf inset;
+	border-radius: 10px;
+}
+
+main ::-webkit-scrollbar-thumb {
+	background: #999;
+	border: thin solid gray;
+	border-radius: 10px;
+}
+
+main ::-webkit-scrollbar-thumb:hover {
+	background: #7d7d7d;
+}
+
+.selected-calendar-mode {
+	background: #50d8af !important;
+	color: white !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	margin: 0.83em 0 0.83em 0;
+}
+</style>
+<body id="body">
+	<div id="page">
+		<!--==========================
+    Top Bar
+  ============================-->
+		<section id="topbar" class="d-none d-lg-block">
+			<div class="container clearfix">
+				<div class="contact-info float-left">
+					<i class="fa fa-envelope-o"></i> <a
+						href="mailto:contact@example.com">contact@example.com</a> <i
+						class="fa fa-phone"></i> +1 5589 55488 55
+				</div>
+				<div class="social-links float-right">
+					<a href="#" class="twitter"><i class="fa fa-twitter"></i></a> <a
+						href="#" class="facebook"><i class="fa fa-facebook"></i></a> <a
+						href="#" class="instagram"><i class="fa fa-instagram"></i></a> <a
+						href="#" class="google-plus"><i class="fa fa-google-plus"></i></a>
+					<a href="#" class="linkedin"><i class="fa fa-linkedin"></i></a>
+				</div>
+			</div>
+		</section>
+
+		<!--==========================
+    Header
+  ============================-->
+		<header id="header">
+			<div class="container">
+
+				<div id="logo" class="pull-left">
+					<h1>
+						<a href="#body" class="scrollto">Apote<span>ke</span></a>
+					</h1>
+					<!-- Uncomment below if you prefer to use an image logo -->
+					<!-- <a href="#body"><img src="img/logo.png" alt="" title="" /></a>-->
+				</div>
+
+				<nav id="nav-menu-container">
+					<ul class="nav-menu">
+						<li class="menu-active"><a
+							href="/dermatologist/dermatologistHome.html">Home</a></li>
+						<li><a href="#about">About Us</a></li>
+						<li class="menu-has-children"><a href="#">Tools</a>
+							<ul>
+								<li><a href="/patientList.html">List of examined clients</a></li>
+								<li><a href="/dermatologist/dermatologistReport.html">Start
+										examination</a></li>
+								<li><a href="/dermatologist/workCalendar.html">Work
+										calendar</a></li>
+								<li><a href="/dermatologist/leaveRequest.html">Create a leave request</a></li>
+								<li><a
+									href="/dermatologist/dermatologistReport.html?schedule=true">Scheduling
+										a new examination</a></li>
+							</ul></li>
+						<li class="menu-has-children"><a href="#">{{derm.firstName}}
+								{{derm.lastName}}</a>
+							<ul>
+								<li><a href="/employeeProfile.html"><i
+										class="icon fa-user"></i>&nbsp&nbsp&nbspProfile</a></li>
+								<li @click="logout"><a href="#"><i
+										class="icon fa-sign-out"></i>&nbsp&nbspLog out</a></li>
+							</ul></li>
+						<li><a href="#contact">Contact</a></li>
+					</ul>
+				</nav>
+				<!-- #nav-menu-container -->
+			</div>
+		</header>
+		<!-- #header -->
+
+		<!--==========================
+    Intro Section
+  ============================-->
+
+		<main id="main">
+			<div class="ml-calendar"
+				style="max-width: 80% !important; min-height: 600px !important; top: 40px; position: relative; margin-top: 30px; margin-bottom: 60px;">
+				<section class="calendar-left" style="min-height: 600px;">
+					<div class="sidebar">
+						<p class="subheading">{{dateDist(current, today)}}</p>
+						<h1>
+							{{weekdays[current.getDay()]}}, <br />{{months[current.getMonth()]}}
+							{{current.getDate()}}{{nth(current.getDate())}}
+						</h1>
+						<h3 class="primary-color" v-if="counts[index] < 1">No
+							Counselings</h3>
+						<h3 class="primary-color" v-if="counts[index] > 0">
+							{{counts[index]}} Counseling<span v-if="counts[index] > 1">s</span>
+						</h3>
+						<div
+							v-if="counts[index] < 1 && !dateDist(current, today).includes('ago')">
+							<ul class="calendar-events">
+								<li>
+									<p style="margin: 0px">
+										<strong>Start date</strong>
+									</p> <input type="date" v-model="startDate"
+									style="border-radius: 5px; margin-bottom: 5px; margin-top: 5px; border-color: silver; border-style: none; background-color: #f9f9f9; outline: none;">
+								</li>
+								<li>
+									<p style="margin: 0px">
+										<strong>End date</strong>
+									</p> <input type="date" v-model="endDate"
+									style="border-radius: 5px; margin-top: 5px; border-color: silver; border-style: none; background-color: #f9f9f9; outline: none;">
+								</li>
+							</ul>
+							<p>
+								<a  @click="submit" class="calendar-btn" style="cursor: pointer; text-align: center;"><i
+									class="icon fa-check"></i> Send request</a>
+							</p>
+						</div>
+					</div>
+				</section>
+				<section class="calendar-right">
+					<div class="calendar">
+						<section class="calendar-header">
+							<h2 style="margin: 0.83em 0 0.83em 0 !important">
+								<strong>{{months[days[6].getMonth()]}}</strong>
+								{{days[6].getFullYear()}}
+							</h2>
+							<div class="calendar-nav" style="cursor: pointer">
+								<a v-on:click="prev()"><i class="fa fa-arrow-left"></i></a><a
+									v-on:click="reset()">Today</a><a v-on:click="next()"><i
+									class="fa fa-arrow-right"></i></a>
+
+							</div>
+						</section>
+						<section class="calendar-row">
+							<div v-for="w in weekdays" class="calendar-day day-name">{{w}}</div>
+						</section>
+						<section class="calendar-row" v-for="index in 6" :key="index">
+							<div class="calendar-day weekend"
+								v-on:click="setCurrDate(days[index * 6 + index], index * 6 + index)"
+								:class="[dateDistance(today, days[index * 6 + index]) === 'Today'? 'active' : '']">
+								<span class="calendar-date">{{days[index * 6 +
+									index].getDate()}}</span> <br /> <span
+									:style="[counts[index * 6 + index] == 0? {'visibility': 'hidden'} : {}]"
+									class="calendar-event">{{counts[index * 6 + index]}}</span>
+							</div>
+							<div class="calendar-day"
+								v-on:click="setCurrDate(days[index * 6 + index + 1], index * 6 + index + 1)"
+								:class="[dateDistance(today, days[index * 6 + index + 1]) === 'Today'? 'active' : '']">
+								<span class="calendar-date">{{days[index * 6 + index +
+									1].getDate()}}</span> <br /> <span
+									:style="[counts[index * 6 + index + 1] == 0? {'visibility': 'hidden'} : {}]"
+									class="calendar-event">{{counts[index * 6 + index + 1]}}</span>
+							</div>
+							<div class="calendar-day"
+								v-on:click="setCurrDate(days[index * 6 + index + 2], index * 6 + index + 2)"
+								:class="[dateDistance(today, days[index * 6 + index + 2]) === 'Today'? 'active' : '']">
+								<span class="calendar-date">{{days[index * 6 + index +
+									2].getDate()}}</span> <br /> <span
+									:style="[counts[index * 6 + index + 2] == 0? {'visibility': 'hidden'} : {}]"
+									class="calendar-event">{{counts[index * 6 + index + 2]}}</span>
+							</div>
+							<div class="calendar-day"
+								v-on:click="setCurrDate(days[index * 6 + index + 3], index * 6 + index + 3)"
+								:class="[dateDistance(today, days[index * 6 + index + 3]) === 'Today'? 'active' : '']">
+								<span class="calendar-date">{{days[index * 6 + index +
+									3].getDate()}}</span> <br /> <span
+									:style="[counts[index * 6 + index + 3] == 0? {'visibility': 'hidden'} : {}]"
+									class="calendar-event">{{counts[index * 6 + index + 3]}}</span>
+							</div>
+							<div class="calendar-day"
+								v-on:click="setCurrDate(days[index * 6 + index + 4], index * 6 + index + 4)"
+								:class="[dateDistance(today, days[index * 6 + index + 4]) === 'Today'? 'active' : '']">
+								<span class="calendar-date">{{days[index * 6 + index +
+									4].getDate()}}</span> <br /> <span
+									:style="[counts[index * 6 + index + 4] == 0? {'visibility': 'hidden'} : {}]"
+									class="calendar-event">{{counts[index * 6 + index + 4]}}</span>
+							</div>
+							<div class="calendar-day"
+								v-on:click="setCurrDate(days[index * 6 + index + 5], index * 6 + index + 5)"
+								:class="[dateDistance(today, days[index * 6 + index + 5]) === 'Today'? 'active' : '']">
+								<span class="calendar-date">{{days[index * 6 + index +
+									5].getDate()}}</span> <br /> <span
+									:style="[counts[index * 6 + index + 5] == 0? {'visibility': 'hidden'} : {}]"
+									class="calendar-event">{{counts[index * 6 + index + 5]}}</span>
+							</div>
+							<div class="calendar-day weekend"
+								v-on:click="setCurrDate(days[index * 6 + index + 6], index * 6 + index + 6)"
+								:class="[dateDistance(today, days[index * 6 + index + 6]) === 'Today'? 'active' : '']">
+								<span class="calendar-date">{{days[index * 6 + index +
+									6].getDate()}}</span> <br /> <span
+									:style="[counts[index * 6 + index + 6] == 0? {'visibility': 'hidden'} : {}]"
+									class="calendar-event">{{counts[index * 6 + index + 6]}}</span>
+							</div>
+						</section>
+					</div>
+
+
+				</section>
+				<div class="clear"></div>
+			</div>
+		</main>
+
+		<a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+	</div>
+	<!-- JavaScript Libraries -->
+	<script src="../lib/jquery/jquery.min.js"></script>
+	<script src="../lib/jquery/jquery-migrate.min.js"></script>
+	<script src="../lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script src="../lib/easing/easing.min.js"></script>
+	<script src="../lib/superfish/hoverIntent.js"></script>
+	<script src="../lib/superfish/superfish.min.js"></script>
+	<script src="../lib/wow/wow.min.js"></script>
+	<script src="../lib/owlcarousel/owl.carousel.min.js"></script>
+	<script src="../lib/magnific-popup/magnific-popup.min.js"></script>
+	<script src="../lib/sticky/sticky.js"></script>
+	<script src="https://npmcdn.com/js-alert/dist/jsalert.min.js"></script>
+
+	<!-- Contact Form JavaScript File -->
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.18/vue.min.js"></script>
+	<!-- Template Main Javascript File -->
+	<script src="../js/main.js"></script>
+	<script src="../axios.js"></script>
+	<script src="leaveRequest.js"></script>
+
+</body>
+</html>

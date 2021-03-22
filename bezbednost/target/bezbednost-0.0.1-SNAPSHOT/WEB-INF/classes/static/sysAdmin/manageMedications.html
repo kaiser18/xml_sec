@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Reveal Bootstrap Template</title>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta content="" name="keywords">
+  <meta content="" name="description">
+
+  <!-- Favicons -->
+  <link href="../img/favicon.png" rel="icon">
+  <link href="../img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Raleway:300,400,500,700,800|Montserrat:300,400,700" rel="stylesheet">
+
+  <!-- Bootstrap CSS File -->
+  <link href="../lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Libraries CSS Files -->
+  <link href="../lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="../lib/animate/animate.min.css" rel="stylesheet">
+  <link href="../lib/ionicons/css/ionicons.min.css" rel="stylesheet">
+  <link href="../lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+  <link href="../lib/magnific-popup/magnific-popup.css" rel="stylesheet">
+  <link href="../lib/ionicons/css/ionicons.min.css" rel="stylesheet">
+
+  <!-- Main Stylesheet File -->
+  <link href="../css/style.css" rel="stylesheet">
+
+  <!-- =======================================================
+    Theme Name: Reveal
+    Theme URL: https://bootstrapmade.com/reveal-bootstrap-corporate-template/
+    Author: BootstrapMade.com
+    License: https://bootstrapmade.com/license/
+  ======================================================= -->
+</head>
+
+<body id="body">
+<div id="manageMedications">
+  <!--==========================
+    Top Bar
+  ============================-->
+  <section id="topbar" class="d-none d-lg-block">
+    <div class="container clearfix">
+      <div class="contact-info float-left">
+        <i class="fa fa-envelope-o"></i> <a href="mailto:contact@example.com">contact@example.com</a>
+        <i class="fa fa-phone"></i> +1 5589 55488 55
+      </div>
+      <div class="social-links float-right">
+        <a href="#" class="twitter"><i class="fa fa-twitter"></i></a>
+        <a href="#" class="facebook"><i class="fa fa-facebook"></i></a>
+        <a href="#" class="instagram"><i class="fa fa-instagram"></i></a>
+        <a href="#" class="google-plus"><i class="fa fa-google-plus"></i></a>
+        <a href="#" class="linkedin"><i class="fa fa-linkedin"></i></a>
+      </div>
+    </div>
+  </section>
+
+  <!--==========================
+    Header
+  ============================-->
+		<header id="header">
+			<div class="container">
+
+				<div id="logo" class="pull-left">
+					<h1>
+						<a href="home.html" class="scrollto">Apote<span>ke</span></a>
+					</h1>
+					<!-- Uncomment below if you prefer to use an image logo -->
+					<!-- <a href="#body"><img src="img/logo.png" alt="" title="" /></a>-->
+				</div>
+
+				<nav id="nav-menu-container">
+					<ul class="nav-menu">
+						<li class="menu-active"><a href="home.html">Home</a></li>
+						<li class="menu-has-children"><a href="#">Tools</a>
+							<ul>
+								<li><a href="pharmacies.html">Pharmacies</a></li>
+								<li><a href="manageUsers.html">Manage Users</a></li>
+								<li><a href="manageMedications.html">Medicines</a></li>
+								<li><a href="manageComplaints.html">Complaints</a></li>
+                                <li><a href="manageLoyaltyProgram.html">Loyalty program</a></li>
+							</ul></li>
+						<li class="menu-has-children"><a href="#"><i class="icon fa-cog"></i></a>
+							<ul>
+								<li><a href="profile.html"><i class="icon fa-user"></i>&nbsp&nbsp&nbspProfile</a></li>
+								<li @click="logout"><a href="#"><i
+										class="icon fa-sign-out"></i>&nbsp&nbspLog out</a></li>
+							</ul></li>
+					</ul>
+				</nav>
+				<!-- #nav-menu-container -->
+			</div>
+		</header>
+
+  <!--==========================
+    Intro Section
+  ============================-->
+  
+  <main id="main">
+    <form @submit.prevent="createMedicine" class="text-center mt-5">
+        <div class="d-inline-block w-50 mx-3 mt-5">
+          <h6 style="color:#50d8af;"">Name</h6>
+          <input autofocus v-model="name" type="text" name="name" class="form-control" id="name" />
+        </div>
+        <div class="form-row d-inline-block w-50 mx-3 mt-3">
+            <div class="form-group col-md-12">
+                <select v-model="type" class="form-control">
+                <option disabled value="">Select type</option>
+                <option v-for="type in types" :value="type.id" :key="item.id">
+                    {{ type.name }}
+                </option>
+                </select>
+            </div>
+        </div>
+        <div class="form-row d-inline-block w-50 mx-3 mt-3">
+            <div class="form-group col-md-12">
+                <select v-model="form" class="form-control">
+                <option disabled value="">Select form</option>
+                <option v-for="form in forms" :value="form.id" :key="item.id">
+                    {{ form.name }}
+                </option>
+                </select>
+            </div>
+        </div>
+        <div class="d-inline-block w-50 mx-3 mt-3">
+          <h6 style="color:#50d8af;"">Contraindications</h6>
+          <input autofocus v-model="contraindications" type="text" name="contraindications" class="form-control" id="contraindications" />
+        </div>
+        <div class="d-inline-block w-50 mx-3 mt-3">
+          <h6 style="color:#50d8af;"">Composition</h6>
+          <input autofocus v-model="composition" type="text" name="composition" class="form-control" id="composition" />
+        </div>
+        <div class="d-inline-block w-50 mx-3 mt-3">
+          <h6 style="color:#50d8af;"">Recommended Intake Per Day</h6>
+          <input autofocus v-model="recommendedIntakePerDay" type="text" name="recommendedIntakePerDay" class="form-control" id="recommendedIntakePerDay" />
+        </div>
+        <div class="d-inline-block w-50 mx-3 mt-3">
+          <h6 style="color:#50d8af;"">Manufacturer</h6>
+          <input autofocus v-model="manufacturer" type="text" name="manufacturer" class="form-control" id="manufacturer" />
+        </div>
+        <div class="form-row d-inline-block w-50 mx-3 mt-3">
+          <div class="form-group col-md-12">
+              <select v-model="substitutes" class="form-control" multiple>
+                <option disabled value="">Select medicines</option>
+                <option v-for="medicine in medicines" :value="medicine.id" :key="medicine.id">
+                    {{ medicine.name }}
+                </option>
+              </select>
+          </div>
+      </div>
+        <button class="btn d-inline-block w-50 mx-3 my-5">Submit</button>
+      </form>
+  </main>
+</div>
+
+  <!-- JavaScript Libraries -->
+  <script src="../lib/jquery/jquery.min.js"></script>
+  <script src="../lib/jquery/jquery-migrate.min.js"></script>
+  <script src="../lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../lib/easing/easing.min.js"></script>
+  <script src="../lib/superfish/hoverIntent.js"></script>
+  <script src="../lib/superfish/superfish.min.js"></script>
+  <script src="../lib/wow/wow.min.js"></script>
+  <script src="../lib/owlcarousel/owl.carousel.min.js"></script>
+  <script src="../lib/magnific-popup/magnific-popup.min.js"></script>
+  <script src="../lib/sticky/sticky.js"></script>
+  <script src="https://npmcdn.com/js-alert/dist/jsalert.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.18/vue.min.js"></script>
+  <!-- Template Main Javascript File -->
+  <script src="../js/main.js"></script>
+  <script src="../axios.js"></script>
+  <script src="manageMedications.js"></script>
+
+</body>
+</html>

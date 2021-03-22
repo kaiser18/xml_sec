@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Home page</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta content="" name="keywords">
+<meta content="" name="description">
+
+<!-- Favicons -->
+<link href="../img/favicon.png" rel="icon">
+<link href="../img/apple-touch-icon.png" rel="apple-touch-icon">
+
+<!-- Google Fonts -->
+<link
+	href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Raleway:300,400,500,700,800|Montserrat:300,400,700"
+	rel="stylesheet">
+
+<!-- Bootstrap CSS File -->
+<link href="../lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Libraries CSS Files -->
+<link href="../lib/font-awesome/css/font-awesome.min.css"
+	rel="stylesheet">
+<link href="../lib/animate/animate.min.css" rel="stylesheet">
+<link href="../lib/ionicons/css/ionicons.min.css" rel="stylesheet">
+<link href="../lib/owlcarousel/assets/owl.carousel.min.css"
+	rel="stylesheet">
+<link href="../lib/magnific-popup/magnific-popup.css" rel="stylesheet">
+<link href="../lib/ionicons/css/ionicons.min.css" rel="stylesheet">
+
+<!-- Main Stylesheet File -->
+<link href="../css/style.css" rel="stylesheet">
+
+
+<!-- =======================================================
+    Theme Name: Reveal
+    Theme URL: https://bootstrapmade.com/reveal-bootstrap-corporate-template/
+    Author: BootstrapMade.com
+    License: https://bootstrapmade.com/license/
+  ======================================================= -->
+</head>
+<style>
+	.txtDisabled{
+		border-color: transparent;
+		background-color: white;
+	}
+	.txtEnabled{
+	 padding: 5px 5px;
+	 border-radius: 0;
+	 box-shadow: none;
+	 font-size: 15px; display: block;
+	 width: 50%;
+	 padding: .275rem .75rem;
+	 font-size: 1rem;
+	 line-height: 2;
+	 color: #495057;
+     background-color: #fff;
+	 background-clip: padding-box;
+	 border: 1px solid #ced4da;
+	 border-radius: .25rem;
+	 transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+	}
+main ::-webkit-scrollbar {
+    width: 8px;
+}
+main ::-webkit-scrollbar-button {
+    width: 8px;
+    height:5px;
+}
+main ::-webkit-scrollbar-track {
+    background:#eee;
+    border: thin solid lightgray;
+    box-shadow: 0px 0px 3px #dfdfdf inset;
+    border-radius:10px;
+}
+main ::-webkit-scrollbar-thumb {
+    background:#999;
+    border: thin solid gray;
+    border-radius:10px;
+}
+main ::-webkit-scrollbar-thumb:hover {
+    background:#7d7d7d;
+}
+
+	
+</style>
+<body id="body">
+	<div id="manageDerm">
+		<!--==========================
+    Top Bar
+  ============================-->
+		 <section id="topbar" class="d-none d-lg-block">
+    <div class="container clearfix">
+      <div class="contact-info float-left">
+        <i class="fa fa-envelope-o"></i> <a href="mailto:contact@example.com">apoteka.isa2021@gmail.com</a>
+        <i class="fa fa-phone"></i> +1 5589 55488 55
+      </div>
+      <div class="social-links float-right">
+        <a href="#" class="twitter"><i class="fa fa-twitter"></i></a>
+        <a href="#" class="facebook"><i class="fa fa-facebook"></i></a>
+        <a href="#" class="instagram"><i class="fa fa-instagram"></i></a>
+        <a href="#" class="google-plus"><i class="fa fa-google-plus"></i></a>
+        <a href="#" class="linkedin"><i class="fa fa-linkedin"></i></a>
+      </div>
+    </div>
+  </section>
+
+  <!--==========================
+    Header
+  ============================-->
+		<header id="header">
+			<div class="container">
+
+				<div id="logo" class="pull-left">
+					<h1>
+						<a href="../pharmacy.html" class="scrollto">Apote<span>ke</span></a>
+					</h1>
+					<!-- Uncomment below if you prefer to use an image logo -->
+					<!-- <a href="#body"><img src="img/logo.png" alt="" title="" /></a>-->
+				</div>
+
+				<nav id="nav-menu-container">
+					<ul class="nav-menu">
+						<li class="menu-active"><a href="../pharmacy.html">Home</a></li>
+						<li class="menu-has-children"><a href="#">Search</a>
+							<ul>
+								<li><a href="../filterDermatologist.html">Dermatologists</a></li>
+								<li><a href="../filterPharmacist.html">Pharmacists</a></li>
+							</ul></li>
+						<li class="menu-has-children"><a href="#">Tools</a>
+							<ul>
+								<li><a href="promotion.html">New Promotion</a></li>
+								<li><a href="newOrder.html">New Order</a></li>
+								<li><a href="managingDermatologists.html">Manage Dermatologists</a></li>
+								<li><a href="managingPharmacists.html">Manage Pharmacists</a></li>
+								<li><a href="managingMedication.html">Manage Medicine</a></li>
+								<li><a href="managingOrders.html">Manage supply offers</a></li>
+								<li><a href="notification.html">Requests for medicine</a></li>
+							</ul></li>
+						<li class="menu-has-children"><a href="#">{{admin.firstName}}
+								{{admin.lastName}}</a>
+							<ul>
+								<li><a href="pharmacyAdminProfile.html"><i class="icon fa-user"></i>&nbsp&nbsp&nbspProfile</a></li>
+								<li @click="logout"><a href="#"><i
+										class="icon fa-sign-out"></i>&nbsp&nbspLog out</a></li>
+							</ul></li>
+							<li><a href="businessReport.html">Business report</a></li>
+					</ul>
+				</nav>
+				<!-- #nav-menu-container -->
+			</div>
+		</header>
+		<!-- #header -->
+
+		<!--==========================
+    Intro Section
+  ============================-->
+
+		<main id="main">
+
+			<!--==========================
+      About Section
+    ============================-->
+
+			<!--==========================
+      Services Section
+    ============================-->
+			<section id="wrapper">
+				<div class="inner">
+					<header class="special">
+						<h2>BUSINESS REPORT</h2>
+					</header>
+						<div id="container1" style="width:100%; height:400px;">{{highcharts}}</div>
+						<br/>
+						<br/>
+						<br/>
+						<div id="container2" style="width:100%; height:400px;">{{highcharts}}</div>
+						<br/>
+						<br/>
+						<br/>
+						<div id="container3" style="width:100%; height:400px;">{{highcharts}}</div>
+						<br/>
+						<br/>
+						<br/>
+						<select name="cars" id="cars"  v-model="selected" @change="onChange(selected)" class="txtEnabled" style="width:25%;">
+						  <option value="2020">2020</option>
+						  <option value="2021" selected="selected">2021</option>
+						</select>
+						<div id="container4" style="width:100%; height:400px;">{{highcharts}}</div>
+						<br/>
+						<br/>
+						<br/>
+						<div id="container5" style="width:100%; height:400px;">{{highcharts}}</div>
+						<br/>
+						<br/>
+						<br/>
+						<div id="container6" style="width:100%; height:400px;">{{highcharts}}</div>
+						<br/>
+						<br/>
+						<br/>
+						<div id="container7" style="width:100%; height:400px;">{{highcharts}}</div>
+						<br/>
+						<br/>
+						<br/>
+						<div id="container8" style="width:100%; height:400px;">{{highcharts}}</div>
+						<br/>
+						<br/>
+						<br/>
+						<div id="container9" style="width:100%; height:400px;">{{highcharts}}</div>
+						<br/>
+						<br/>
+						<br/>
+						<table style="width:25%">
+							<tr>
+								<td style="width:50%">
+									<h6>Choose start date:</h6>
+								</td>
+								<td style="width:50%">
+									<h6>Choose end date:</h6>
+								</td>
+							</tr>
+							<tr>
+								<td style="width:50%; ">
+									<input type=date v-model="start" class="txtEnabled" style="width:100%; ">
+								</td>
+								<td style="width:50%; ">
+									<input type=date v-model="end" class="txtEnabled" style="width:100%">
+								</td>
+							</tr>
+							<tr >
+							<td style="width:50%; " colspan="2">
+								<input type="submit" value="Search" @click="searchEarning" style="background: #50d8af; border: 0; width:100%;border-radius: 3px; padding: 10px 30px; color: #fff; transition: 0.4s; cursor: pointer; margin-top:7.5%"/>
+							</td>
+							</tr>
+						</table>
+						
+						
+						
+						
+						
+						<div id="container10" style="width:100%; height:400px;">{{highcharts}}</div>
+						
+				</div>
+				
+			</section>
+			<!-- #services -->
+
+
+		</main>
+
+		<a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+	</div>
+	<!-- JavaScript Libraries -->
+	<script src="../lib/jquery/jquery.min.js"></script>
+	<script src="../lib/jquery/jquery-migrate.min.js"></script>
+	<script src="../lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script src="../lib/easing/easing.min.js"></script>
+	<script src="../lib/superfish/hoverIntent.js"></script>
+	<script src="../lib/superfish/superfish.min.js"></script>
+	<script src="../lib/wow/wow.min.js"></script>
+	<script src="../lib/owlcarousel/owl.carousel.min.js"></script>
+	<script src="../lib/magnific-popup/magnific-popup.min.js"></script>
+	<script src="../lib/sticky/sticky.js"></script>
+	<script src="https://code.highcharts.com/highcharts.src.js"></script>
+	<script src="https://npmcdn.com/js-alert/dist/jsalert.min.js"></script>
+
+	<!-- Contact Form JavaScript File -->
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.18/vue.min.js"></script>
+	<!-- Template Main Javascript File -->
+	<script src="../js/main.js"></script>
+	<script src="../axios.js"></script>
+	<script src="businessReport.js"></script>
+	<script></script>
+</body>
+</html>

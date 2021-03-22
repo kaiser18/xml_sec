@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Home page</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta content="" name="keywords">
+<meta content="" name="description">
+
+<!-- Favicons -->
+<link href="../img/favicon.png" rel="icon">
+<link href="../img/apple-touch-icon.png" rel="apple-touch-icon">
+
+<!-- Google Fonts -->
+<link
+	href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Raleway:300,400,500,700,800|Montserrat:300,400,700"
+	rel="stylesheet">
+
+<!-- Bootstrap CSS File -->
+<link href="../lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Libraries CSS Files -->
+<link href="../lib/font-awesome/css/font-awesome.min.css"
+	rel="stylesheet">
+<link href="../lib/animate/animate.min.css" rel="stylesheet">
+<link href="../lib/ionicons/css/ionicons.min.css" rel="stylesheet">
+<link href="../lib/owlcarousel/assets/owl.carousel.min.css"
+	rel="stylesheet">
+<link href="../lib/magnific-popup/magnific-popup.css" rel="stylesheet">
+<link href="../lib/ionicons/css/ionicons.min.css" rel="stylesheet">
+
+<!-- Main Stylesheet File -->
+<link href="../css/style.css" rel="stylesheet">
+
+
+<!-- =======================================================
+    Theme Name: Reveal
+    Theme URL: https://bootstrapmade.com/reveal-bootstrap-corporate-template/
+    Author: BootstrapMade.com
+    License: https://bootstrapmade.com/license/
+  ======================================================= -->
+</head>
+<body id="body">
+	<div id="patient">
+		<!--==========================
+    Top Bar
+  ============================-->
+		<section id="topbar" class="d-none d-lg-block">
+			<div class="container clearfix">
+				<div class="contact-info float-left">
+					<i class="fa fa-envelope-o"></i> <a
+						href="mailto:contact@example.com">contact@example.com</a> <i
+						class="fa fa-phone"></i> +1 5589 55488 55
+				</div>
+				<div class="social-links float-right">
+					<a href="#" class="twitter"><i class="fa fa-twitter"></i></a> <a
+						href="#" class="facebook"><i class="fa fa-facebook"></i></a> <a
+						href="#" class="instagram"><i class="fa fa-instagram"></i></a> <a
+						href="#" class="google-plus"><i class="fa fa-google-plus"></i></a>
+					<a href="#" class="linkedin"><i class="fa fa-linkedin"></i></a>
+				</div>
+			</div>
+		</section>
+
+		<!--==========================
+    Header
+  ============================-->
+		<header id="header">
+			<div class="container">
+
+				<div id="logo" class="pull-left">
+					<h1>
+						<a href="#body" class="scrollto">Apote<span>ke</span></a>
+					</h1>
+					<!-- Uncomment below if you prefer to use an image logo -->
+					<!-- <a href="#body"><img src="img/logo.png" alt="" title="" /></a>-->
+				</div>
+
+				<nav id="nav-menu-container">
+					<ul class="nav-menu">
+						<li class="menu-active"><a href="#body">Home</a></li>
+						<li><a href="#about">About Us</a></li>
+						<li class="menu-has-children"><a href="#">Tools</a>
+							<ul>
+								<li><a href="/patientList.html">List of examined clients</a></li>
+								<li><a href="/pharmacist/pharmacistReport.html">Start counseling</a></li>
+								<li><a href="/pharmacist/workCalendar.html">Work calendar</a></li>
+								<li><a href="/pharmacist/leaveRequest.html">Create a leave request</a></li>
+								<li><a href="/pharmacist/pharmacistReport.html?schedule=true">Scheduling a new counseling</a></li>
+								<li><a href="#">Issue a drug</a></li>
+							</ul></li>
+						<li class="menu-has-children"><a href="#">{{pharm.firstName}}
+								{{pharm.lastName}}</a>
+							<ul>
+								<li><a href="/employeeProfile.html"><i class="icon fa-user"></i>&nbsp&nbsp&nbspProfile</a></li>
+								<li @click="logout"><a href="#"><i
+										class="icon fa-sign-out"></i>&nbsp&nbspLog out</a></li>
+							</ul></li>
+						<li><a href="#contact">Contact</a></li>
+					</ul>
+				</nav>
+				<!-- #nav-menu-container -->
+			</div>
+		</header>
+		<!-- #header -->
+
+		<!--==========================
+    Intro Section
+  ============================-->
+
+		<main id="main">
+
+			<!--==========================
+      About Section
+    ============================-->
+
+			<!--==========================
+      Services Section
+    ============================-->
+			<section id="wrapper">
+				<div class="inner">
+					<header class="special">
+						<h2>Welcome {{patient.firstName}} {{patient.lastName}}</h2>
+						<p>View and manage your profile information, schedule
+							counseling, start counseling, view your work calendar, create a
+							leave request ...</p>
+					</header>
+					<div class="highlights">
+						<section>
+							<div class="content" @click="redirect('/counselingAppointments.html')">
+								<header>
+									<a href="#" class="icon fa-list-alt"><span class="label">Icon</span></a>
+									<h3>Dermatologist Appointments</h3>
+								</header>
+								<p>List of scheduled appointments at dermatologist.</p>
+							</div>
+						</section>
+						<section>
+							<div class="content" @click="redirect('/pharm.html')">
+								<header>
+									<a href="#" class="icon fa-clock-o"><span class="label">Icon</span></a>
+									<h3>Schedule Dermatologist Appointment</h3>
+								</header>
+								<p>Schedule appointment at dermatologist.</p>
+							</div>
+						</section>
+						<section>
+							<div class="content"  @click="redirect('/examinationAppointments.html')">
+								<header>
+									<a href="#" class="icon fa-calendar"><span class="label">Icon</span></a>
+									<h3>Scheduled Counselings</h3>
+								</header>
+								<p>View scheduled counselings.</p>
+							</div>
+						</section>
+						<section>
+							<div class="content" @click="redirect('/drugreservation.html')">
+								<header>
+									<a href="#" class="icon fa-suitcase"><span class="label">Icon</span></a>
+									<h3>Reserve Medicine</h3>
+								</header>
+								<p>Reserve new medications, you can see reserved ones on your profile page.</p>
+							</div>
+						</section>
+						<section>
+							<div class="content" @click="redirect('/reserveCounseling.html')">
+								<header>
+									<a href="#" class="icon fa-plus"><span class="label">Icon</span></a>
+									<h3>Scheduling a new counseling</h3>
+								</header>
+								<p>Scheduling a new counseling.</p>
+							</div>
+						</section>
+						<!--<section>
+							<div class="content" @click="redirect('/drugreservation.html')">
+								<header>
+									<a href="#" class="icon fa-hospital-o"><span class="label">Icon</span></a>
+									<h3>Reserve a drug</h3>
+								</header>
+								<p>Page for medicine reservation.</p>
+							</div>
+						</section>-->
+						<section>
+							<div class="content" @click="redirect('/profile.html')">
+								<header>
+									<a href="#" class="icon fa-user"><span class="label">Icon</span></a>
+									<h3>Profile</h3>
+								</header>
+								<p>View profile information.</p>
+							</div>
+						</section>
+					</div>
+				</div>
+			</section>
+			<!-- #services -->
+
+
+		</main>
+
+		<a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+	</div>
+	<!-- JavaScript Libraries -->
+	<script src="../lib/jquery/jquery.min.js"></script>
+	<script src="../lib/jquery/jquery-migrate.min.js"></script>
+	<script src="../lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script src="../lib/easing/easing.min.js"></script>
+	<script src="../lib/superfish/hoverIntent.js"></script>
+	<script src="../lib/superfish/superfish.min.js"></script>
+	<script src="../lib/wow/wow.min.js"></script>
+	<script src="../lib/owlcarousel/owl.carousel.min.js"></script>
+	<script src="../lib/magnific-popup/magnific-popup.min.js"></script>
+	<script src="../lib/sticky/sticky.js"></script>
+
+	<!-- Contact Form JavaScript File -->
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.18/vue.min.js"></script>
+	<!-- Template Main Javascript File -->
+	<script src="../js/main.js"></script>
+	<script src="../axios.js"></script>
+	<script src="patientHomepage.js"></script>
+
+</body>
+</html>

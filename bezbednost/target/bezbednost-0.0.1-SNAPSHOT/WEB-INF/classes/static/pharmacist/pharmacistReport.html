@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Home page</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta content="" name="keywords">
+<meta content="" name="description">
+
+<!-- Favicons -->
+<link href="../img/favicon.png" rel="icon">
+<link href="../img/apple-touch-icon.png" rel="apple-touch-icon">
+
+<!-- Google Fonts -->
+<link
+	href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Raleway:300,400,500,700,800|Montserrat:300,400,700"
+	rel="stylesheet">
+
+<!-- Bootstrap CSS File -->
+<link href="../lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Libraries CSS Files -->
+<link href="../lib/font-awesome/css/font-awesome.min.css"
+	rel="stylesheet">
+<link href="../lib/animate/animate.min.css" rel="stylesheet">
+<link href="../lib/ionicons/css/ionicons.min.css" rel="stylesheet">
+<link href="../lib/owlcarousel/assets/owl.carousel.min.css"
+	rel="stylesheet">
+<link href="../lib/magnific-popup/magnific-popup.css" rel="stylesheet">
+<link href="../lib/ionicons/css/ionicons.min.css" rel="stylesheet">
+<link rel="stylesheet" href="../dermatologist/css/ml-calendar.css">
+
+<!-- Main Stylesheet File -->
+<link href="../css/style.css" rel="stylesheet">
+<link href="../dermatologist/css/report.css" rel="stylesheet">
+
+
+<!-- =======================================================
+    Theme Name: Reveal
+    Theme URL: https://bootstrapmade.com/reveal-bootstrap-corporate-template/
+    Author: BootstrapMade.com
+    License: https://bootstrapmade.com/license/
+  ======================================================= -->
+</head>
+<style>
+main ::-webkit-scrollbar {
+    width: 8px;
+}
+main ::-webkit-scrollbar-button {
+    width: 8px;
+    height:5px;
+}
+main ::-webkit-scrollbar-track {
+    background:#eee;
+    border: thin solid lightgray;
+    box-shadow: 0px 0px 3px #dfdfdf inset;
+    border-radius:10px;
+}
+main ::-webkit-scrollbar-thumb {
+    background:#999;
+    border: thin solid gray;
+    border-radius:10px;
+}
+main ::-webkit-scrollbar-thumb:hover {
+    background:#7d7d7d;
+} 
+.selected-calendar-mode {
+	background: #50d8af !important;
+	color: white !important;
+}
+</style>
+<body id="body">
+	<div id="page">
+		<!--==========================
+    Top Bar
+  ============================-->
+		<section id="topbar" class="d-none d-lg-block">
+			<div class="container clearfix">
+				<div class="contact-info float-left">
+					<i class="fa fa-envelope-o"></i> <a
+						href="mailto:contact@example.com">contact@example.com</a> <i
+						class="fa fa-phone"></i> +1 5589 55488 55
+				</div>
+				<div class="social-links float-right">
+					<a href="#" class="twitter"><i class="fa fa-twitter"></i></a> <a
+						href="#" class="facebook"><i class="fa fa-facebook"></i></a> <a
+						href="#" class="instagram"><i class="fa fa-instagram"></i></a> <a
+						href="#" class="google-plus"><i class="fa fa-google-plus"></i></a>
+					<a href="#" class="linkedin"><i class="fa fa-linkedin"></i></a>
+				</div>
+			</div>
+		</section>
+
+		<!--==========================
+    Header
+  ============================-->
+		<header id="header">
+			<div class="container">
+
+				<div id="logo" class="pull-left">
+					<h1>
+						<a href="#body" class="scrollto">Apote<span>ke</span></a>
+					</h1>
+					<!-- Uncomment below if you prefer to use an image logo -->
+					<!-- <a href="#body"><img src="img/logo.png" alt="" title="" /></a>-->
+				</div>
+
+				<nav id="nav-menu-container">
+					<ul class="nav-menu">
+						<li class="menu-active"><a href="/dermatologist/dermatologistHome.html">Home</a></li>
+						<li><a href="#about">About Us</a></li>
+						<li class="menu-has-children"><a href="#">Tools</a>
+							<ul>
+								<li><a href="/patientList.html">List of examined clients</a></li>
+								<li><a href="/pharmacist/pharmacistReport.html">Start examination</a></li>
+								<li><a href="/pharmacist/workCalendar.html">Work
+										calendar</a></li>
+								<li><a href="/pharmacist/leaveRequest.html">Create a leave request</a></li>
+								<li><a href="/pharmacist/pharmacistReport.html?schedule=true">Scheduling a new examination</a></li>
+							</ul></li>
+						<li class="menu-has-children"><a href="#">{{derm.firstName}}
+								{{derm.lastName}}</a>
+							<ul>
+								<li><a href="/employeeProfile.html"><i
+										class="icon fa-user"></i>&nbsp&nbsp&nbspProfile</a></li>
+								<li @click="logout"><a href="#"><i
+										class="icon fa-sign-out"></i>&nbsp&nbspLog out</a></li>
+							</ul></li>
+						<li><a href="#contact">Contact</a></li>
+					</ul>
+				</nav>
+				<!-- #nav-menu-container -->
+			</div>
+		</header>
+		<!-- #header -->
+
+		<!--==========================
+    Intro Section
+  ============================-->
+
+		<main id="main">
+			<a v-if="currentStep != 'START' && currentStep != 'REPORT'" style="left: 50px;"
+				class="arrow left" @click="goLeft()"></a> <a
+				v-if="currentStep != 'START' && currentStep != 'SCHEDULE'"
+				style="right: 50px;" class="arrow right" @click="goRight()"></a>
+			<div class="progressbar-wrapper">
+				<ul class="progressbar">
+					<li :style="[schedule ? {'width' : '50%'} : {}]" 
+						:class="[(currentStep === 'REPORT' || currentStep === 'PRESCRIPT' || currentStep === 'SCHEDULE')? 'active' : '']">Start
+						<span v-if="!schedule">examination</span></li>
+					<li v-if="!schedule"
+						:class="[(currentStep === 'PRESCRIPT' || currentStep === 'SCHEDULE')? 'active' : '']">Report</li>
+					<li  v-if="!schedule" :class="[currentStep === 'SCHEDULE'? 'active' : '']">Prescript</li>
+					<li :style="[schedule ? {'width' : '50%'} : {}]" >Schedule examination</li>
+				</ul>
+				<input v-if="currentStep == 'SCHEDULE'" @click="finish" type="button" style="position: absolute; height: 40px; width: 100px;" value="Finish" class="buttonR">
+			</div>
+			<div class="start_examintaion" v-if="currentStep == 'START'">
+				<div class="left">
+					<table>
+						<tr>
+							<td><b>Start time</b></td>
+							<td>{{formatDate(examination.startDate)}}</td>
+						</tr>
+						<tr>
+							<td><b>Duration</b></td>
+							<td>{{examination.duration}}min</td>
+						</tr>
+						<tr>
+							<td><b>Pharmacy name</b></td>
+							<td>{{examination.pharmacyName}}</td>
+						</tr>
+						<tr>
+							<td><b>Patient name</b></td>
+							<td v-if="examination.patientName != null">{{examination.patientName}}</td>
+							<td v-else>Free term</td>
+						</tr>
+					</table>
+				</div>
+				<div class="right">
+					<input type="button" class="buttonS"
+						@click="startButton" :value="[schedule? 'Schedule' : 'Start']"
+						:style="[canStart ? {} : {'background' : 'gray', 'cursor' : 'not-allowed'}]"
+						:disabled="!canStart"> <input type="button"
+						class="buttonS" value="Finish"
+						:style="[canStart ? {} : {'background' : 'gray', 'cursor' : 'not-allowed'}]"
+						:disabled="!canStart">
+					<div v-if="!canStart"
+						style="width: calc(100% - 40px); position: relative; top: 30px; text-align: center; color: red;">Wait
+						time: {{waitingTime}}</div>
+				</div>
+			</div>
+			<div class="report" v-if="currentStep == 'REPORT'">
+				<span style="left: 10px; position: relative">Report:</span>
+				<textarea class="report_info" v-model="report"></textarea>
+			</div>
+			<div class="report" v-if="currentStep == 'PRESCRIPT'">
+				<div class="drugs">
+					<div v-if="!showSubs"
+						style="position: relative; height: 50px; top: 10px;">
+						<form v-on:submit.prevent="search">
+							<span class="search_container"> <input
+								placeholder="Search..." type="text" v-model="sname"
+								class="search"> <i @click="search" class="fa fa-search"
+								style="position: absolute; top: 5px; right: 10px; cursor: pointer;"></i>
+							</span>
+						</form>
+					</div>
+					<div v-else style="position: relative; height: 50px;">
+						<span style="position: absolute; left: 20px;">Alternative
+							leka <b>{{subDrug.name}}</b>:
+						</span> <i class="fa fa-undo" @click="goBack()"
+							style="position: absolute; top: 10px; right: 20px; cursor: pointer">&nbsp;Go
+							back</i>
+					</div>
+					<div
+						style="position: absolute; width: 100%; overflow-y: auto; height: calc(100% - 120px);">
+						<div class="drug" v-for="d in medicines"
+							style="position: relative">
+							<table style="width: 70%; left: 5%; position: relative">
+								<tr>
+									<td style="width: 40%"><b>Name</b></td>
+									<td>{{d.name}}</td>
+								</tr>
+								<tr>
+									<td style="width: 40%"><b>Manufacturer</b></td>
+									<td>{{d.manufacturer}}</td>
+								</tr>
+								<tr>
+									<td style="width: 40%"><b>Type</b></td>
+									<td>{{d.type.name}}</td>
+								</tr>
+								<tr>
+									<td style="width: 40%"><b>Form</b></td>
+									<td>{{d.form.name}}</td>
+								</tr>
+							</table>
+							<i class="fa fa-eye" @click="selectDrug(d)"
+								style="position: absolute; top: 20px; right: 20px;"></i> <i
+								class="fa fa-check" @click="prescribeDrug(d)"
+								style="position: absolute; top: 40px; right: 20px;"></i>
+						</div>
+					</div>
+				</div>
+				<div v-if="drugInfo"
+					style="box-shadow: 0px 15px 25px rgba(0, 0, 0, 0.1); position: absolute; padding: 30px; background: rgb(248, 248, 248); left: calc(50% - 250px); top: calc(50% - 150px); border-radius: 5px;">
+					<a @click="drugInfo = false" class="icon fa-close"
+						style="float: right; top: -15px;"></a>
+					<table style="width: 80%; left: 10%; position: relative">
+						<tr>
+							<td><b>Contraindications</b></td>
+							<td style="padding-left: 10px">{{selectedDrug.contraindications}}</td>
+						</tr>
+						<tr>
+							<td><b>Composition</b></td>
+							<td style="padding-left: 10px">{{selectedDrug.composition}}</td>
+						</tr>
+						<tr>
+							<td><b>Recommended intake<br /> per day
+							</b></td>
+							<td style="padding-left: 10px">{{selectedDrug.recommendedIntakePerDay}}</td>
+						</tr>
+						<tr>
+							<td><b>Regime</b></td>
+							<td style="padding-left: 10px">{{selectedDrug.regime}}</td>
+						</tr>
+						<tr>
+							<td><b>Notes</b></td>
+							<td>{{selectedDrug.notes}}</td>
+						</tr>
+					</table>
+				</div>
+				<div v-if="showTherapies"
+					style="box-shadow: 0px 15px 25px rgba(0, 0, 0, 0.1); position: fixed; padding: 30px; background: rgb(248, 248, 248); left: calc(50% - 180px); top: calc(50% - 100px); border-radius: 5px; height: 200px;">
+					<a class="icon fa-close" @click="showTherapies = false"
+						style="float: right; top: -15px;"></a>
+					<div style="width: 100%; overflow-y: auto; height: 110px;">
+						<div class="drug" v-for="d in therapies"
+							style="position: relative">
+							<table style="width: 70%; left: 5%; position: relative">
+								<tr>
+									<td style="width: 40%"><b>Duration</b></td>
+									<td>{{d.duration}}</td>
+								</tr>
+								<tr>
+									<td style="width: 40%"><b>Medicine</b></td>
+									<td>{{d.medicineName}}</td>
+								</tr>
+								<tr>
+									<td style="width: 40%"><b>Manufacturer</b></td>
+									<td>{{d.medicineManuf}}</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+				<input v-if="therapies != null && therapies.length > 0"
+					@click="changeShowTherapiesStatus" type="button" class="buttonR"
+					value="Therapies"
+					style="height: 40px; width: 120px; padding: 0px; position: relative; left: calc(50% - 60px)">
+			</div>
+			<div class="ml-calendar" v-if="currentStep == 'SCHEDULE'"
+				style="max-width: 80% !important; min-height: 600px !important; top: 40px; position: relative; margin-top: 60px; margin-bottom: 40px;">
+				<section class="calendar-left" style="min-height: 600px;">
+					<div class="sidebar">
+						<p class="subheading">{{dateDist(current, today)}}</p>
+						<h1>
+							{{weekdays[current.getDay()]}}, <br />{{months[current.getMonth()]}}
+							{{current.getDate()}}{{nth(current.getDate())}}
+						</h1>
+						<h3 class="primary-color" v-if="counselings.length < 1">No
+							Counselings</h3>
+						<h3 class="primary-color" v-if="counselings.length > 0">
+							{{counselings.length}} Counseling<span
+								v-if="counselings.length > 1">s</span>
+						</h3>
+						<ul class="calendar-events"
+							style="overflow-y: auto; overflow-x: hidden; height: 300px;">
+							<li v-for="c in counselings" style="position: relative">
+								<p>
+									<strong>{{getStartTime(new Date(c.startDate))}}</strong> <span
+										style="font-size: 10px;">{{c.duration}}min</span><br /> <span
+										v-if="c.patientName == ''">Free term</span> <span v-else>{{c.patientName}}</span><br />
+									<span style="text-transform: uppercase; font-size: 10px;">{{c.pharmacyName}}</span>
+								</p></li>
+						</ul>
+						<p>
+							<a @click="addNewTerm = true" style="text-align: center; cursor: pointer;"
+								class="calendar-btn"><i class="fa fa-plus"></i> Add new
+								examination</a>
+						</p>
+						<p>Working period: {{wp}}</p>
+					</div>
+				</section>
+				<section class="calendar-right">
+					<div class="calendar">
+						<section class="calendar-header">
+							<h2 style="margin: 0.83em 0 0.83em 0 !important">
+								<strong>{{months[days[6].getMonth()]}}</strong>
+								{{days[6].getFullYear()}}
+							</h2>
+							<div class="calendar-nav" style="cursor: pointer">
+								<a v-on:click="prev()"><i class="fa fa-arrow-left"></i></a><a
+									v-on:click="reset()">Today</a><a v-on:click="next()"><i
+									class="fa fa-arrow-right"></i></a>
+
+							</div>
+						</section>
+						<section class="calendar-row">
+							<div v-for="w in weekdays" class="calendar-day day-name">{{w}}</div>
+						</section>
+						<section class="calendar-row" v-for="index in 6" :key="index">
+							<div class="calendar-day weekend"
+								v-on:click="setCurrDate(days[index * 6 + index])"
+								:class="[dateDistance(today, days[index * 6 + index]) === 'Today'? 'active' : '']">
+								<span class="calendar-date">{{days[index * 6 +
+									index].getDate()}}</span> <br /> <span
+									:style="[counts[index * 6 + index] == 0? {'visibility': 'hidden'} : {}]"
+									class="calendar-event">{{counts[index * 6 + index]}}</span>
+							</div>
+							<div class="calendar-day"
+								v-on:click="setCurrDate(days[index * 6 + index + 1])"
+								:class="[dateDistance(today, days[index * 6 + index + 1]) === 'Today'? 'active' : '']">
+								<span class="calendar-date">{{days[index * 6 + index +
+									1].getDate()}}</span> <br /> <span
+									:style="[counts[index * 6 + index + 1] == 0? {'visibility': 'hidden'} : {}]"
+									class="calendar-event">{{counts[index * 6 + index + 1]}}</span>
+							</div>
+							<div class="calendar-day"
+								v-on:click="setCurrDate(days[index * 6 + index + 2])"
+								:class="[dateDistance(today, days[index * 6 + index + 2]) === 'Today'? 'active' : '']">
+								<span class="calendar-date">{{days[index * 6 + index +
+									2].getDate()}}</span> <br /> <span
+									:style="[counts[index * 6 + index + 2] == 0? {'visibility': 'hidden'} : {}]"
+									class="calendar-event">{{counts[index * 6 + index + 2]}}</span>
+							</div>
+							<div class="calendar-day"
+								v-on:click="setCurrDate(days[index * 6 + index + 3])"
+								:class="[dateDistance(today, days[index * 6 + index + 3]) === 'Today'? 'active' : '']">
+								<span class="calendar-date">{{days[index * 6 + index +
+									3].getDate()}}</span> <br /> <span
+									:style="[counts[index * 6 + index + 3] == 0? {'visibility': 'hidden'} : {}]"
+									class="calendar-event">{{counts[index * 6 + index + 3]}}</span>
+							</div>
+							<div class="calendar-day"
+								v-on:click="setCurrDate(days[index * 6 + index + 4])"
+								:class="[dateDistance(today, days[index * 6 + index + 4]) === 'Today'? 'active' : '']">
+								<span class="calendar-date">{{days[index * 6 + index +
+									4].getDate()}}</span> <br /> <span
+									:style="[counts[index * 6 + index + 4] == 0? {'visibility': 'hidden'} : {}]"
+									class="calendar-event">{{counts[index * 6 + index + 4]}}</span>
+							</div>
+							<div class="calendar-day"
+								v-on:click="setCurrDate(days[index * 6 + index + 5])"
+								:class="[dateDistance(today, days[index * 6 + index + 5]) === 'Today'? 'active' : '']">
+								<span class="calendar-date">{{days[index * 6 + index +
+									5].getDate()}}</span> <br /> <span
+									:style="[counts[index * 6 + index + 5] == 0? {'visibility': 'hidden'} : {}]"
+									class="calendar-event">{{counts[index * 6 + index + 5]}}</span>
+							</div>
+							<div class="calendar-day weekend"
+								v-on:click="setCurrDate(days[index * 6 + index + 6])"
+								:class="[dateDistance(today, days[index * 6 + index + 6]) === 'Today'? 'active' : '']">
+								<span class="calendar-date">{{days[index * 6 + index +
+									6].getDate()}}</span> <br /> <span
+									:style="[counts[index * 6 + index + 6] == 0? {'visibility': 'hidden'} : {}]"
+									class="calendar-event">{{counts[index * 6 + index + 6]}}</span>
+							</div>
+						</section>
+					</div>
+
+
+				</section>
+				<div class="clear"></div>
+				<div v-if="addNewTerm"
+					style="position: fixed; padding: 20px; width: 250px; height: 200px; left: calc(50% - 125px); top: calc(50% - 100px); box-shadow: 0px 15px 25px rgb(0 0 0/ 10%); background: rgb(248, 248, 248); border-radius: 5px;">
+					<a @click="addNewTerm = false" class="icon fa-close" style="position: absolute; right: 20px; cursor: pointer;"></a>
+					<span style="position: relative; top: 30px;">
+						<b>Start time:</b>&nbsp;&nbsp;<input v-model="examTime" type="time" style="border-radius: 5px; margin-bottom:5px; border-color: silver; border-style: none; background-color: #f9f9f9; outline: none;">
+						<b>Duration: &nbsp;&nbsp;</b><input type="number" v-model="examDuration" style="width: 50px;">
+						<input type="button" @click="addExam" value="Submit" style="width: 200px; background: #50d8af; border: 0; border-radius: 3px; padding: 10px 30px; color: #fff; transition: 0.4s; cursor: pointer; margin-top: 20px;">
+					</span>
+				</div>
+			</div>
+		</main>
+
+		<a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+	</div>
+	<!-- JavaScript Libraries -->
+	<script src="../lib/jquery/jquery.min.js"></script>
+	<script src="../lib/jquery/jquery-migrate.min.js"></script>
+	<script src="../lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script src="../lib/easing/easing.min.js"></script>
+	<script src="../lib/superfish/hoverIntent.js"></script>
+	<script src="../lib/superfish/superfish.min.js"></script>
+	<script src="../lib/wow/wow.min.js"></script>
+	<script src="../lib/owlcarousel/owl.carousel.min.js"></script>
+	<script src="../lib/magnific-popup/magnific-popup.min.js"></script>
+	<script src="../lib/sticky/sticky.js"></script>
+	<script src="https://npmcdn.com/js-alert/dist/jsalert.min.js"></script>
+
+	<!-- Contact Form JavaScript File -->
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.18/vue.min.js"></script>
+	<!-- Template Main Javascript File -->
+	<script src="../js/main.js"></script>
+	<script src="../axios.js"></script>
+	<script src="pharmacistReport.js"></script>
+
+</body>
+</html>

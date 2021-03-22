@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Reveal Bootstrap Template</title>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta content="" name="keywords">
+  <meta content="" name="description">
+
+  <!-- Favicons -->
+  <link href="../img/favicon.png" rel="icon">
+  <link href="../img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Raleway:300,400,500,700,800|Montserrat:300,400,700" rel="stylesheet">
+
+  <!-- Bootstrap CSS File -->
+  <link href="../lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Libraries CSS Files -->
+  <link href="../lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="../lib/animate/animate.min.css" rel="stylesheet">
+  <link href="../lib/ionicons/css/ionicons.min.css" rel="stylesheet">
+  <link href="../lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+  <link href="../lib/magnific-popup/magnific-popup.css" rel="stylesheet">
+  <link href="../lib/ionicons/css/ionicons.min.css" rel="stylesheet">
+
+  <!-- Main Stylesheet File -->
+  <link href="../css/style.css" rel="stylesheet">
+
+  <!-- =======================================================
+    Theme Name: Reveal
+    Theme URL: https://bootstrapmade.com/reveal-bootstrap-corporate-template/
+    Author: BootstrapMade.com
+    License: https://bootstrapmade.com/license/
+  ======================================================= -->
+</head>
+
+<body id="body">
+<div id="pharmacies">
+  <div v-if="showAddPharmacyForm" style="position: absolute; width: 100vw; height: 100vh; background-color: rgba(0,0,0,0.2); z-index: 1000;" @click="showAddPharmacyForm = false">
+    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); background-color: white; width: 600px; height: 500px;" @click.stop>
+      <div style="position: absolute; top: 10px; right: 15px; cursor: pointer;" @click="showAddPharmacyForm = false"><i class="icon fa-times"></i></div>
+      <form @submit.prevent="submit" class="text-center mt-5">
+        <div class="d-inline-block w-75 mt-5">
+          <h6 style="color:#50d8af;"">Pharmacy name</h6>
+          <input autofocus v-model="name" type="text" name="name" class="form-control" id="name" />
+        </div>
+        <div class="d-inline-block w-75 mt-4">
+          <h6 style="color:#50d8af;"">Street</h6>
+          <input autofocus v-model="address" type="text" name="address" class="form-control" id="address" />
+        </div>
+        <div class="d-inline-block w-75 mt-4">
+          <h6 style="color:#50d8af;"">City</h6>
+          <input autofocus v-model="city" type="text" name="city" class="form-control" id="city" />
+        </div>
+        <button class="btn d-inline-block w-75 mt-5">Submit</button>
+      </form>
+    </div>
+  </div>
+  <div v-if="showAddPharmacyAdminForm" style="position: absolute; width: 100%; min-height: 100vh; background-color: rgba(0,0,0,0.2); z-index: 1000;" @click="showAddPharmacyAdminForm = false">
+    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); background-color: white; width: 600px; min-height: 500px;" @click.stop>
+    <div style="position: absolute; top: 10px; right: 15px; cursor: pointer;" @click="showAddPharmacyAdminForm = false"><i class="icon fa-times"></i></div>
+      <form @submit.prevent="createPharmacyAdmin" class="text-center mt-5">
+        <div class="d-inline-block w-75 mt-5">
+          <h6 style="color:#50d8af;"">Email</h6>
+          <input autofocus v-model="email" type="text" name="email" class="form-control" id="email" />
+        </div>
+        <div class="d-inline-block w-75 mt-3">
+          <h6 style="color:#50d8af;"">Password</h6>
+          <input autofocus v-model="password" type="password" name="password" class="form-control" id="password" />
+        </div>
+        <div class="d-inline-block w-75 mt-3">
+          <h6 style="color:#50d8af;"">First name</h6>
+          <input autofocus v-model="firstName" type="text" name="firstName" class="form-control" id="firstName" />
+        </div>
+        <div class="d-inline-block w-75 mt-3">
+          <h6 style="color:#50d8af;"">Last name</h6>
+          <input autofocus v-model="lastName" type="text" name="lastName" class="form-control" id="lastName" />
+        </div>
+        <div class="d-inline-block w-75 mt-3">
+          <h6 style="color:#50d8af;"">Phone number</h6>
+          <input autofocus v-model="phonenumber" type="text" name="phonenumber" class="form-control" id="phonenumber" />
+        </div>
+        <div class="form-row d-inline-block w-75 mt-3">
+          <div class="form-group col-md-12">
+            <select v-model="country" class="form-control">
+              <option disabled value="">Select country</option>
+              <option v-for="item in countryOptions" :value="item" :key="item.id">
+                {{ item.country }}
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row d-inline-block w-75 mt-2">
+          <div class="form-group col-md-12">
+            <select v-model="city" class="form-control">
+              <option disabled value="">Select city</option>
+              <option v-for="item in cityOptions" :value="item" :key="item.id">
+                {{ item.city }}
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="d-inline-block w-75 mt-3">
+          <h6 style="color:#50d8af;"">Address</h6>
+          <input autofocus v-model="addressString" type="text" name="addressString" class="form-control" id="addressString" />
+        </div>
+        <button class="btn d-inline-block w-75 my-5">Submit</button>
+      </form>
+    </div>
+  </div>
+
+  <!--==========================
+    Top Bar
+  ============================-->
+  <section id="topbar" class="d-none d-lg-block">
+    <div class="container clearfix">
+      <div class="contact-info float-left">
+        <i class="fa fa-envelope-o"></i> <a href="mailto:contact@example.com">contact@example.com</a>
+        <i class="fa fa-phone"></i> +1 5589 55488 55
+      </div>
+      <div class="social-links float-right">
+        <a href="#" class="twitter"><i class="fa fa-twitter"></i></a>
+        <a href="#" class="facebook"><i class="fa fa-facebook"></i></a>
+        <a href="#" class="instagram"><i class="fa fa-instagram"></i></a>
+        <a href="#" class="google-plus"><i class="fa fa-google-plus"></i></a>
+        <a href="#" class="linkedin"><i class="fa fa-linkedin"></i></a>
+      </div>
+    </div>
+  </section>
+
+  <!--==========================
+    Header
+  ============================-->
+		<header id="header">
+			<div class="container">
+
+				<div id="logo" class="pull-left">
+					<h1>
+						<a href="home.html" class="scrollto">Apote<span>ke</span></a>
+					</h1>
+					<!-- Uncomment below if you prefer to use an image logo -->
+					<!-- <a href="#body"><img src="img/logo.png" alt="" title="" /></a>-->
+				</div>
+
+				<nav id="nav-menu-container">
+					<ul class="nav-menu">
+						<li class="menu-active"><a href="home.html">Home</a></li>
+						<li class="menu-has-children"><a href="#">Tools</a>
+							<ul>
+								<li><a href="pharmacies.html">Pharmacies</a></li>
+								<li><a href="manageUsers.html">Manage Users</a></li>
+								<li><a href="manageMedications.html">Medicines</a></li>
+								<li><a href="manageComplaints.html">Complaints</a></li>
+                <li><a href="manageLoyaltyProgram.html">Loyalty program</a></li>
+							</ul></li>
+						<li class="menu-has-children"><a href="#"><i class="icon fa-cog"></i></a>
+							<ul>
+								<li><a href="profile.html"><i class="icon fa-user"></i>&nbsp&nbsp&nbspProfile</a></li>
+								<li @click="logout"><a href="#"><i
+										class="icon fa-sign-out"></i>&nbsp&nbspLog out</a></li>
+							</ul></li>
+					</ul>
+				</nav>
+				<!-- #nav-menu-container -->
+			</div>
+		</header>
+
+  <!--==========================
+    Intro Section
+  ============================-->
+  
+  <main id="main">
+    <div class="text-center mt-5" v-if="!pharmacySelected">
+        <ul class="list-group d-inline-block w-50 mt-3">
+            <li v-for="pharmacy in pharmacies" style="cursor: pointer;" class="list-group-item" @click="pharmacySelected = pharmacy.id">{{ pharmacy.name }} <i class="icon fa-chevron-right"></i></li>
+            <li class="list-group-item" style="cursor: pointer;" @click="showAddPharmacyForm = true"><i
+                class="icon fa-plus"></i> Add new pharmacy</li>
+          </ul>
+    </div>
+    <div v-else>
+      <div class="text-center mt-5">
+        <div @click="pharmacySelected = false"><i class="icon fa-chevron-left"></i> Back</div>
+        <ul class="list-group d-inline-block w-50 mt-3">
+          <li v-for="pharmacyAdmin in pharmacyAdmins" class="list-group-item" @click="pharmacySelected = pharmacy.id">{{ pharmacyAdmin.firstName }} {{ pharmacyAdmin.lastName}}</li>
+          <li class="list-group-item" style="cursor: pointer;" @click="showAddPharmacyAdminForm = true"><i
+              class="icon fa-plus"></i> Add new pharmacy admin</li>
+        </ul>
+      </div>
+    </div>
+  </main>
+</div>
+
+  <!-- JavaScript Libraries -->
+  <script src="../lib/jquery/jquery.min.js"></script>
+  <script src="../lib/jquery/jquery-migrate.min.js"></script>
+  <script src="../lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../lib/easing/easing.min.js"></script>
+  <script src="../lib/superfish/hoverIntent.js"></script>
+  <script src="../lib/superfish/superfish.min.js"></script>
+  <script src="../lib/wow/wow.min.js"></script>
+  <script src="../lib/owlcarousel/owl.carousel.min.js"></script>
+  <script src="../lib/magnific-popup/magnific-popup.min.js"></script>
+  <script src="../lib/sticky/sticky.js"></script>
+  <script src="https://npmcdn.com/js-alert/dist/jsalert.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.18/vue.min.js"></script>
+  <!-- Template Main Javascript File -->
+  <script src="../js/main.js"></script>
+  <script src="../axios.js"></script>
+  <script src="pharmacies.js"></script>
+
+</body>
+</html>
