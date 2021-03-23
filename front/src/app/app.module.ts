@@ -13,6 +13,8 @@ import { HttpClientModule } from '@angular/common/http';
 import {MatInputModule} from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
+import {MatTabsModule} from '@angular/material/tabs';
+import {MatRadioModule} from '@angular/material/radio';
 import { CertificateListComponent } from './certificate-list/certificate-list.component';
 
 @NgModule({
@@ -32,7 +34,9 @@ import { CertificateListComponent } from './certificate-list/certificate-list.co
     MatInputModule,
     MatButtonModule,
     FormsModule,
-    MatCardModule
+    MatCardModule,
+    MatTabsModule,
+    MatRadioModule
   ],
   providers: [],
   bootstrap: [AppComponent]
