@@ -61,7 +61,7 @@ public class CertificateController {
 		return certificateService.getCertificate(serialNum);
 	}
 	
-	@RequestMapping(value = "/revokeCertificate", method = RequestMethod.POST, headers = { "content-type=application/json" })
+	@RequestMapping(value = "/revokeCertificate", method = RequestMethod.POST)
 	public ResponseEntity<?> revokeCertificate(@RequestBody String serialNum) {
 		if(serialNum == null || serialNum.equals(""))
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

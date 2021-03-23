@@ -5,7 +5,10 @@
 export const environment = {
   production: false,
   baseUrl: 'http://localhost:8081',
-  createCertificate: 'generateRoot'
+  createCertificate: 'generateRoot',
+  getAllCertificates: 'api/certificate/getAllCertificates',
+  revokeCertificate: 'api/certificate/revokeCertificate',
+  getRevokedCertificates: 'api/certificate/revokeCertificate',
 };
 
 /*
