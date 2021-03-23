@@ -5,8 +5,8 @@
 export const environment = {
   production: false,
   baseUrl: 'http://localhost:8081',
-  createRootCertificate: 'generateRoot',
-  createOtherCertificate: 'generateOther',
+  createRootCertificate: 'api/certificate/generateRoot',
+  createOtherCertificate: 'api/certificate/generateOther',
   getAllCertificates: 'api/certificate/getAllCertificates',
   revokeCertificate: 'api/certificate/revokeCertificate',
   getRevokedCertificates: 'api/certificate/revokeCertificate',
