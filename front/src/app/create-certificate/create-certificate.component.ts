@@ -62,7 +62,16 @@ export class CreateCertificateComponent implements OnInit {
     this.certificate = new Certificate(this.commonName, this.alias, this.orgName, this.orgUnit, this.country, this.email, this.serialNum,
       this.ksName, this.ksPassword, this.privateKeyPassword, this.validity, this.purpose)
 
-    
+    this.service.createCertificate(this.certificate).subscribe(
+      res => {
+        this.postForm.reset();
+        alert("success");
+      },
+      error => {
+        alert("error");
+      }
+      
+    )
   }
 
 }
