@@ -72,8 +72,8 @@ public class CertificateController {
 			return ResponseEntity.status(HttpStatus.OK).body("Neuspesno.");
 	}
 		
-	@RequestMapping(value = "/isRevoked", method = RequestMethod.GET, headers = { "content-type=application/json" })
-	public ResponseEntity<Boolean> isRevoked(@RequestBody String serialNum) {
+	@RequestMapping(value = "/isRevoked", method = RequestMethod.GET)
+	public ResponseEntity<Boolean> isRevoked(String serialNum) {
 		if(serialNum == null || serialNum.equals(""))
 			return null;
 		return new ResponseEntity<>(certificateService.isRevoked(serialNum), HttpStatus.OK);

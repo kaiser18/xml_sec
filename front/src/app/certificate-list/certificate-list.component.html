@@ -16,6 +16,6 @@
       </p>
     </mat-card-content>
     <mat-card-actions>
-      <button mat-button (click)="revoke(certificate.serialNum)">REVOKE</button>
+      <button mat-button [disabled]="map.get(certificate.serialNum)" (click)="revoke(certificate.serialNum)">REVOKE</button>
     </mat-card-actions>
 </mat-card>

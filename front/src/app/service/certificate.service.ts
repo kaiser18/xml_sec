@@ -24,7 +24,7 @@ export class CertificateService {
     return this.http.post(`${environment.baseUrl}/${environment.revokeCertificate}`, serialNum, {responseType: 'text'});
   }
 
-  getRevokedCertificates() {
-    return this.http.post(`${environment.baseUrl}/${environment.getRevokedCertificates}`, {responseType: 'text'});
+  isRevoked(serialNum: string) {
+    return this.http.get<boolean>(`${environment.baseUrl}/${environment.isRevoked}?serialNum=${serialNum}`);
   }
 }
