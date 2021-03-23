@@ -84,4 +84,9 @@ public class CertificateController {
 		return certificateService.getAllSignatures();
 	}
 	
+	@RequestMapping(value = "/getAllCertificates", method = RequestMethod.GET)
+	public List<CertificateModel> getAllCertificates(HttpServletRequest request) {
+		return certificateService.getAllCertificates();
+	}
+	
 }

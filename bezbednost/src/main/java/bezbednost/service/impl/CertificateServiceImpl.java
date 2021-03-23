@@ -304,4 +304,10 @@ public class CertificateServiceImpl implements CertificateService {
 	    return null;
 	}
 
+	public List<CertificateModel> getAllCertificates() {
+		List<CertificateModel> ret = new ArrayList<CertificateModel>();
+		certificateRepository.findAll().iterator().forEachRemaining(ret::add);
+		return ret;
+	}
+
 }
