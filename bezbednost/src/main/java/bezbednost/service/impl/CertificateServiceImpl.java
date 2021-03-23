@@ -82,11 +82,11 @@ public class CertificateServiceImpl implements CertificateService {
 		
 		CertificateModel cModel = new CertificateModel();
 		cModel.setSerialNum(cert.getSerialNumber().toString());
-		cModel.setIssuer(cert.getIssuerDN().toString());
-		cModel.setSubject(cert.getSubjectDN().toString());
+		cModel.setIssuerAlias(selfSignedCertificateModel.getAlias());
+		//cModel.setSubject(cert.getSubjectDN().toString());
+		cModel.setEmail(selfSignedCertificateModel.getEmail());
 		cModel.setTypeOfCertificate(cert.getType());
 		cModel.setAlgorithm(cert.getSigAlgName());
-		cModel.setVersion(cert.getVersion());
 		cModel.setExpDate(cert.getNotAfter());
 		cModel.setKsFileName(fileName);
 		cModel.setAlias(selfSignedCertificateModel.getAlias());
@@ -134,11 +134,11 @@ public class CertificateServiceImpl implements CertificateService {
 		System.out.println(otherCertificate.isCA());
 		CertificateModel cModel = new CertificateModel();
 		cModel.setSerialNum(cert.getSerialNumber().toString());
-		cModel.setIssuer(cert.getIssuerDN().toString());
-		cModel.setSubject(cert.getSubjectDN().toString());
+		cModel.setIssuerAlias(otherCertificate.getIssuerAlias());
+		//cModel.setSubject(cert.getSubjectDN().toString());
+		cModel.setEmail(otherCertificate.getEmail());
 		cModel.setTypeOfCertificate(cert.getType());
 		cModel.setAlgorithm(cert.getSigAlgName());
-		cModel.setVersion(cert.getVersion());
 		cModel.setExpDate(cert.getNotAfter());
 		cModel.setKsFileName(fileName);
 		cModel.setAlias(otherCertificate.getAlias());
@@ -302,6 +302,12 @@ public class CertificateServiceImpl implements CertificateService {
 		}
 	        
 	    return null;
+	}
+
+	public List<CertificateModel> getAllCertificates() {
+		List<CertificateModel> ret = new ArrayList<CertificateModel>();
+		certificateRepository.findAll().iterator().forEachRemaining(ret::add);
+		return ret;
 	}
 
 }
