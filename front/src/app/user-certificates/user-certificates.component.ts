@@ -1,7 +1,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Certificate } from '../model/certificate';
+import { RootCertificate } from '../model/root-certificate';
 import { CertificateModel } from '../model/certificateModel';
 import { CertificateService } from '../service/certificate.service';
 
@@ -44,7 +44,10 @@ export class UserCertificatesComponent implements OnInit {
 
 
   ngOnInit(): void {
-      this.geDesiredtData();
+      this.stateChecker = new FormGroup({
+        'dCert' : new FormControl('', [Validators.required])
+      })
+      this.getDesiredData();
   }
 
   checkCert() : string {

@@ -87,15 +87,15 @@ export class CreateCertificateComponent implements OnInit {
 
   public createOther() {
     this.issuerAlias = this.otherForm.value.issuerAlias;
-    this.commonName = this.rootForm.value.commonName;
-    this.alias = this.rootForm.value.alias;
-    this.orgName = this.rootForm.value.orgName;
-    this.orgUnit = this.rootForm.value.orgUnit;
-    this.country = this.rootForm.value.country;
-    this.email = this.rootForm.value.email;
-    this.serialNum = this.rootForm.value.serialNum;
-    this.validity = this.rootForm.value.validity;
-    this.purpose = this.rootForm.value.purpose;
+    this.commonName = this.otherForm.value.commonName;
+    this.alias = this.otherForm.value.alias;
+    this.orgName = this.otherForm.value.orgName;
+    this.orgUnit = this.otherForm.value.orgUnit;
+    this.country = this.otherForm.value.country;
+    this.email = this.otherForm.value.email;
+    this.serialNum = this.otherForm.value.serialNum;
+    this.validity = this.otherForm.value.validity;
+    this.purpose = this.otherForm.value.purpose;
     this.isCA = this.CACheck();
 
     this.otherCertificate = new OtherCertificate(this.issuerAlias, this.commonName, this.alias, this.orgName, this.orgUnit, this.country, this.email, this.serialNum,

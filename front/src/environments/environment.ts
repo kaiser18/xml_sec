@@ -10,6 +10,7 @@ export const environment = {
   getAllCertificates: 'api/certificate/getAllCertificates',
   revokeCertificate: 'api/certificate/revokeCertificate',
   isRevoked: 'api/certificate/isRevoked',
+  isDesired: 'api/certificate/isDesired'
 };
 
 /*
