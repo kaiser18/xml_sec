@@ -32,4 +32,8 @@ export class CertificateService {
   isRevoked(serialNum: string) {
     return this.http.get<boolean>(`${environment.baseUrl}/${environment.isRevoked}?serialNum=${serialNum}`);
   }
+
+  isDesired(serialNum: string) {
+    return this.http.get<boolean>(`${environment.baseUrl}/${environment.isDesired}?serialNum=${serialNum}`);
+  }
 }
