@@ -61,7 +61,7 @@ public class CertificateController {
 		return certificateService.getCertificate(serialNum);
 	}
 	
-	@RequestMapping(value = "/revokeCertificate", method = RequestMethod.POST, headers = { "content-type=application/json" })
+	@RequestMapping(value = "/revokeCertificate", method = RequestMethod.POST)
 	public ResponseEntity<?> revokeCertificate(@RequestBody String serialNum) {
 		if(serialNum == null || serialNum.equals(""))
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -72,8 +72,8 @@ public class CertificateController {
 			return ResponseEntity.status(HttpStatus.OK).body("Neuspesno.");
 	}
 		
-	@RequestMapping(value = "/isRevoked", method = RequestMethod.GET, headers = { "content-type=application/json" })
-	public ResponseEntity<Boolean> isRevoked(@RequestBody String serialNum) {
+	@RequestMapping(value = "/isRevoked", method = RequestMethod.GET)
+	public ResponseEntity<Boolean> isRevoked(String serialNum) {
 		if(serialNum == null || serialNum.equals(""))
 			return null;
 		return new ResponseEntity<>(certificateService.isRevoked(serialNum), HttpStatus.OK);
@@ -82,6 +82,16 @@ public class CertificateController {
 	@RequestMapping(value="/getAllSignatures", method = RequestMethod.GET, produces="application/json")
 	public ArrayList<String> getAllSignatures(HttpServletRequest request) {
 		return certificateService.getAllSignatures();
+	}
+	
+	@RequestMapping(value = "/getAllCertificates", method = RequestMethod.GET)
+	public List<CertificateModel> getAllCertificates(HttpServletRequest request) {
+		return certificateService.getAllCertificates();
+	}
+	
+	@RequestMapping(value = "/isVerified", method = RequestMethod.GET)
+	public boolean isVerified(@RequestBody String alias) {
+		return certificateService.isVerified(alias);
 	}
 	
 }

@@ -8,19 +8,22 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTableModule } from '@angular/material/table';
 import { CreateCertificateComponent } from './create-certificate/create-certificate.component'
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import {MatInputModule} from '@angular/material/input';
 import { MatButton, MatButtonModule } from '@angular/material/button';
+import {MatCardModule} from '@angular/material/card';
+import {MatTabsModule} from '@angular/material/tabs';
+import {MatRadioModule} from '@angular/material/radio';
+import { CertificateListComponent } from './certificate-list/certificate-list.component';
 import { UserCertificatesComponent } from './user-certificates/user-certificates.component';
-import { CertificateStateComponent } from './certificate-state/certificate-state.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CreateCertificateComponent,
     UserCertificatesComponent,
-    CertificateStateComponent
+    CertificateListComponent,
   ],
   imports: [
     BrowserModule,
@@ -31,7 +34,11 @@ import { CertificateStateComponent } from './certificate-state/certificate-state
     ReactiveFormsModule,
     HttpClientModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    FormsModule,
+    MatCardModule,
+    MatTabsModule,
+    MatRadioModule
   ],
   providers: [],
   bootstrap: [AppComponent]

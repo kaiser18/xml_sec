@@ -1,66 +1,104 @@
 <div class="container">
-    <form id="post-form" [formGroup]="postForm" (ngSumbit)="onSubmit()">
-        <mat-form-field>
-            <label>Common name: </label>
-            <input matInput id="commonName" name="commonName" formControlName="commonName" />
-        </mat-form-field>
+    <mat-card>
+        <mat-tab-group>
+            <mat-tab label="Root">
+                <form [formGroup]="rootForm" (ngSubmit)="createRoot()">
+                    <mat-form-field class="field">
+                        <input matInput name="commonName" placeholder="Common name" formControlName="commonName" />
+                    </mat-form-field>
 
-        <mat-form-field>
-            <label>Alias: </label>
-            <input matInput id="alias" name="alias" formControlName="alias"/>
-        </mat-form-field>
+                    <mat-form-field class="field">
+                        <input matInput name="alias" placeholder="Alias" formControlName="alias" />
+                    </mat-form-field>
 
-        <mat-form-field>
-            <label>Organisation name: </label>
-            <input matInput id="orgName" name="orgName" formControlName="orgName"/>
-        </mat-form-field>
+                    <mat-form-field class="field">
+                        <input matInput name="orgName" placeholder="Organisation name" formControlName="orgName" />
+                    </mat-form-field>
 
-        <mat-form-field>
-            <label>Organisation unit: </label>
-            <input matInput id="orgUnit" name="orgUnit" formControlName="orgUnit"/>
-        </mat-form-field>
+                    <mat-form-field class="field">
+                        <input matInput name="orgUnit" placeholder="Organisation unit" formControlName="orgUnit" />
+                    </mat-form-field>
 
-        <mat-form-field>
-            <label>Country: </label>
-            <input matInput id="country" name="country" formControlName="country"/>
-        </mat-form-field>
+                    <mat-form-field class="field">
+                        <input matInput name="country" placeholder="Country" formControlName="country" />
+                    </mat-form-field>
 
-        <mat-form-field>
-            <label>Email: </label>
-            <input matInput id="email" name="email" formControlName="email"/>
-        </mat-form-field>
+                    <mat-form-field class="field">
+                        <input matInput name="email" placeholder="Email" formControlName="email" />
+                    </mat-form-field>
 
-        <mat-form-field>
-            <label>Serial number: </label>
-            <input matInput id="serialNum" name="serialNum" formControlName="serialNum"/>
-        </mat-form-field>
+                    <mat-form-field class="field">
+                        <input matInput name="serailNum" placeholder="Serial number" formControlName="serialNum" />
+                    </mat-form-field>
 
-        <mat-form-field>
-            <label>Keystore name: </label>
-            <input matInput id="ksName" name="ksName" formControlName="ksName"/>
-        </mat-form-field>
+                    <mat-form-field class="field">
+                        <input matInput name="validity" placeholder="Validity" formControlName="validity" />
+                    </mat-form-field>
 
-        <mat-form-field>
-            <label>Keystore password: </label>
-            <input matInput type="password" id="ksPassword" name="ksPassword" formControlName="ksPassword"/>
-        </mat-form-field>
+                    <mat-form-field class="field">
+                        <input matInput name="purpose" placeholder="Purpose" formControlName="purpose" />
+                    </mat-form-field>
+                    <div class="button">
+                        <button mat-raised-button type="submit">Submit</button>
+                    </div>
+                </form>
+            </mat-tab>
 
-        <mat-form-field>
-            <label>Private key password: </label>
-            <input matInput type="password" id="privateKeyPassword" name="privateKeyPassword" formControlName="privateKeyPassword"/>
-        </mat-form-field>
+            <mat-tab label="Other">
+                <form [formGroup]="otherForm" (ngSubmit)="createOther()">
+                    <mat-form-field class="field">
+                        <input matInput name="issuerAlias" placeholder="Issuer alias" formControlName="issuerAlias" />
+                    </mat-form-field>
 
+                    <mat-form-field class="field">
+                        <input matInput name="commonName" placeholder="Common name" formControlName="commonName" />
+                    </mat-form-field>
 
-        <mat-form-field>
-            <label>Validity: </label>
-            <input matInput id="validity" name="validity" formControlName="validity"/>
-        </mat-form-field>
+                    <mat-form-field class="field">
+                        <input matInput name="alias" placeholder="Alias" formControlName="alias" />
+                    </mat-form-field>
 
-        <mat-form-field>
-            <label>Purpose: </label>
-            <input matInput id="purpose" name="purpose" formControlName="purpose"/>
-        </mat-form-field>
+                    <mat-form-field class="field">
+                        <input matInput name="orgName" placeholder="Organisation name" formControlName="orgName" />
+                    </mat-form-field>
 
-        <button mat-raised-button color="accent" value="submit">Submit</button>
-    </form>
+                    <mat-form-field class="field">
+                        <input matInput name="orgUnit" placeholder="Organisation unit" formControlName="orgUnit" />
+                    </mat-form-field>
+
+                    <mat-form-field class="field">
+                        <input matInput name="country" placeholder="Country" formControlName="country" />
+                    </mat-form-field>
+
+                    <mat-form-field class="field">
+                        <input matInput name="email" placeholder="Email" formControlName="email" />
+                    </mat-form-field>
+
+                    <mat-form-field class="field">
+                        <input matInput name="serailNum" placeholder="Serial number" formControlName="serialNum" />
+                    </mat-form-field>
+
+                    <mat-form-field class="field">
+                        <input matInput name="validity" placeholder="Validity" formControlName="validity" />
+                    </mat-form-field>
+
+                    <mat-form-field class="field">
+                        <input matInput name="purpose" placeholder="Purpose" formControlName="purpose" />
+                    </mat-form-field>
+
+                    <div class="ca-cont">
+                        <label for="isCA" class="ca-margin">CA: </label><br>
+                        <mat-radio-group aria-label="Select an option" formControlName="isCA">
+                            <mat-radio-button id="caYes" value="yes">Yes</mat-radio-button><br>
+                            <mat-radio-button id="caNo" value="no">No</mat-radio-button>
+                        </mat-radio-group>
+                    </div>
+                    <br>
+                    <div class="button">
+                        <button mat-raised-button type="submit">Submit</button>
+                    </div>
+                </form>
+            </mat-tab>
+        </mat-tab-group>
+    </mat-card>
 </div>

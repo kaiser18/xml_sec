@@ -27,14 +27,13 @@ public class CertificateModel {
 	@Column(unique = true)
 	@NotNull
 	private String alias;
-
+	@NotNull
+	private String privateKeyPassword;
 	@NotNull
 	private String ksFileName;
-	
 	private Date expDate;	
-	private String issuer;
-	private String subject;
-	private int version;
+	private String issuerAlias;
+	private String email;
 	private String algorithm;
 	private String typeOfCertificate;
 	
@@ -44,16 +43,16 @@ public class CertificateModel {
 	}
 
 	public CertificateModel(String serialNum, boolean isCA, String alias, String ksFileName, Date expDate,
-			String issuer, String subject, int version, String algorithm, String typeOfCertificate) {
+			String issuerAlias, String email, String algorithm, String typeOfCertificate) {
 		super();
 		this.serialNum = serialNum;
 		this.isCA = isCA;
 		this.alias = alias;
+		this.privateKeyPassword = alias;
 		this.ksFileName = ksFileName;
 		this.expDate = expDate;
-		this.issuer = issuer;
-		this.subject = subject;
-		this.version = version;
+		this.issuerAlias = issuerAlias;
+		this.email = email;
 		this.algorithm = algorithm;
 		this.typeOfCertificate = typeOfCertificate;
 	}
@@ -106,28 +105,20 @@ public class CertificateModel {
 		this.expDate = expDate;
 	}
 
-	public String getIssuer() {
-		return issuer;
+	public String getIssuerAlias() {
+		return issuerAlias;
 	}
 
-	public void setIssuer(String issuer) {
-		this.issuer = issuer;
+	public void setIssuerAlias(String issuerAlias) {
+		this.issuerAlias = issuerAlias;
 	}
 
-	public String getSubject() {
-		return subject;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setSubject(String subject) {
-		this.subject = subject;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getAlgorithm() {
@@ -145,4 +136,13 @@ public class CertificateModel {
 	public void setTypeOfCertificate(String typeOfCertificate) {
 		this.typeOfCertificate = typeOfCertificate;
 	}
+
+	public String getPrivateKeyPassword() {
+		return privateKeyPassword;
+	}
+
+	public void setPrivateKeyPassword(String privateKeyPassword) {
+		this.privateKeyPassword = privateKeyPassword;
+	}
+
 }

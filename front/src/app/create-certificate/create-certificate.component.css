@@ -4,3 +4,22 @@
     align-items: center;
     flex-direction: column;
 }
+
+.field {
+    display: flex;
+    justify-content: center;
+}
+
+.button {
+    display: flex;
+    justify-content: center;
+}
+
+.ca-cont {
+    display: flex;
+    justify-content: center;
+}
+
+.ca-margin {
+    padding-right: 5px;
+}
