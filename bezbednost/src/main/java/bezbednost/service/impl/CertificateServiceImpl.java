@@ -47,9 +47,10 @@ import bezbednost.dto.SelfSignedCertificateModel;
 import bezbednost.dto.SubjectData;
 import bezbednost.keystores.KeyStoreReader;
 import bezbednost.repository.CertificateRepository;
-import bezbednost.repository.KeyStoreRepository;
 import bezbednost.repository.RevokedCertificatesRepository;
 import bezbednost.service.CertificateService;
+
+import static bezbednost.keystores.KeyStore.*;
 
 @Service
 public class CertificateServiceImpl implements CertificateService {
@@ -59,9 +60,6 @@ public class CertificateServiceImpl implements CertificateService {
 	
 	@Autowired
 	private RevokedCertificatesRepository revokedCertificatesRepository;
-	
-	@Autowired
-	private KeyStoreRepository keyStoreRepository;
 	
 	public void generateRoot(SelfSignedCertificateModel selfSignedCertificateModel) throws Exception {
 		
@@ -74,8 +72,8 @@ public class CertificateServiceImpl implements CertificateService {
 			
 		KeyStore keyStore = KeyStore.getInstance("JKS", "SUN");
 		
-		String fileName = "root";
-		String password = keyStoreRepository.findByKsFileName(fileName).getKsPassword();
+		String fileName = ROOT_FILE;
+		String password = ROOT_PASS;
 		String alias = selfSignedCertificateModel.getAlias();
 		String pkPassword = alias;;
 		BufferedInputStream in = new BufferedInputStream(new FileInputStream(fileName+".jks"));
@@ -116,10 +114,11 @@ public class CertificateServiceImpl implements CertificateService {
 		}
 		
 		KeyStoreReader ksr = new KeyStoreReader();
+		String issuerKsFile = certificateModel.getKsFileName();
+		String issuerKsPass = getPassword(issuerKsFile);
 		String issuerPassword = certificateRepository.findByAlias(otherCertificate.getIssuerAlias()).getPrivateKeyPassword();
-		String ksIssuerPass = keyStoreRepository.findByKsFileName(certificateModel.getKsFileName()).getKsPassword();
-		IssuerData issuerData = ksr.readIssuerFromStore(certificateModel.getKsFileName()+".jks", certificateModel.getAlias(), ksIssuerPass.toCharArray(), issuerPassword.toCharArray());
-		X509Certificate certIssuer = (X509Certificate)ksr.readCertificate(certificateModel.getKsFileName() + ".jks", ksIssuerPass, otherCertificate.getIssuerAlias());
+		IssuerData issuerData = ksr.readIssuerFromStore(issuerKsFile+".jks", certificateModel.getAlias(), issuerKsPass.toCharArray(), issuerPassword.toCharArray());
+		X509Certificate certIssuer = (X509Certificate)ksr.readCertificate(issuerKsFile + ".jks", issuerKsPass, otherCertificate.getIssuerAlias());
 
 		Date today = new Date();
 		if(today.after(certIssuer.getNotAfter())) {
@@ -129,10 +128,12 @@ public class CertificateServiceImpl implements CertificateService {
 		KeyStore keyStore = KeyStore.getInstance("JKS", "SUN");
 		String fileName;
 		if(otherCertificate.isCA())
-			fileName = "inter";
+			fileName = INTER_FILE;
 		else
-			fileName = "end";
-		String password = keyStoreRepository.findByKsFileName(fileName).getKsPassword();
+			fileName = END_FILE;
+		
+		String password = getPassword(fileName);
+		
 		String alias = otherCertificate.getAlias();
 		String pkPassword = alias;
 		
@@ -164,7 +165,7 @@ public class CertificateServiceImpl implements CertificateService {
 		String issuerAlias = cm.getIssuerAlias();
 		KeyStoreReader ksr = new KeyStoreReader();
 		String fileName = cm.getKsFileName();
-		String password = keyStoreRepository.findByKsFileName(fileName).getKsPassword();
+		String password = getPassword(fileName);
 		X509Certificate cert = (X509Certificate)ksr.readCertificate(fileName + ".jks", password, alias);
 		if(alias == null || issuerAlias == null)
 			return false;
@@ -176,7 +177,8 @@ public class CertificateServiceImpl implements CertificateService {
 			}
 			CertificateModel cmI = certificateRepository.findByAlias(issuerAlias);
 			String fileNameI = cmI.getKsFileName();
-			String passwordI = keyStoreRepository.findByKsFileName(fileNameI).getKsPassword();
+			String passwordI = getPassword(fileNameI);
+			
 			X509Certificate certI = (X509Certificate)ksr.readCertificate(fileNameI + ".jks", passwordI, issuerAlias);
 			// 2. Provera potpisa
 			try {
