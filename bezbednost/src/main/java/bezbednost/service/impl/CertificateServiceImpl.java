@@ -113,6 +113,12 @@ public class CertificateServiceImpl implements CertificateService {
 			}
 		}
 		
+		try {
+			isVerified(otherCertificate.getIssuerAlias());
+		} catch (Exception e) {
+			return false;
+		}
+		
 		List<String> list = getAllSignaturesByValidity(otherCertificate.getValidity());
 		if(!list.contains(otherCertificate.getIssuerAlias()))
 			return false;
