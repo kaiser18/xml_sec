@@ -20,7 +20,7 @@ export class UserCertificatesComponent implements OnInit {
   constructor(private service : CertificateService) { }
 
   getData(){
-    return  this.service.gelAllCertificatesByEmail("root@root.com").subscribe(data =>{
+    return  this.service.gelAllCertificatesByEmail("email@email.com").subscribe(data =>{
       this.certificates = data;
     })
   }
