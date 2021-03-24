@@ -27,10 +27,10 @@ public class CertificateModel {
 	@Column(unique = true)
 	@NotNull
 	private String alias;
-
+	@NotNull
+	private String privateKeyPassword;
 	@NotNull
 	private String ksFileName;
-	
 	private Date expDate;	
 	private String issuerAlias;
 	private String email;
@@ -48,6 +48,7 @@ public class CertificateModel {
 		this.serialNum = serialNum;
 		this.isCA = isCA;
 		this.alias = alias;
+		this.privateKeyPassword = alias;
 		this.ksFileName = ksFileName;
 		this.expDate = expDate;
 		this.issuerAlias = issuerAlias;
@@ -135,4 +136,13 @@ public class CertificateModel {
 	public void setTypeOfCertificate(String typeOfCertificate) {
 		this.typeOfCertificate = typeOfCertificate;
 	}
+
+	public String getPrivateKeyPassword() {
+		return privateKeyPassword;
+	}
+
+	public void setPrivateKeyPassword(String privateKeyPassword) {
+		this.privateKeyPassword = privateKeyPassword;
+	}
+
 }

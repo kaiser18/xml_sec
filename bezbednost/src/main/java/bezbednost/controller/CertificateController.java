@@ -89,4 +89,9 @@ public class CertificateController {
 		return certificateService.getAllCertificates();
 	}
 	
+	@RequestMapping(value = "/isVerified", method = RequestMethod.GET)
+	public boolean isVerified(@RequestBody String alias) {
+		return certificateService.isVerified(alias);
+	}
+	
 }

@@ -47,6 +47,7 @@ import bezbednost.dto.SelfSignedCertificateModel;
 import bezbednost.dto.SubjectData;
 import bezbednost.keystores.KeyStoreReader;
 import bezbednost.repository.CertificateRepository;
+import bezbednost.repository.KeyStoreRepository;
 import bezbednost.repository.RevokedCertificatesRepository;
 import bezbednost.service.CertificateService;
 
@@ -59,8 +60,11 @@ public class CertificateServiceImpl implements CertificateService {
 	@Autowired
 	private RevokedCertificatesRepository revokedCertificatesRepository;
 	
+	@Autowired
+	private KeyStoreRepository keyStoreRepository;
+	
 	public void generateRoot(SelfSignedCertificateModel selfSignedCertificateModel) throws Exception {
-
+		
 		KeyPair keyPair = generateKeyPair();
 		
 		SubjectData subjectData = generateSubjectData(selfSignedCertificateModel, keyPair, Integer.parseInt(selfSignedCertificateModel.getValidity()));
@@ -70,10 +74,10 @@ public class CertificateServiceImpl implements CertificateService {
 			
 		KeyStore keyStore = KeyStore.getInstance("JKS", "SUN");
 		
-		String password = selfSignedCertificateModel.getKsPassword();
-		String pkPassword = selfSignedCertificateModel.getPrivateKeyPassword();
+		String fileName = "root";
+		String password = keyStoreRepository.findByKsFileName(fileName).getKsPassword();
 		String alias = selfSignedCertificateModel.getAlias();
-		String fileName = selfSignedCertificateModel.getKsName().trim();
+		String pkPassword = alias;;
 		BufferedInputStream in = new BufferedInputStream(new FileInputStream(fileName+".jks"));
 		keyStore.load(in, password.toCharArray());
 		keyStore.setCertificateEntry(alias, cert);
@@ -90,6 +94,7 @@ public class CertificateServiceImpl implements CertificateService {
 		cModel.setExpDate(cert.getNotAfter());
 		cModel.setKsFileName(fileName);
 		cModel.setAlias(selfSignedCertificateModel.getAlias());
+		cModel.setPrivateKeyPassword(selfSignedCertificateModel.getAlias());
 		cModel.setCA(true);
 		certificateRepository.save(cModel);
 	}
@@ -111,20 +116,25 @@ public class CertificateServiceImpl implements CertificateService {
 		}
 		
 		KeyStoreReader ksr = new KeyStoreReader();
-		IssuerData issuerData = ksr.readIssuerFromStore(certificateModel.getKsFileName()+".jks", certificateModel.getAlias(), otherCertificate.getKsName().toCharArray(), otherCertificate.getIssuerPassword().toCharArray());
-		X509Certificate certIssuer = (X509Certificate)ksr.readCertificate(certificateModel.getKsFileName() + ".jks", otherCertificate.getKsName(), otherCertificate.getIssuerAlias());
+		String issuerPassword = certificateRepository.findByAlias(otherCertificate.getIssuerAlias()).getPrivateKeyPassword();
+		String ksIssuerPass = keyStoreRepository.findByKsFileName(certificateModel.getKsFileName()).getKsPassword();
+		IssuerData issuerData = ksr.readIssuerFromStore(certificateModel.getKsFileName()+".jks", certificateModel.getAlias(), ksIssuerPass.toCharArray(), issuerPassword.toCharArray());
+		X509Certificate certIssuer = (X509Certificate)ksr.readCertificate(certificateModel.getKsFileName() + ".jks", ksIssuerPass, otherCertificate.getIssuerAlias());
 
 		Date today = new Date();
 		if(today.after(certIssuer.getNotAfter())) {
 			return false;
 		}
-		System.out.println(otherCertificate.getSerialNum());
 		X509Certificate cert = generateCertificate(subjectData, issuerData);
 		KeyStore keyStore = KeyStore.getInstance("JKS", "SUN");
-		String password = otherCertificate.getKsPassword();
-		String pkPassword = otherCertificate.getPrivateKeyPassword();
+		String fileName;
+		if(otherCertificate.isCA())
+			fileName = "inter";
+		else
+			fileName = "end";
+		String password = keyStoreRepository.findByKsFileName(fileName).getKsPassword();
 		String alias = otherCertificate.getAlias();
-		String fileName = otherCertificate.getKsName().trim();
+		String pkPassword = alias;
 		
 		BufferedInputStream in = new BufferedInputStream(new FileInputStream(fileName+".jks"));
 		keyStore.load(in, password.toCharArray());
@@ -135,13 +145,13 @@ public class CertificateServiceImpl implements CertificateService {
 		CertificateModel cModel = new CertificateModel();
 		cModel.setSerialNum(cert.getSerialNumber().toString());
 		cModel.setIssuerAlias(otherCertificate.getIssuerAlias());
-		//cModel.setSubject(cert.getSubjectDN().toString());
 		cModel.setEmail(otherCertificate.getEmail());
 		cModel.setTypeOfCertificate(cert.getType());
 		cModel.setAlgorithm(cert.getSigAlgName());
 		cModel.setExpDate(cert.getNotAfter());
 		cModel.setKsFileName(fileName);
 		cModel.setAlias(otherCertificate.getAlias());
+		cModel.setPrivateKeyPassword(otherCertificate.getAlias());
 		cModel.setCA(otherCertificate.isCA()); //ako je false onda je krajnji korisnik
 		
 		certificateRepository.save(cModel);
@@ -149,14 +159,41 @@ public class CertificateServiceImpl implements CertificateService {
 		return true;
 	}
 	
-	public Boolean isVerified(X509Certificate certificate) {
-		// 1. Da li je istekao ?
-		Date today = new Date();
-		if(today.after(certificate.getNotAfter())) {
+	public Boolean isVerified(String alias) {
+		CertificateModel cm = certificateRepository.findByAlias(alias);
+		String issuerAlias = cm.getIssuerAlias();
+		KeyStoreReader ksr = new KeyStoreReader();
+		String fileName = cm.getKsFileName();
+		String password = keyStoreRepository.findByKsFileName(fileName).getKsPassword();
+		X509Certificate cert = (X509Certificate)ksr.readCertificate(fileName + ".jks", password, alias);
+		if(alias == null || issuerAlias == null)
 			return false;
-		}		
+		Date today = new Date();
+		do {
+			// 1. Da li je istekao ?
+			if(today.after(cert.getNotAfter())) {
+				return false;
+			}
+			CertificateModel cmI = certificateRepository.findByAlias(issuerAlias);
+			String fileNameI = cmI.getKsFileName();
+			String passwordI = keyStoreRepository.findByKsFileName(fileNameI).getKsPassword();
+			X509Certificate certI = (X509Certificate)ksr.readCertificate(fileNameI + ".jks", passwordI, issuerAlias);
+			// 2. Provera potpisa
+			try {
+				cert.verify(certI.getPublicKey());
+			} catch (Exception e) {
+				return false;
+			}
+			// 3. Da li je povucen
+			if(isRevoked(cm.getSerialNum()))
+				return false;
+			cm = cmI;
+			cert = certI;
+			alias = issuerAlias;
+			issuerAlias = cm.getIssuerAlias();	
+		} while(alias != issuerAlias);
 		
-		return false;
+		return true;
 	}
 	
 	public CertificateModel getCertificate(String serialNum) {

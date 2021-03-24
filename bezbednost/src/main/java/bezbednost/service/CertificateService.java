@@ -14,5 +14,6 @@ public interface CertificateService {
 	public List<CertificateModel> getAllCertificates();
 	boolean revokeCertificate(String serialNum);
 	public boolean isRevoked(String serialNum);
+	public Boolean isVerified(String alias);
 	public ArrayList<String> getAllSignatures();
 }

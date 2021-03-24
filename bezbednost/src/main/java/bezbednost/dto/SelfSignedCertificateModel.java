@@ -9,10 +9,10 @@ public class SelfSignedCertificateModel extends Certificate {
 	}
 
 	public SelfSignedCertificateModel(String commonName,String alias, String orgName, String orgUnit, String country, String email,
-		    String serialNum, String ksName, String ksPassword, String privateKeyPassword, String validity,
+		    String serialNum, String ksName, String privateKeyPassword, String validity,
 			String aia, String cdp, String purpose) {
 		super(commonName, alias, orgName, orgUnit, country, email,
-			    serialNum, ksName, ksPassword, privateKeyPassword, validity, purpose);
+			    serialNum, ksName, privateKeyPassword, validity, purpose);
 		this.aia = aia;
 		this.cdp = cdp;
 		
