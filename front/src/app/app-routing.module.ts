@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { CertificateListComponent } from './certificate-list/certificate-list.component';
 import { CreateCertificateComponent } from './create-certificate/create-certificate.component';
 import { UserCertificatesComponent } from './user-certificates/user-certificates.component';
-import { CertificateStateComponent } from './certificate-state/certificate-state.component';
+
 
 const routes: Routes = [
   {
