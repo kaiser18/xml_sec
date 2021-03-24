@@ -12,11 +12,15 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import {MatInputModule} from '@angular/material/input';
 import { MatButton, MatButtonModule } from '@angular/material/button';
+import { UserCertificatesComponent } from './user-certificates/user-certificates.component';
+import { CertificateStateComponent } from './certificate-state/certificate-state.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    CreateCertificateComponent
+    CreateCertificateComponent,
+    UserCertificatesComponent,
+    CertificateStateComponent
   ],
   imports: [
     BrowserModule,
