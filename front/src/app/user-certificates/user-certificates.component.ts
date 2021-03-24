@@ -4,6 +4,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { RootCertificate } from '../model/root-certificate';
 import { CertificateModel } from '../model/certificateModel';
 import { CertificateService } from '../service/certificate.service';
+import { asLiteral } from '@angular/compiler/src/render3/view/util';
 
 @Component({
     selector: 'app-user-certificates',
@@ -19,35 +20,25 @@ export class UserCertificatesComponent implements OnInit {
   constructor(private service : CertificateService) { }
 
   getData(){
-    return  this.service.gelAllCertificates().subscribe(data =>{
+    return  this.service.gelAllCertificatesByEmail("root@root.com").subscribe(data =>{
       this.certificates = data;
     })
   }
 
- getDesiredData(){
-    return  this.service.gelAllCertificates().subscribe(data =>{
-      this.certificates = data;
-      this.findDesiredCert();
-    })
-  }
-
- findDesiredCert(){
-   for(let i = 0; i < this.certificates.length; i++){
-    if(this.certificates[i].serialNum == this.checkCert()){
-         this.service.isDesired(this.certificates[i].serialNum).subscribe(data =>{
-           this.map.set(this.certificates[i].serialNum, data);
-         });
-    }
-   }
-   console.log(this.map)
+checkValidity(alias: string){
+  this.service.isDesired(alias).subscribe(data =>{
+    if(data)
+      alert("Valid!");
+    else
+      alert("Invalid!");
+  });
 }
-
 
   ngOnInit(): void {
       this.stateChecker = new FormGroup({
         'dCert' : new FormControl('', [Validators.required])
       })
-      this.getDesiredData();
+      this.getData();
   }
 
   checkCert() : string {

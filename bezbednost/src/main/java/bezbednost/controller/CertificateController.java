@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import bezbednost.domain.CertificateModel;
+import bezbednost.dto.Certificate;
 import bezbednost.dto.OtherCertificate;
-import bezbednost.dto.SelfSignedCertificateModel;
 import bezbednost.service.CertificateService;
 
 @RestController
@@ -26,7 +26,7 @@ public class CertificateController {
 	private CertificateService certificateService;
 	
 	@RequestMapping(value = "/generateRoot", method = RequestMethod.POST, consumes ="application/json", produces="application/json")
-	public ResponseEntity<?> generateRoot(@RequestBody SelfSignedCertificateModel selfSignedCertificateModel) {
+	public ResponseEntity<?> generateRoot(@RequestBody Certificate selfSignedCertificateModel) {
 		if(selfSignedCertificateModel == null)
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		try {
@@ -89,8 +89,13 @@ public class CertificateController {
 		return certificateService.getAllCertificates();
 	}
 	
+	@RequestMapping(value = "/getAllCertificatesByEmail", method = RequestMethod.GET)
+	public List<CertificateModel> getAllCertificatesByEmail(String email) {
+		return certificateService.getAllCertificatesByEmail(email);
+	}
+	
 	@RequestMapping(value = "/isVerified", method = RequestMethod.GET)
-	public boolean isVerified(@RequestBody String alias) {
+	public boolean isVerified(String alias) {
 		return certificateService.isVerified(alias);
 	}
 	

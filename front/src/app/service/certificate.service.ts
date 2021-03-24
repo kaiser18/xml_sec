@@ -25,6 +25,10 @@ export class CertificateService {
     return this.http.get<CertificateModel[]>(`${environment.baseUrl}/${environment.getAllCertificates}`);
   }
 
+  gelAllCertificatesByEmail(email: string) {
+    return this.http.get<CertificateModel[]>(`${environment.baseUrl}/${environment.getAllCertificatesByEmail}?email=${email}`);
+  }
+
   revokeCertificate(serialNum: string) {
     return this.http.post(`${environment.baseUrl}/${environment.revokeCertificate}`, serialNum, {responseType: 'text'});
   }
@@ -34,6 +38,6 @@ export class CertificateService {
   }
 
   isDesired(serialNum: string) {
-    return this.http.get<boolean>(`${environment.baseUrl}/${environment.isDesired}?serialNum=${serialNum}`);
+    return this.http.get<boolean>(`${environment.baseUrl}/${environment.isDesired}?alias=${serialNum}`);
   }
 }

@@ -8,9 +8,10 @@ export const environment = {
   createRootCertificate: 'api/certificate/generateRoot',
   createOtherCertificate: 'api/certificate/generateOther',
   getAllCertificates: 'api/certificate/getAllCertificates',
+  getAllCertificatesByEmail: 'api/certificate/getAllCertificatesByEmail',
   revokeCertificate: 'api/certificate/revokeCertificate',
   isRevoked: 'api/certificate/isRevoked',
-  isDesired: 'api/certificate/isDesired'
+  isDesired: 'api/certificate/isVerified'
 };
 
 /*

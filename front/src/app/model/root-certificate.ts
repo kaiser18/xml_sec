@@ -6,12 +6,12 @@ export class RootCertificate {
     public country: string;
     public email: string;
     public serialNum: string;
-    public validity: string;
+    public validity: number;
     public purpose: string;
 
     constructor(commonName: string, alias: string, orgName: string,
         orgUnit: string, country: string, email: string,
-        serialNum: string, validity: string, purpose: string) {
+        serialNum: string, validity: number, purpose: string) {
             this.commonName = commonName;
             this.alias = alias;
             this.orgName = orgName;

@@ -43,7 +43,6 @@ import bezbednost.domain.CertificateModel;
 import bezbednost.domain.RevokedCertificate;
 import bezbednost.dto.IssuerData;
 import bezbednost.dto.OtherCertificate;
-import bezbednost.dto.SelfSignedCertificateModel;
 import bezbednost.dto.SubjectData;
 import bezbednost.keystores.KeyStoreReader;
 import bezbednost.repository.CertificateRepository;
@@ -61,11 +60,11 @@ public class CertificateServiceImpl implements CertificateService {
 	@Autowired
 	private RevokedCertificatesRepository revokedCertificatesRepository;
 	
-	public void generateRoot(SelfSignedCertificateModel selfSignedCertificateModel) throws Exception {
+	public void generateRoot(bezbednost.dto.Certificate selfSignedCertificateModel) throws Exception {
 		
 		KeyPair keyPair = generateKeyPair();
 		
-		SubjectData subjectData = generateSubjectData(selfSignedCertificateModel, keyPair, Integer.parseInt(selfSignedCertificateModel.getValidity()));
+		SubjectData subjectData = generateSubjectData(selfSignedCertificateModel, keyPair, selfSignedCertificateModel.getValidity());
 			
 		IssuerData issuerData = generateIssuerData(keyPair.getPrivate(), selfSignedCertificateModel);
 		X509Certificate cert = generateCertificate(subjectData, issuerData);
@@ -103,7 +102,7 @@ public class CertificateServiceImpl implements CertificateService {
 		}
 		KeyPair keyPair = generateKeyPair();
 		
-		SubjectData subjectData = generateSubjectData(otherCertificate, keyPair, Integer.parseInt(otherCertificate.getValidity()));
+		SubjectData subjectData = generateSubjectData(otherCertificate, keyPair, otherCertificate.getValidity());
 		
 		CertificateModel  certificateModel = new CertificateModel();
 		List<CertificateModel> lista = (List<CertificateModel>) certificateRepository.findAll();
@@ -267,7 +266,7 @@ public class CertificateServiceImpl implements CertificateService {
 	}
 	
 	
-	private IssuerData generateIssuerData(PrivateKey issuerKey, SelfSignedCertificateModel selfSignedCertificateModel) {
+	private IssuerData generateIssuerData(PrivateKey issuerKey, bezbednost.dto.Certificate selfSignedCertificateModel) {
 		X500NameBuilder builder = new X500NameBuilder(BCStyle.INSTANCE);
 		builder.addRDN(BCStyle.CN, selfSignedCertificateModel.getCommonName());
 		builder.addRDN(BCStyle.O, selfSignedCertificateModel.getOrgName());
@@ -347,6 +346,11 @@ public class CertificateServiceImpl implements CertificateService {
 		List<CertificateModel> ret = new ArrayList<CertificateModel>();
 		certificateRepository.findAll().iterator().forEachRemaining(ret::add);
 		return ret;
+	}
+
+	@Override
+	public List<CertificateModel> getAllCertificatesByEmail(String email) {
+		return certificateRepository.findAllByEmail(email);
 	}
 
 }
