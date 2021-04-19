@@ -1,0 +1,39 @@
+.card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding-top: 33px;
+}
+
+.card-header {
+    font-weight: bold;
+    color: white;
+    background-color: rgba(114, 38, 38, 0.82);
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.field {
+    display: flex;
+    justify-content: center;
+}
+
+.button {
+    display: flex;
+    justify-content: center;
+}
+
+.ca-cont {
+    display: flex;
+    justify-content: center;
+}
+
+.ca-margin {
+    padding-right: 5px;
+}

@@ -11,7 +11,9 @@ export const environment = {
   getAllCertificatesByEmail: 'api/certificate/getAllCertificatesByEmail',
   revokeCertificate: 'api/certificate/revokeCertificate',
   isRevoked: 'api/certificate/isRevoked',
-  isDesired: 'api/certificate/isVerified'
+  isDesired: 'api/certificate/isVerified',
+  registerUser: 'register'
+
 };
 
 /*

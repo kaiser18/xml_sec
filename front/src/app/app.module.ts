@@ -17,6 +17,7 @@ import {MatTabsModule} from '@angular/material/tabs';
 import {MatRadioModule} from '@angular/material/radio';
 import { CertificateListComponent } from './certificate-list/certificate-list.component';
 import { UserCertificatesComponent } from './user-certificates/user-certificates.component';
+import { RegistrationComponent } from './registration/registration.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { UserCertificatesComponent } from './user-certificates/user-certificates
     CreateCertificateComponent,
     UserCertificatesComponent,
     CertificateListComponent,
+    RegistrationComponent,
   ],
   imports: [
     BrowserModule,
