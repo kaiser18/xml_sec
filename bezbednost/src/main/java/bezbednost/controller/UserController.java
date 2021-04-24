@@ -57,31 +57,5 @@ public class UserController {
         return fooObj;
     }
 	
-	@GetMapping(value = "/findAllDerms")
-	public ResponseEntity<List<UserDTO>> getAllDerms() {
-
-		List<User> users = userService.findAllDerms();
-
-		List<UserDTO> userDTO = new ArrayList<>();
-		for (User u : users) {
-			userDTO.add(new UserDTO(u));
-		}
-
-		return new ResponseEntity<>(userDTO, HttpStatus.OK);
-	}
-	
-	@GetMapping(value = "/findAllPharms")
-	public ResponseEntity<List<UserDTO>> getAllPharms() {
-
-		List<User> users = userService.findAllPharms();
-
-		List<UserDTO> userDTO = new ArrayList<>();
-		for (User u : users) {
-			userDTO.add(new UserDTO(u));
-		}
-
-		return new ResponseEntity<>(userDTO, HttpStatus.OK);
-	}
-	
 
 }

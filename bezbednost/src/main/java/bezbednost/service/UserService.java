@@ -11,7 +11,7 @@ public interface UserService {
     User findById(Long id);
     User findByUsername(String username);
     List<User> findAll ();
-	User save(UserRequest userRequest);
+	User save(User user);
 	List<User> findAllDerms();
 	List<User> findAllPharms();
     User findUserByEmail(String email);

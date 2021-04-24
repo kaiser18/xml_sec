@@ -1,6 +1,7 @@
 package bezbednost.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +15,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,12 +23,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import bezbednost.auth.JwtAuthenticationRequest;
+import bezbednost.domain.Authority;
 import bezbednost.domain.User;
 import bezbednost.domain.UserRequest;
 import bezbednost.domain.UserTokenState;
 import bezbednost.dto.UserVerificationDTO;
 import bezbednost.exception.ResourceConflictException;
 import bezbednost.security.TokenUtils;
+import bezbednost.service.AuthorityService;
 import bezbednost.service.UserService;
 import bezbednost.service.impl.CustomUserDetailsService;
 
@@ -45,6 +49,12 @@ public class AuthenticationController {
 
     @Autowired
     private UserService userService;
+    
+    @Autowired
+    private AuthorityService authorityService;
+    
+    @Autowired
+	private PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
     public ResponseEntity<UserTokenState> createAuthenticationToken(
@@ -68,8 +78,15 @@ public class AuthenticationController {
             User existUser = this.userService.findUserByEmail(userRequest.getEmail());
             if (existUser != null)
                 throw new ResourceConflictException(userRequest.getId(), "Username already exists");
-
-            return new ResponseEntity<>(this.userService.save(userRequest), HttpStatus.CREATED);
+	            User user = new User();
+	        	user.setEmail(userRequest.getEmail());
+	        	user.setUsername(userRequest.getUsername());
+	        	user.setFirstName(userRequest.getFirstname());
+	        	user.setLastName(userRequest.getLastname());
+	        	user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+	        	List<Authority> auth = authorityService.findByname("ROLE_USER");
+	    		user.setAuthorities(auth);
+            return new ResponseEntity<>(this.userService.save(user), HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
