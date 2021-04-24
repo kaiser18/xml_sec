@@ -7,24 +7,22 @@ public class UserDTO {
 	private String firstName;
 	private String lastName;
 	private String email;
-	private String phonenumber;
 	
 	public UserDTO() {
 
 	}
 
-	public UserDTO(Long id, String username, String firstName, String lastName, String email, String phonenumber) {
+	public UserDTO(Long id, String username, String firstName, String lastName, String email) {
 		super();
 		this.id = id;
 		this.username = username;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
-		this.phonenumber = phonenumber;
 	}
 	
 	public UserDTO(User user) {
-		this(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getPhonenumber());
+		this(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getEmail());
 	}
 
 	public Long getId() {
@@ -59,13 +57,6 @@ public class UserDTO {
 		this.lastName = lastName;
 	}
 	
-	public String getPhonenumber() {
-		return phonenumber;
-	}
-
-	public void setPhonenumber(String phonenumber) {
-		this.phonenumber = phonenumber;
-	}
 	public String getEmail() {
 		return email;
 	}

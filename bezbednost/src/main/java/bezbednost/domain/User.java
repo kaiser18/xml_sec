@@ -61,10 +61,6 @@ public class User implements UserDetails {
 
     @Column(name = "email", unique=true)
     private String email;
-    
-    
-    @Column(name = "phonenumber")
-    private String phonenumber;
 
     @Column(name = "enabled")
     private boolean enabled = false;
@@ -72,9 +68,7 @@ public class User implements UserDetails {
 
     @Column(name = "last_password_reset_date")
     private Timestamp lastPasswordResetDate;
-
-	@Version
-	protected Long version;
+    
     
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_authority",
@@ -83,7 +77,6 @@ public class User implements UserDetails {
     private List<Authority> authorities;
 
     public User(){
-    	this.version = 0L;
     }
 
     public User(UserRequest userRequest) {
@@ -152,14 +145,6 @@ public class User implements UserDetails {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-    
-    public String getPhonenumber() {
-        return phonenumber;
-    }
-
-    public void setPhonenumber(String phonenumber) {
-        this.phonenumber = phonenumber;
     }
     
     @Override

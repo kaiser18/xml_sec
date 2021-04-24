@@ -15,14 +15,6 @@ public class UserRequest {
 
 	private String lastname;
 
-	private Integer stateId;
-
-	private Integer cityId;
-
-	private String address;
-
-	private String phoneNumber;
-
 	public UserRequest() {
 	}
 
@@ -35,12 +27,12 @@ public class UserRequest {
 	}
 
     public void registerValidation() throws Exception {
-		if(email.isEmpty() || password.isEmpty() || firstname.isEmpty() || lastname.isEmpty() || stateId == null || cityId == null || address.isEmpty() || password == null || password.length() < PASSWORD_LENGTH)
+		if(email.isEmpty() || password.isEmpty() || firstname.isEmpty() || lastname.isEmpty() || password == null || password.length() < PASSWORD_LENGTH)
 			throw new Exception("Validation failed");
 	}
 
 	public void updateValidation() throws Exception {
-		if(email.isEmpty() || firstname.isEmpty() || lastname.isEmpty() || cityId == null || address.isEmpty())
+		if(email.isEmpty() || firstname.isEmpty() || lastname.isEmpty())
 			throw new Exception("Validation failed");
 	}
 
@@ -84,22 +76,6 @@ public class UserRequest {
 		this.id = id;
 	}
 
-	public Integer getStateId() {
-		return stateId;
-	}
-
-	public void setStateId(Integer stateId) {
-		this.stateId = stateId;
-	}
-
-	public Integer getCityId() {
-		return cityId;
-	}
-
-	public void setCityId(Integer cityId) {
-		this.cityId = cityId;
-	}
-
 	public String getEmail() {
 		return email;
 	}
@@ -108,19 +84,4 @@ public class UserRequest {
 		this.email = email;
 	}
 
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
-
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
 }
