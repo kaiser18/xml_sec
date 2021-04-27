@@ -71,7 +71,7 @@ export class CreateCertificateComponent implements OnInit {
     this.purpose = this.rootForm.value.purpose;
 
     this.rootCertificate = new RootCertificate(this.commonName, this.alias, this.orgName, this.orgUnit, this.country, this.email, this.serialNum,
-      this.validity, this.purpose)
+      Number(this.validity), this.purpose)
 
     this.service.createRootCertificate(this.rootCertificate).subscribe(
       res => {
@@ -99,7 +99,7 @@ export class CreateCertificateComponent implements OnInit {
     this.isCA = this.CACheck();
 
     this.otherCertificate = new OtherCertificate(this.issuerAlias, this.commonName, this.alias, this.orgName, this.orgUnit, this.country, this.email, this.serialNum,
-      this.validity, this.purpose, this.isCA)
+      Number(this.validity), this.purpose, this.isCA)
 
       this.service.createOtherCertificate(this.otherCertificate).subscribe(
         res => {

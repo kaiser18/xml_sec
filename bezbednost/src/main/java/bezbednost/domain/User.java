@@ -3,6 +3,7 @@ package bezbednost.domain;
 import static javax.persistence.InheritanceType.TABLE_PER_CLASS;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -17,12 +18,14 @@ import javax.persistence.Inheritance;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Version;
 import javax.validation.constraints.Size;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -63,18 +66,24 @@ public class User implements UserDetails {
     private String email;
 
     @Column(name = "enabled")
-    private boolean enabled = false;
+    private boolean enabled = true;
     
 
     @Column(name = "last_password_reset_date")
     private Timestamp lastPasswordResetDate;
     
     
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_authority",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
-    private List<Authority> authorities;
+    @ManyToMany (fetch=FetchType.EAGER)
+    @JoinTable(
+        name = "users_roles", 
+        joinColumns = @JoinColumn(
+          name = "user_id", referencedColumnName = "id"), 
+        inverseJoinColumns = @JoinColumn(
+          name = "role_id", referencedColumnName = "id")) 
+    private Collection<Role> roles;
+
+    @OneToMany(mappedBy="user")
+    private List<PasswordResetToken> resetTokens;
 
     public User(){
     }
@@ -88,7 +97,7 @@ public class User implements UserDetails {
     }
 
 
-    public Long getId() {
+	public Long getId() {
         return id;
     }
 
@@ -130,14 +139,6 @@ public class User implements UserDetails {
         this.lastName = lastName;
     }
 
-    public void setAuthorities(List<Authority> authorities) {
-        this.authorities = authorities;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.authorities;
-    }
 
     public String getEmail() {
         return email;
@@ -186,4 +187,47 @@ public class User implements UserDetails {
     public void setPasswordForReset(String password) {
         this.password = password;
     }
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		// TODO Auto-generated method stub
+		//return null;
+		return getGrantedAuthorities(getPrivileges(getRoles()));
+	}
+	
+	private List<String> getPrivileges(Collection<Role> roles) {
+		 
+        List<String> privileges = new ArrayList<>();
+        List<Privilege> collection = new ArrayList<>();
+        for (Role role : roles) {
+            collection.addAll(role.getPrivileges());
+        }
+        for (Privilege item : collection) {
+            privileges.add(item.getName());
+        }
+        return privileges;
+    }
+
+    private List<GrantedAuthority> getGrantedAuthorities(List<String> privileges) {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        for (String privilege : privileges) {
+            authorities.add(new SimpleGrantedAuthority(privilege));
+        }
+        return authorities;
+    }
+
+	public Collection<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Collection<Role> roles) {
+		this.roles = roles;
+	}
+
+
+
+
+
+	
+	
 }

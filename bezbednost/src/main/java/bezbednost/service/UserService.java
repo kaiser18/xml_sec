@@ -12,8 +12,9 @@ public interface UserService {
     User findByUsername(String username);
     List<User> findAll ();
 	User save(User user);
-	List<User> findAllDerms();
-	List<User> findAllPharms();
     User findUserByEmail(String email);
     void verifyUser(UserVerificationDTO verificationData) throws Exception;
+    void createPasswordResetTokenForUser(User user, String token);
+	void changeUserPassword(User user, String newPassword);
+	User getUserByPasswordResetToken(String token);
 }

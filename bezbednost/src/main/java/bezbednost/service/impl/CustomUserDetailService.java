@@ -1,10 +1,17 @@
 package bezbednost.service.impl;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,7 +19,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import bezbednost.domain.Privilege;
+import bezbednost.domain.Role;
 import bezbednost.domain.User;
+import bezbednost.repository.RoleRepository;
 import bezbednost.repository.UserRepository;
 
 
@@ -21,41 +31,55 @@ import bezbednost.repository.UserRepository;
 @Service
 public class CustomUserDetailService implements UserDetailsService {
 
-	protected final Log LOGGER = LogFactory.getLog(getClass());
-
 	@Autowired
-	private UserRepository userRepository;
+    private UserRepository userRepository;
+ 
+    @Autowired
+    private RoleRepository roleRepository;
 
-	@Autowired
-	private AuthenticationManager authenticationManager;
+    @Override
+    public UserDetails loadUserByUsername(String email)
+      throws UsernameNotFoundException {
+ 
+        User user = userRepository.findUserByEmail(email);
+        if (user == null) {
+            /*return new org.springframework.security.core.userdetails.User(
+              " ", " ", true, true, true, true, 
+              getAuthorities(Arrays.asList(
+                roleRepository.findRoleByName("ROLE_USER"))));*/
+        	
+        	throw new UsernameNotFoundException(String.format("No user found with email '%s'.", email));
+        }
+        return user;
+        /*return new org.springframework.security.core.userdetails.User(
+          user.getEmail(), user.getPassword(), user.isEnabled(), true, true, 
+          true, getAuthorities(user.getRoles()));*/
+    }
 
-	// Funkcija koja na osnovu username-a iz baze vraca objekat User-a
-	@Override
-	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-		User user = userRepository.findUserByEmail(email);
-		if (user == null) {
-			throw new UsernameNotFoundException(String.format("No user found with email '%s'.", email));
-		} else {
-			return user;
-		}
-	}
+    private Collection<? extends GrantedAuthority> getAuthorities(
+      Collection<Role> roles) {
+ 
+        return getGrantedAuthorities(getPrivileges(roles));
+    }
 
-	public void changePassword(String oldPassword, String newPassword) throws Exception {
-		User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		if(currentUser == null)
-			throw new Exception("User not found");
-		String email = currentUser.getEmail();
-		if (authenticationManager != null) {
-			LOGGER.debug("Re-authenticating user '" + email + "' for password change request.");
-			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, oldPassword));
-		} else {
-			LOGGER.debug("No authentication manager set. can't change Password!");
-			return;
-		}
-		LOGGER.debug("Changing password for user '" + email + "'");
-		User user = (User) loadUserByUsername(email);
-		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-		user.setPassword(passwordEncoder.encode(newPassword));
-		userRepository.save(user);
-	}
+    private List<String> getPrivileges(Collection<Role> roles) {
+ 
+        List<String> privileges = new ArrayList<>();
+        List<Privilege> collection = new ArrayList<>();
+        for (Role role : roles) {
+            collection.addAll(role.getPrivileges());
+        }
+        for (Privilege item : collection) {
+            privileges.add(item.getName());
+        }
+        return privileges;
+    }
+
+    private List<GrantedAuthority> getGrantedAuthorities(List<String> privileges) {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        for (String privilege : privileges) {
+            authorities.add(new SimpleGrantedAuthority(privilege));
+        }
+        return authorities;
+    }
 }
