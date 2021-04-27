@@ -10,14 +10,11 @@ import bezbednost.domain.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     User findByUsername( String username );
-    
-    @Query("from User u join u.authorities a where a.id=3")
-	List<User> findAllDerms();
-    
-    @Query("from User u join u.authorities a where a.id=4")
-	List<User> findAllPharms();
-    
+       
     User findUserByEmail(String email);
+
+    @Query("from User u join u.resetTokens r where r.token=:token")
+	User findUserByToken(String token);
     
 }
 

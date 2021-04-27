@@ -21,6 +21,23 @@ public class KeyStoreController {
 	
 	public ArrayList<String> keystores = new ArrayList<>();
 
+	@RequestMapping(value = "/generateKeystore", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<?> generateKeystore() {
+		try {
+			KeyStore keyStore = KeyStore.getInstance("JKS", "SUN");
+			String fileName = "root";
+			String password = "root";
+			System.out.println(fileName);
+			System.out.println(password);
+			keyStore.load(null, password.toCharArray());
+			keyStore.store(new FileOutputStream(fileName+".jks"), password.toCharArray());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
 	
 	@RequestMapping(value = "/deleteAll", method = RequestMethod.POST)
 	@ResponseBody

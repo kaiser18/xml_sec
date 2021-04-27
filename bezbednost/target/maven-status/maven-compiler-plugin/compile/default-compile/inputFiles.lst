@@ -1,33 +1,47 @@
-A:\8. semestar\Bezbednost u sistemima elektronskog poslovanja\Vežbe\bezbednost\src\main\java\bezbednost\auth\TokenAuthenticationFilter.java
-A:\8. semestar\Bezbednost u sistemima elektronskog poslovanja\Vežbe\bezbednost\src\main\java\bezbednost\controller\AuthenticationController.java
-A:\8. semestar\Bezbednost u sistemima elektronskog poslovanja\Vežbe\bezbednost\src\main\java\bezbednost\service\impl\CustomUserDetailsService.java
-A:\8. semestar\Bezbednost u sistemima elektronskog poslovanja\Vežbe\bezbednost\src\main\java\bezbednost\auth\TokenBasedAuthentication.java
-A:\8. semestar\Bezbednost u sistemima elektronskog poslovanja\Vežbe\bezbednost\src\main\java\bezbednost\dto\UserVerificationDTO.java
-A:\8. semestar\Bezbednost u sistemima elektronskog poslovanja\Vežbe\bezbednost\src\main\java\bezbednost\service\impl\UserServiceImpl.java
-A:\8. semestar\Bezbednost u sistemima elektronskog poslovanja\Vežbe\bezbednost\src\main\java\bezbednost\dto\StateModel.java
-A:\8. semestar\Bezbednost u sistemima elektronskog poslovanja\Vežbe\bezbednost\src\main\java\bezbednost\keystores\KeyStoreReader.java
-A:\8. semestar\Bezbednost u sistemima elektronskog poslovanja\Vežbe\bezbednost\src\main\java\bezbednost\service\impl\AuthorityServiceImpl.java
-A:\8. semestar\Bezbednost u sistemima elektronskog poslovanja\Vežbe\bezbednost\src\main\java\bezbednost\BezbednostApplication.java
-A:\8. semestar\Bezbednost u sistemima elektronskog poslovanja\Vežbe\bezbednost\src\main\java\bezbednost\domain\UserTokenState.java
-A:\8. semestar\Bezbednost u sistemima elektronskog poslovanja\Vežbe\bezbednost\src\main\java\bezbednost\controller\UserController.java
-A:\8. semestar\Bezbednost u sistemima elektronskog poslovanja\Vežbe\bezbednost\src\main\java\bezbednost\domain\OtherCertificate.java
-A:\8. semestar\Bezbednost u sistemima elektronskog poslovanja\Vežbe\bezbednost\src\main\java\bezbednost\service\UserService.java
-A:\8. semestar\Bezbednost u sistemima elektronskog poslovanja\Vežbe\bezbednost\src\main\java\bezbednost\auth\RestAuthenticationEntryPoint.java
-A:\8. semestar\Bezbednost u sistemima elektronskog poslovanja\Vežbe\bezbednost\src\main\java\bezbednost\domain\UserRequest.java
-A:\8. semestar\Bezbednost u sistemima elektronskog poslovanja\Vežbe\bezbednost\src\main\java\bezbednost\repository\UserRepository.java
-A:\8. semestar\Bezbednost u sistemima elektronskog poslovanja\Vežbe\bezbednost\src\main\java\bezbednost\domain\User.java
-A:\8. semestar\Bezbednost u sistemima elektronskog poslovanja\Vežbe\bezbednost\src\main\java\bezbednost\service\impl\CustomUserDetailService.java
-A:\8. semestar\Bezbednost u sistemima elektronskog poslovanja\Vežbe\bezbednost\src\main\java\bezbednost\config\WebSecurityConfig.java
-A:\8. semestar\Bezbednost u sistemima elektronskog poslovanja\Vežbe\bezbednost\src\main\java\bezbednost\repository\AuthorityRepository.java
-A:\8. semestar\Bezbednost u sistemima elektronskog poslovanja\Vežbe\bezbednost\src\main\java\bezbednost\repository\CertificateRepository.java
-A:\8. semestar\Bezbednost u sistemima elektronskog poslovanja\Vežbe\bezbednost\src\main\java\bezbednost\domain\SelfSignedCertificateModel.java
-A:\8. semestar\Bezbednost u sistemima elektronskog poslovanja\Vežbe\bezbednost\src\main\java\bezbednost\exception\ResourceConflictException.java
-A:\8. semestar\Bezbednost u sistemima elektronskog poslovanja\Vežbe\bezbednost\src\main\java\bezbednost\security\TokenUtils.java
-A:\8. semestar\Bezbednost u sistemima elektronskog poslovanja\Vežbe\bezbednost\src\main\java\bezbednost\domain\Authority.java
-A:\8. semestar\Bezbednost u sistemima elektronskog poslovanja\Vežbe\bezbednost\src\main\java\bezbednost\dto\IssuerData.java
-A:\8. semestar\Bezbednost u sistemima elektronskog poslovanja\Vežbe\bezbednost\src\main\java\bezbednost\dto\SubjectData.java
-A:\8. semestar\Bezbednost u sistemima elektronskog poslovanja\Vežbe\bezbednost\src\main\java\bezbednost\dto\UserDTO.java
-A:\8. semestar\Bezbednost u sistemima elektronskog poslovanja\Vežbe\bezbednost\src\main\java\bezbednost\domain\CertificateModel.java
-A:\8. semestar\Bezbednost u sistemima elektronskog poslovanja\Vežbe\bezbednost\src\main\java\bezbednost\controller\CertificateController.java
-A:\8. semestar\Bezbednost u sistemima elektronskog poslovanja\Vežbe\bezbednost\src\main\java\bezbednost\auth\JwtAuthenticationRequest.java
-A:\8. semestar\Bezbednost u sistemima elektronskog poslovanja\Vežbe\bezbednost\src\main\java\bezbednost\service\AuthorityService.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\controller\CertificateController.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\domain\GenericResponse.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\security\TokenUtils.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\domain\MyAuditListener.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\SetupDataLoader.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\auth\RestAuthenticationEntryPoint.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\dto\UserDTO.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\domain\RevokedCertificate.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\dto\ResetPasswordDTO.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\repository\PrivilegeRepository.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\domain\UserRequest.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\keystores\KeyStore.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\domain\User.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\service\impl\UserServiceImpl.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\config\WebSecurityConfig.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\service\CertificateService.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\domain\Role.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\BezbednostApplication.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\config\CORSFilter.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\dto\ForgotPassDTO.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\domain\UserTokenState.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\domain\Privilege.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\exception\ResourceConflictException.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\repository\RoleRepository.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\controller\AuthenticationController.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\domain\PasswordResetToken.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\repository\UserRepository.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\dto\SubjectData.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\auth\TokenAuthenticationFilter.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\repository\CertificateRepository.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\repository\PasswordTokenRepository.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\service\impl\CertificateServiceImpl.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\auth\JwtAuthenticationRequest.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\dto\UserVerificationDTO.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\controller\KeyStoreController.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\repository\RevokedCertificatesRepository.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\controller\UserController.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\service\UserService.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\config\WebConfig.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\dto\Certificate.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\dto\OtherCertificate.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\service\impl\CustomUserDetailService.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\keystores\KeyStoreReader.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\domain\CertificateModel.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\auth\TokenBasedAuthentication.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\async\service\EmailService.java
+C:\Users\helen\Desktop\xml_sec\bezbednost\src\main\java\bezbednost\dto\IssuerData.java
