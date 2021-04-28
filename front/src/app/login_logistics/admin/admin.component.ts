@@ -28,7 +28,7 @@ export class AdminComponent implements OnInit {
     }
 
     get isAdmin() {
-        return this.user && this.user.authorities[0].authority === 'ROLE_ADMIN';
+        return this.user && this.user.roles[0].name === 'ROLE_ADMIN';
     }
 
     logout() {

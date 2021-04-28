@@ -41,7 +41,7 @@ public class SetupDataLoader implements
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
  
-    	alreadySetup = true;
+    	//alreadySetup = true;
         if (alreadySetup)
             return;
         Privilege readCertPrivilege
@@ -64,7 +64,7 @@ public class SetupDataLoader implements
         createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
         createRoleIfNotFound("ROLE_USER", Arrays.asList(createCertPrivilege));
 
-        Role adminRole = roleRepository.findRoleByName("ROLE_ADMIN");
+        Role adminRole = roleRepository.findRoleByName("ROLE_ADMIN"); 
         User user = new User();
         user.setFirstName("Test");
         user.setLastName("Test");
@@ -73,6 +73,16 @@ public class SetupDataLoader implements
         user.setRoles(Arrays.asList(adminRole));
         user.setEnabled(true);
         userRepository.save(user);
+        
+        Role userRole = roleRepository.findRoleByName("ROLE_USER");
+        User u = new User();
+        u.setFirstName("Test");
+        u.setLastName("Test");
+        u.setPassword(passwordEncoder.encode("test"));
+        u.setEmail("ttest@test.com");
+        u.setRoles(Arrays.asList(userRole));
+        u.setEnabled(true);
+        userRepository.save(u);
 
         alreadySetup = true;
     }
