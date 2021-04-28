@@ -10,8 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -32,7 +31,7 @@ public class ConfirmationToken {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdDate;
 	
-	@OneToMany(targetEntity = User.class, fetch = FetchType.EAGER)
+	@ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER)
 	private User user;
 	
 	private Date expiryDate;
