@@ -110,9 +110,10 @@ public class AuthenticationController {
 	        	user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
 	        	user.setRoles(Arrays.asList(roleRepository.findRoleByName("ROLE_USER")));
 	        	
+	        	this.userService.save(user);
 	        	ConfirmationToken token = userService.createConfirmationToken(user);
 	        	emailService.sendConfirmationEmail(user, token.getConfirmationToken(), userRequest.getClientURI());
-            return new ResponseEntity<>(this.userService.save(user), HttpStatus.CREATED);
+            return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
