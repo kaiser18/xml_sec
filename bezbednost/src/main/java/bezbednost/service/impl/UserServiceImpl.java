@@ -1,5 +1,6 @@
 package bezbednost.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import bezbednost.domain.*;
 import bezbednost.dto.UserVerificationDTO;
+import bezbednost.repository.ConfirmationTokenRepository;
 import bezbednost.repository.PasswordTokenRepository;
 import bezbednost.repository.UserRepository;
 import bezbednost.service.UserService;
@@ -26,6 +28,9 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private ConfirmationTokenRepository confirmationTokenRepository;
 
 	@Override
 	public User findByUsername(String username) throws UsernameNotFoundException {
@@ -53,9 +58,29 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void verifyUser(UserVerificationDTO verificationData) throws Exception {
-		// TODO Auto-generated method stub
+	public boolean verifyUser(String token) throws Exception {
+		ConfirmationToken confirmationToken = confirmationTokenRepository.findByConfirmationToken(token);
+		if (confirmationToken == null || confirmationToken.getExpiryDate().before(new Date(System.currentTimeMillis()))) {
+			throw new Exception("Token is not valid!");
+		}
 		
+		User user = userRepository.getOne(confirmationToken.getUser().getId());
+		if (user == null) {
+			return false;
+		}
+		
+		user.setEnabled(true);
+		userRepository.save(user);
+		
+		confirmationTokenRepository.delete(confirmationToken);
+		
+		return true;
+	}
+	
+	public ConfirmationToken createConfirmationToken(User user) {
+		ConfirmationToken confirmationToken = new ConfirmationToken(user);
+		confirmationTokenRepository.save(confirmationToken);
+		return confirmationToken;
 	}
 	
 	public void createPasswordResetTokenForUser(User user, String token) {

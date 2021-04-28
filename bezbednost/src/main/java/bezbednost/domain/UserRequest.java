@@ -14,6 +14,8 @@ public class UserRequest {
 	private String firstname;
 
 	private String lastname;
+	
+	private String clientURI;
 
 	public UserRequest() {
 	}
@@ -82,6 +84,14 @@ public class UserRequest {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getClientURI() {
+		return clientURI;
+	}
+
+	public void setClientURI(String clientURI) {
+		this.clientURI = clientURI;
 	}
 
 }
