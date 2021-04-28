@@ -147,7 +147,7 @@ public class AuthenticationController {
         SecurityContextHolder.clearContext();
     }
 
-    @GetMapping("/getRole")
+    @GetMapping("/getRole") 
     public ResponseEntity<String> getRole() {
         if (SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_DERM"))) {

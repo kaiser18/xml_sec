@@ -13,7 +13,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
        
     User findUserByEmail(String email);
 
-    @Query("from User u join u.resetTokens r where r.token=:token")
+    @Query("from User u join u.resetTokens r where r.token=?1")
 	User findUserByToken(String token);
     
 }
