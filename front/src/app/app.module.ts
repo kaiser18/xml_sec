@@ -22,6 +22,7 @@ import { HomeComponent } from './login_logistics/home/home.component';
 import { MainHomepageComponent } from './login_logistics/main-homepage/main-homepage.component';
 import { BasicAuthInterceptor, ErrorInterceptor } from './login_logistics/_helpers';
 import { AdminComponent } from './login_logistics/admin/admin.component';
+import { RegisterComponent } from './login_logistics/register/register.component';
 
 
 @NgModule({
@@ -34,6 +35,7 @@ import { AdminComponent } from './login_logistics/admin/admin.component';
     HomeComponent,
     MainHomepageComponent,
     AdminComponent,
+    RegisterComponent,
   ],
   imports: [
     BrowserModule,

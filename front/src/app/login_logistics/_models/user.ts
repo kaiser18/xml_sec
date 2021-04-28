@@ -12,4 +12,5 @@ export class User {
     authorities: Array<any>;
     //authority: string;
     public authority : Role;
+
 }
