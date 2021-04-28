@@ -3,6 +3,8 @@ package bezbednost.domain;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 
+import bezbednost.validation.ValidPassword;
+
 public class UserRequest {
 	private final int PASSWORD_LENGTH = 6;
 
@@ -14,6 +16,7 @@ public class UserRequest {
 	@Email(message="Email is not in the correct form.")
 	private String email;
 
+	@ValidPassword
 	private String password;
 
 	@Size(min=1, max=50, message="First name has to be min 1 and max 50 characters.")

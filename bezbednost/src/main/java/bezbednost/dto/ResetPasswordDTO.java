@@ -1,11 +1,14 @@
 package bezbednost.dto;
 
+import bezbednost.validation.ValidPassword;
+
 public class ResetPasswordDTO {
     private  String token;
 
-   // @ValidPassword
+    @ValidPassword
     private String newPassword;
 
+    @ValidPassword
     private String confirmPassword;
     
 	public ResetPasswordDTO(String token, String newPassword, String confirmPassword) {
