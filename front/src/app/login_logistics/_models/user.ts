@@ -9,8 +9,8 @@ export class User {
     email: string;
     authdata?: string;
     accessToken?: string;
-    authorities: Array<any>;
+    roles: Array<any>;
     //authority: string;
-    public authority : Role;
+    public name : Role;
 
 }

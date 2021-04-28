@@ -32,7 +32,7 @@ export class AuthenticationService {
                 response.authdata = response.accessToken;
                 localStorage.setItem('user', JSON.stringify(response.user));
                 this.userSubject.next(response.user);
-                //console.log('LOGIN---->', response.authdata);
+                console.log('LOGIN---->', response);
                 return response;
             }));
     }
