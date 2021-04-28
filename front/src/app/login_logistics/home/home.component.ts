@@ -23,7 +23,12 @@ export class HomeComponent {
     }
 
     ngOnInit() {
+        //console.log('ROLE CHECKER  --->', this.user.authorities[0].authority);
 
+    }
+
+    get isAdmin() {
+        return this.user && this.user.authorities[0].authority === 'ROLE_ADMIN';
     }
 
     logout() {

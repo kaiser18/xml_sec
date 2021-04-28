@@ -29,10 +29,10 @@ export class AuthenticationService {
         return this.http.post<any>(`${environment.apiUrl}`, { email, password })
             .pipe(map(response => {
                 // store user details and basic auth credentials in local storage to keep user logged in between page refreshes
-                response.authdata = window.btoa(response.accessToken);
+                response.authdata = response.accessToken;
                 localStorage.setItem('user', JSON.stringify(response.user));
                 this.userSubject.next(response.user);
-                //console.log('LOGIN---->', response.user);
+                //console.log('LOGIN---->', response.authdata);
                 return response;
             }));
     }

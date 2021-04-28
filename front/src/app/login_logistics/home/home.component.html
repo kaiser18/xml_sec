@@ -1,9 +1,12 @@
+
+<html class="mat-typography">
 <head>
     <link href="//netdna.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" />
 </head>
 <nav class="navbar navbar-expand navbar-dark bg-dark" *ngIf="user">
     <div class="navbar-nav">
         <a class="nav-item nav-link" routerLink="/Home">Home</a>
+        <a class="nav-item nav-link" routerLink="/Home/admin" *ngIf='isAdmin'>Admin only page</a>
         <a class="nav-item nav-link" (click)="logout()">Logout</a>
     </div>
 </nav>
@@ -19,3 +22,4 @@
         </ul>
     </div>
 </div>
+</html>

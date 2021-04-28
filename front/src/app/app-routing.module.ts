@@ -7,6 +7,8 @@ import { LoginComponent } from './login_logistics/login/login.component';
 import { HomeComponent } from './login_logistics/home/home.component';
 import { MainHomepageComponent } from './login_logistics/main-homepage/main-homepage.component';
 import { AuthGuard } from '../app/login_logistics/_helpers';
+import { AdminComponent } from './login_logistics/admin/admin.component';
+import { Role } from './login_logistics/_models';
 
 const routes: Routes = [
   {
@@ -37,7 +39,14 @@ const routes: Routes = [
   {
     path: "Home",
     component: HomeComponent, canActivate: [AuthGuard]
-  }
+  },
+
+  {
+        path: 'Home/admin',
+        component: AdminComponent,
+        canActivate: [AuthGuard],
+        data: { roles: [Role.ROLE_ADMIN] }
+    }
 
 ];
 
