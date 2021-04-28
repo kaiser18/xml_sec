@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import bezbednost.async.service.EmailService;
 import bezbednost.auth.JwtAuthenticationRequest;
+import bezbednost.domain.ConfirmationToken;
 import bezbednost.domain.GenericResponse;
 import bezbednost.domain.PasswordResetToken;
 import bezbednost.domain.Role;
@@ -107,6 +108,9 @@ public class AuthenticationController {
 	        	user.setLastName(userRequest.getLastname());
 	        	user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
 	        	user.setRoles(Arrays.asList(roleRepository.findRoleByName("ROLE_USER")));
+	        	
+	        	ConfirmationToken token = userService.createConfirmationToken(user);
+	        	emailService.sendConfirmationEmail(user, token.getConfirmationToken(), userRequest.getClientURI());
             return new ResponseEntity<>(this.userService.save(user), HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -114,9 +118,9 @@ public class AuthenticationController {
     }
 
     @PostMapping("/verify")
-    public ResponseEntity<Boolean> verifyUser(@RequestBody UserVerificationDTO verificationData) {
+    public ResponseEntity<Boolean> verifyUser(@RequestBody String token) {
         try {
-            this.userService.verifyUser(verificationData);
+            this.userService.verifyUser(token);
             return new ResponseEntity<>(true, HttpStatus.CREATED);
         } catch (Exception e) {
             System.out.println(e.getMessage());
