@@ -1,0 +1,21 @@
+<head>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<nav class="navbar navbar-expand navbar-dark bg-dark" *ngIf="user">
+    <div class="navbar-nav">
+        <a class="nav-item nav-link" routerLink="/Home">Home</a>
+        <a class="nav-item nav-link" (click)="logout()">Logout</a>
+    </div>
+</nav>
+<div class="card mt-4">
+    <h2 class="card-header">{{user.firstName}} 😏 </h2>
+    <div class="card-body">
+        <div *ngIf="loading" class="spinner-border spinner-border-sm"></div>
+        <ul *ngIf="user">
+            <li><b><i>Name:</i></b> {{user.firstName}}</li>
+            <li><b><i>Surname:</i></b> {{user.lastName}}</li>
+            <li><b><i>Username:</i></b> {{user.username}}</li>
+            <li><b><i>Email:</i></b> {{user.email}}</li>
+        </ul>
+    </div>
+</div>
