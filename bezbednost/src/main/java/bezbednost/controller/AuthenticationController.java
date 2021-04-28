@@ -95,9 +95,10 @@ public class AuthenticationController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> addUser(@RequestBody UserRequest userRequest) {
+    public ResponseEntity<?> addUser(@Valid @RequestBody UserRequest userRequest) {
+    	System.out.println("lskjdflsjfsjsfdl");
         try {
-            userRequest.registerValidation();
+            
             User existUser = this.userService.findUserByEmail(userRequest.getEmail());
             if (existUser != null)
                 throw new ResourceConflictException(userRequest.getId(), "Username already exists");
@@ -151,7 +152,7 @@ public class AuthenticationController {
         SecurityContextHolder.clearContext();
     }
 
-    @GetMapping("/getRole")
+    @GetMapping("/getRole") 
     public ResponseEntity<String> getRole() {
         if (SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_DERM"))) {
@@ -182,7 +183,7 @@ public class AuthenticationController {
     }
     
     @PostMapping("/resetPassword")
-    public ResponseEntity<?> resetPassword(HttpServletRequest request, 
+    public ResponseEntity<?> resetPassword(HttpServletRequest request, @Valid
     		  @RequestBody ForgotPassDTO forgotPassDto) throws Exception {
     	User user = userService.findUserByEmail(forgotPassDto.getEmail());
     	
@@ -198,7 +199,7 @@ public class AuthenticationController {
     }
     
     @PostMapping("/changePassword")
-    public ResponseEntity<?> showChangePasswordPage(@RequestBody ResetPasswordDTO passwordDto) {
+    public ResponseEntity<?> showChangePasswordPage(@Valid @RequestBody ResetPasswordDTO passwordDto) {
     	System.out.println("usoooo");
     	System.out.println(passwordDto.getConfirmPassword());
     	System.out.println(passwordDto.getNewPassword());

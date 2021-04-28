@@ -41,17 +41,28 @@ public class SetupDataLoader implements
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
  
+    	alreadySetup = true;
         if (alreadySetup)
             return;
-        Privilege readPrivilege
-          = createPrivilegeIfNotFound("READ_PRIVILEGE");
-        Privilege writePrivilege
-          = createPrivilegeIfNotFound("WRITE_PRIVILEGE");
+        Privilege readCertPrivilege
+          = createPrivilegeIfNotFound("READ_CERT_PRIVILEGE");
+        Privilege readAllCertPrivilege
+        = createPrivilegeIfNotFound("READ_ALL_CERT_PRIVILEGE");
+        Privilege readAllSignPrivilege
+        = createPrivilegeIfNotFound("READ_ALL_SIGN_PRIVILEGE");
+        Privilege createCertPrivilege
+          = createPrivilegeIfNotFound("CREATE_CERT_PRIVILEGE");
+        Privilege revokeCertPrivilege
+        = createPrivilegeIfNotFound("REVOKE_CERT_PRIVILEGE");
+        Privilege genKeystorePrivilege
+        = createPrivilegeIfNotFound("GENERATE_KEYSTORE_PRIVILEGE");
+        Privilege deleteKeystorePrivilege
+        = createPrivilegeIfNotFound("DELETE_KEYSTORE_PRIVILEGE");
  
         List<Privilege> adminPrivileges = Arrays.asList(
-          readPrivilege, writePrivilege);        
-        createRoleIfNotFound("ROLE_ADMIN", Arrays.asList(readPrivilege));
-        createRoleIfNotFound("ROLE_USER", Arrays.asList(readPrivilege));
+        		readCertPrivilege, createCertPrivilege, readAllCertPrivilege, readAllSignPrivilege, createCertPrivilege, revokeCertPrivilege, genKeystorePrivilege, deleteKeystorePrivilege);
+        createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
+        createRoleIfNotFound("ROLE_USER", Arrays.asList(createCertPrivilege));
 
         Role adminRole = roleRepository.findRoleByName("ROLE_ADMIN");
         User user = new User();

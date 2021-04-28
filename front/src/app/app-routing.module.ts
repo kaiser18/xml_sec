@@ -15,10 +15,11 @@ import { AdminComponent } from './login_logistics/admin/admin.component';
 import { Role } from './login_logistics/_models';
 import { VerifyAccountComponent } from './verify-account/verify-account.component';
 
+
 const routes: Routes = [
   {
     path: "createCertificate",
-    component: CreateCertificateComponent 
+    component: CreateCertificateComponent
     },
 
   {

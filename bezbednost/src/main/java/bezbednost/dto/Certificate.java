@@ -1,5 +1,7 @@
 package bezbednost.dto;
 
+import javax.validation.constraints.Email;
+
 public class Certificate {
 	private String alias;
 	private String privateKeyPassword;
@@ -7,6 +9,7 @@ public class Certificate {
 	private String orgName;
 	private String orgUnit;
 	private String country;
+	@Email(message="Email is not in the correct format.")
 	private String email;
 	private String serialNum;
 	public int validity;

@@ -1,0 +1,9 @@
+.card-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-style: italic;
+    font-weight: bold;
+    color: #0c5460;
+}

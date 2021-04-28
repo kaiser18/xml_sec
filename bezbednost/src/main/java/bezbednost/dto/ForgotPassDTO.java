@@ -1,6 +1,9 @@
 package bezbednost.dto;
 
+import javax.validation.constraints.Email;
+
 public class ForgotPassDTO {
+	@Email(message="email is not in the correct form")
 	private String email;
 	private String clientURI;
 	public String getEmail() {
