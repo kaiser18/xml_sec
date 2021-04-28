@@ -90,6 +90,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.addFilterBefore(new TokenAuthenticationFilter(tokenUtils, jwtUserDetailsService),
 						BasicAuthenticationFilter.class);
 				http.csrf().disable();
+				http
+		          .headers()
+		          .xssProtection()
+		          .and()
+		          .contentSecurityPolicy("script-src 'self'");
 
 	}  
 	
@@ -99,10 +104,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override 
 	public void configure(WebSecurity web) throws Exception {
 		// TokenAuthenticationFilter ce ignorisati sve ispod navedene putanje
-		web.ignoring().antMatchers(HttpMethod.POST, "/auth/login", "/auth/logout", "/auth/signup","/api/keystore/deleteAll", "/api/certificate/generateOther", 
-				"/api/certificate/revokeCertificate", "/auth/resetPassword", "/auth/changePassword", "/api/keystore/generateKeystore");
+		web.ignoring().antMatchers(HttpMethod.POST, "/auth/login", "/auth/logout", "/auth/signup",
+				"/auth/resetPassword", "/auth/changePassword");
 		web.ignoring().antMatchers(HttpMethod.GET, "/", "/webjars/**", "/favicon.ico", "/**/*.png", "/**/*.css", "/**/*.js", "/**/*.woff2",
-				"/**/*.woff", "/**/*.html", "/*.html", "/api/**", "/static/passwordReset.html");
+				"/**/*.woff", "/**/*.html", "/*.html", "/static/passwordReset.html");
 	}
 	
 
