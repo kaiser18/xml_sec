@@ -6,8 +6,6 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
 import { HelloComponent } from './hello/hello.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { UserCertificatesComponent } from './user-certificates/user-certificates.component';
-<<<<<<< Updated upstream
-=======
 import { RegisterComponent } from './login_logistics/register/register.component';
 import { LoginComponent } from './login_logistics/login/login.component';
 import { HomeComponent } from './login_logistics/home/home.component';
@@ -16,43 +14,17 @@ import { AuthGuard } from '../app/login_logistics/_helpers';
 import { AdminComponent } from './login_logistics/admin/admin.component';
 import { Role } from './login_logistics/_models';
 import { VerifyAccountComponent } from './verify-account/verify-account.component';
->>>>>>> Stashed changes
 
 const routes: Routes = [
   {
     path: "createCertificate",
-<<<<<<< Updated upstream
     component: CreateCertificateComponent 
     },
-=======
-    component: CreateCertificateComponent
-  },
->>>>>>> Stashed changes
 
   {
     path: "userCertificates",
     component: UserCertificatesComponent
 
-<<<<<<< Updated upstream
-    },
-    {
-      path: "certificateList",
-      component: CertificateListComponent
-    },
-    {
-      path: "forgotPassword",
-      component: ForgotPasswordComponent
-    },
-    {
-      path: "resetPassword",
-      component: ResetPasswordComponent
-    },
-    {
-      path: "hello",
-      component: HelloComponent
-      
-    }
-=======
   },
   {
     path: "certificateList",
@@ -90,7 +62,6 @@ const routes: Routes = [
     component: VerifyAccountComponent
   }
 
->>>>>>> Stashed changes
 
 ];
 
