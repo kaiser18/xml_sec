@@ -1,0 +1,24 @@
+<html class="mat-typography">
+<head>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<nav class="navbar navbar-expand navbar-dark bg-dark" *ngIf="user">
+    <div class="navbar-nav">
+        <a class="nav-item nav-link" routerLink="/Home">Home</a>
+        <a class="nav-item nav-link" routerLink="/Home/admin" *ngIf='isAdmin'>Admin only page</a>
+        <a class="nav-item nav-link" (click)="logout()">Logout</a>
+    </div>
+</nav>
+<div class="card mt-4">
+    <h2 class="card-header">{{user.firstName}} is Admin 🤩</h2>
+    <div class="card-body">
+        <div *ngIf="loading" class="spinner-border spinner-border-sm"></div>
+        <ul *ngIf="user">
+            <li><b><i>Username:</i></b> {{user.username}}</li>
+            <li><b><i>Email:</i></b> {{user.email}}</li>
+            <li><b><i>Username:</i></b> {{user.username}}</li>
+            <li><b><i>Role:</i></b> <b style="color:Orange;">  ADMIN</b></li>
+        </ul>
+    </div>
+</div>
+</html>
