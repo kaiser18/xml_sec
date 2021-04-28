@@ -43,4 +43,27 @@ public class EmailService {
 			return;
 		} 
 	}
+	
+	@Async
+	public void sendConfirmationEmail(User user, String token, String clientURI) throws MailException {
+		try {
+			MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+			mimeMessage.setContent("<p>Click this link to complete your registration: <a href=\""+clientURI+"?token=" + token
+					+ "\">Verify</a></p>", "text/html");
+			MimeMessageHelper mail = new MimeMessageHelper(mimeMessage, "utf-8");
+			mail.setTo(user.getEmail());
+			
+			if (env.getProperty("spring.mail.username") == null) {
+				return;
+			}
+			mail.setFrom(env.getProperty("spring.mail.username"));
+			mail.setSubject("Verify your account");
+			
+			javaMailSender.send(mimeMessage);
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+			return;
+		}
+		
+	}
 }

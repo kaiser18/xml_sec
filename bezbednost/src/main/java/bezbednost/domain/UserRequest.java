@@ -24,6 +24,8 @@ public class UserRequest {
 
 	@Size(min=1, max=50, message="Last name has to be min 1 and max 50 characters.")
 	private String lastname;
+	
+	private String clientURI;
 
 	public UserRequest() {
 	}
@@ -92,6 +94,14 @@ public class UserRequest {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getClientURI() {
+		return clientURI;
+	}
+
+	public void setClientURI(String clientURI) {
+		this.clientURI = clientURI;
 	}
 
 }
