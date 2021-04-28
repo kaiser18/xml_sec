@@ -27,6 +27,7 @@ export class RegisterComponent implements OnInit {
   username: string;
   email: string;
   password: string;
+  clientURI: string;
 
 
   constructor(private service : RegistrationService) { }
@@ -47,8 +48,9 @@ export class RegisterComponent implements OnInit {
     this.username = this.registerForm.value.username;
     this.email = this.registerForm.value.email;
     this.password = this.registerForm.value.password;
+    this.clientURI = 'http://localhost:4200/register/';
 
-    this.user = new New(this.firstname, this.lastname, this.username, this.email, this.password)
+    this.user = new New(this.firstname, this.lastname, this.username, this.email, this.password, this.clientURI)
 
     this.service.createUser(this.user).subscribe(
       res => {
