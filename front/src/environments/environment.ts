@@ -13,7 +13,8 @@ export const environment = {
   isRevoked: 'api/certificate/isRevoked',
   isDesired: 'api/certificate/isVerified',
   forgotPassword: 'auth/resetPassword',
-  resetPassword: 'auth/changePassword'
+  resetPassword: 'auth/changePassword',
+  verify: 'auth/verify'
 };
 
 /*
