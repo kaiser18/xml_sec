@@ -18,7 +18,7 @@ export class CertificateService {
   }
   _envUrl: any;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) { } 
 
   createRootCertificate(data: RootCertificate) {
     return this.http.post(`${environment.baseUrl}/${environment.createRootCertificate}`, data, {responseType: 'text'});

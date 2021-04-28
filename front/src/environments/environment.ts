@@ -15,7 +15,8 @@ export const environment = {
   apiUrl: 'http://localhost:8081/auth/login',
   createUser: 'auth/signup',
   forgotPassword: 'auth/resetPassword',
-  resetPassword: 'auth/changePassword'
+  resetPassword: 'auth/changePassword',
+  verify: 'auth/verify'
 };
 
 /*

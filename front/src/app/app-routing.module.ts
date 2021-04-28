@@ -13,6 +13,8 @@ import { MainHomepageComponent } from './login_logistics/main-homepage/main-home
 import { AuthGuard } from '../app/login_logistics/_helpers';
 import { AdminComponent } from './login_logistics/admin/admin.component';
 import { Role } from './login_logistics/_models';
+import { VerifyAccountComponent } from './verify-account/verify-account.component';
+
 
 const routes: Routes = [
   {
@@ -20,11 +22,11 @@ const routes: Routes = [
     component: CreateCertificateComponent
     },
 
-    {
-      path: "userCertificates",
-      component: UserCertificatesComponent
+  {
+    path: "userCertificates",
+    component: UserCertificatesComponent
 
-    },
+  },
   {
     path: "certificateList",
     component: CertificateListComponent
@@ -40,10 +42,10 @@ const routes: Routes = [
     component: LoginComponent
   },
 
-    {
-      path: "HomeX",
-      component: MainHomepageComponent
-    },
+  {
+    path: "HomeX",
+    component: MainHomepageComponent
+  },
 
   {
     path: "Home",
@@ -51,11 +53,16 @@ const routes: Routes = [
   },
 
   {
-        path: 'Home/admin',
-        component: AdminComponent,
-        canActivate: [AuthGuard],
-        data: { roles: [Role.ROLE_ADMIN] }
-    }
+    path: 'Home/admin',
+    component: AdminComponent,
+    canActivate: [AuthGuard],
+    data: { roles: [Role.ROLE_ADMIN] }
+  },
+  {
+    path: "verify",
+    component: VerifyAccountComponent
+  }
+
 
 ];
 

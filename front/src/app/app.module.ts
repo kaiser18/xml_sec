@@ -26,6 +26,7 @@ import { RegisterComponent } from './login_logistics/register/register.component
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { HelloComponent } from './hello/hello.component';
+import { VerifyAccountComponent } from './verify-account/verify-account.component';
 
 
 @NgModule({
@@ -42,6 +43,7 @@ import { HelloComponent } from './hello/hello.component';
     ForgotPasswordComponent,
     ResetPasswordComponent,
     HelloComponent,
+    VerifyAccountComponent,
   ],
   imports: [
     BrowserModule,
