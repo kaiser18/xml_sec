@@ -19,7 +19,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import bezbednost.auth.RestAuthenticationEntryPoint;
 import bezbednost.auth.TokenAuthenticationFilter;
 import bezbednost.security.TokenUtils;
-import bezbednost.service.impl.CustomUserDetailsService;
+import bezbednost.service.impl.CustomUserDetailService;
 
 
 @EnableWebSecurity
@@ -36,7 +36,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	// Servis koji se koristi za citanje podataka o korisnicima aplikacije
 	@Autowired
-	private CustomUserDetailsService jwtUserDetailsService;
+	private CustomUserDetailService jwtUserDetailsService;
 
 	// Handler za vracanje 401 kada klijent sa neodogovarajucim korisnickim imenom i lozinkom pokusa da pristupi resursu
 	@Autowired
@@ -90,18 +90,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.addFilterBefore(new TokenAuthenticationFilter(tokenUtils, jwtUserDetailsService),
 						BasicAuthenticationFilter.class);
 				http.csrf().disable();
+				http
+		          .headers()
+		          .xssProtection()
+		          .and()
+		          .contentSecurityPolicy("script-src 'self'");
 
 	}  
 	
 	
 
 	// Generalna bezbednost aplikacije
-	@Override
+	@Override 
 	public void configure(WebSecurity web) throws Exception {
 		// TokenAuthenticationFilter ce ignorisati sve ispod navedene putanje
-		web.ignoring().antMatchers(HttpMethod.POST, "/auth/login", "/auth/logout", "/auth/signup", "/api/certificate/generateRoot", "/api/keystore/deleteAll", "/api/certificate/generateOther", "/api/certificate/revokeCertificate");
+		web.ignoring().antMatchers(HttpMethod.POST, "/auth/login", "/auth/logout", "/auth/signup",
+				"/auth/resetPassword", "/auth/changePassword");
 		web.ignoring().antMatchers(HttpMethod.GET, "/", "/webjars/**", "/favicon.ico", "/**/*.png", "/**/*.css", "/**/*.js", "/**/*.woff2",
-				"/**/*.woff", "/**/*.html", "/*.html", "/api/**");
+				"/**/*.woff", "/**/*.html", "/*.html", "/static/passwordReset.html");
 	}
 	
 

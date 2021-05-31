@@ -5,13 +5,20 @@ import { environment } from 'src/environments/environment';
 import { RootCertificate } from '../model/root-certificate';
 import { OtherCertificate } from '../model/other-certificate';
 import { CertificateModel } from '../model/certificateModel';
+import { ForgotPasswordDTO } from '../model/forgot-password-dto';
+import { ResetPasswordDTO } from '../model/reset-password-dto';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CertificateService {
+  _http: any;
+  createCompleteRoute(route: string, urlAddress: any): any {
+    throw new Error('Method not implemented.');
+  }
+  _envUrl: any;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) { } 
 
   createRootCertificate(data: RootCertificate) {
     return this.http.post(`${environment.baseUrl}/${environment.createRootCertificate}`, data, {responseType: 'text'});
@@ -28,7 +35,7 @@ export class CertificateService {
   gelAllCertificatesByEmail(email: string) {
     return this.http.get<CertificateModel[]>(`${environment.baseUrl}/${environment.getAllCertificatesByEmail}?email=${email}`);
   }
-
+  
   revokeCertificate(serialNum: string) {
     return this.http.post(`${environment.baseUrl}/${environment.revokeCertificate}`, serialNum, {responseType: 'text'});
   }
@@ -39,5 +46,13 @@ export class CertificateService {
 
   isDesired(serialNum: string) {
     return this.http.get<boolean>(`${environment.baseUrl}/${environment.isDesired}?alias=${serialNum}`);
+  }
+
+  forgotPassword(data: ForgotPasswordDTO) {
+    return this.http.post(`${environment.baseUrl}/${environment.forgotPassword}`, data, {responseType: 'text'});
+  }
+ 
+  resetPassword(data: ResetPasswordDTO) {
+    return this.http.post(`${environment.baseUrl}/${environment.resetPassword}`, data, {responseType: 'text'});
   }
 }

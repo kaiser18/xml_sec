@@ -14,6 +14,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import bezbednost.domain.User;
 import bezbednost.security.TokenUtils;
+import bezbednost.service.impl.CustomUserDetailService;
 
 
 //Filter koji ce presretati svaki zahtev klijenta ka serveru
@@ -22,9 +23,9 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
     private TokenUtils tokenUtils;
 
-    private UserDetailsService userDetailsService;
+    private CustomUserDetailService userDetailsService;
 
-    public TokenAuthenticationFilter(TokenUtils tokenHelper, UserDetailsService userDetailsService) {
+    public TokenAuthenticationFilter(TokenUtils tokenHelper, CustomUserDetailService userDetailsService) {
         this.tokenUtils = tokenHelper;
         this.userDetailsService = userDetailsService;
     }

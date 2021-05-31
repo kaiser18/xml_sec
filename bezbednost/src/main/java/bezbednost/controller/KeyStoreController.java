@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -21,7 +22,26 @@ public class KeyStoreController {
 	
 	public ArrayList<String> keystores = new ArrayList<>();
 
+	@PreAuthorize("hasAuthority('GENERATE_KEYSTORE_PRIVILEGE')")
+	@RequestMapping(value = "/generateKeystore", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<?> generateKeystore() {
+		try {
+			KeyStore keyStore = KeyStore.getInstance("JKS", "SUN");
+			String fileName = "root";
+			String password = "root";
+			System.out.println(fileName);
+			System.out.println(password);
+			keyStore.load(null, password.toCharArray());
+			keyStore.store(new FileOutputStream(fileName+".jks"), password.toCharArray());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
 	
+	@PreAuthorize("hasAuthority('DELETE_KEYSTORE_PRIVILEGE')")
 	@RequestMapping(value = "/deleteAll", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<?> deleteAll(HttpServletRequest request) {

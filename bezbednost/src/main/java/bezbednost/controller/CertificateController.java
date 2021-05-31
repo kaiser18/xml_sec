@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,6 +26,7 @@ public class CertificateController {
 	@Autowired
 	private CertificateService certificateService;
 	
+	@PreAuthorize("hasAuthority('CREATE_CERT_PRIVILEGE')")
 	@RequestMapping(value = "/generateRoot", method = RequestMethod.POST, consumes ="application/json", produces="application/json")
 	public ResponseEntity<?> generateRoot(@RequestBody Certificate selfSignedCertificateModel) {
 		if(selfSignedCertificateModel == null)
@@ -38,6 +40,7 @@ public class CertificateController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
+	@PreAuthorize("hasAuthority('CREATE_CERT_PRIVILEGE')")
 	@RequestMapping(value = "/generateOther", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	public ResponseEntity<?> generateOther(@RequestBody OtherCertificate otherCertificate) {
 		if(otherCertificate == null)
@@ -54,13 +57,16 @@ public class CertificateController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
+	@PreAuthorize("hasAuthority('READ_CERT_PRIVILEGE')")
 	@RequestMapping(value = "/getCertificate", method = RequestMethod.GET, headers = { "content-type=application/json" })
 	public CertificateModel getCertificate(@RequestBody String serialNum) {
 		if(serialNum == null || serialNum.equals(""))
 			return null;
+		System.out.println(serialNum);
 		return certificateService.getCertificate(serialNum);
 	}
 	
+	@PreAuthorize("hasAuthority('REVOKE_CERT_PRIVILEGE')")
 	@RequestMapping(value = "/revokeCertificate", method = RequestMethod.POST)
 	public ResponseEntity<?> revokeCertificate(@RequestBody String serialNum) {
 		if(serialNum == null || serialNum.equals(""))
@@ -71,7 +77,8 @@ public class CertificateController {
 		else
 			return ResponseEntity.status(HttpStatus.OK).body("Neuspesno.");
 	}
-		
+	
+	@PreAuthorize("hasAuthority('READ_PRIVILEGE')")
 	@RequestMapping(value = "/isRevoked", method = RequestMethod.GET)
 	public ResponseEntity<Boolean> isRevoked(String serialNum) {
 		if(serialNum == null || serialNum.equals(""))
@@ -79,21 +86,25 @@ public class CertificateController {
 		return new ResponseEntity<>(certificateService.isRevoked(serialNum), HttpStatus.OK);
 	}
 	
+	@PreAuthorize("hasAuthority('READ_ALL_SIGN_PRIVILEGE')")
 	@RequestMapping(value="/getAllSignatures", method = RequestMethod.GET, produces="application/json")
 	public ArrayList<String> getAllSignatures(HttpServletRequest request) {
 		return certificateService.getAllSignatures();
 	}
 	
+	@PreAuthorize("hasAuthority('READ_ALL_CERT_PRIVILEGE')")
 	@RequestMapping(value = "/getAllCertificates", method = RequestMethod.GET)
 	public List<CertificateModel> getAllCertificates(HttpServletRequest request) {
 		return certificateService.getAllCertificates();
 	}
 	
+	@PreAuthorize("hasAuthority('READ_ALL_CERT_PRIVILEGE')")
 	@RequestMapping(value = "/getAllCertificatesByEmail", method = RequestMethod.GET)
 	public List<CertificateModel> getAllCertificatesByEmail(String email) {
 		return certificateService.getAllCertificatesByEmail(email);
 	}
 	
+	@PreAuthorize("hasAuthority('READ_PRIVILEGE')")
 	@RequestMapping(value = "/isVerified", method = RequestMethod.GET)
 	public boolean isVerified(String alias) {
 		return certificateService.isVerified(alias);

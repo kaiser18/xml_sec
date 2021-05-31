@@ -261,7 +261,7 @@ public class CertificateServiceImpl implements CertificateService {
 	
 	private SubjectData generateSubjectData(bezbednost.dto.Certificate certificate, KeyPair keyPairSubject, int validity) {
 		try {
-			
+			System.out.println(certificate.getCommonName());
 			Date startDate = new Date();
 			Date endDate = new Date(startDate.getTime() + validity * 365 * 24 * 60 * 60 * 1000L);
 			

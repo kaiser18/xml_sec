@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  baseUrl: 'http://localhost:8081',
+  baseUrl: 'https://localhost:8443',
   createRootCertificate: 'api/certificate/generateRoot',
   createOtherCertificate: 'api/certificate/generateOther',
   getAllCertificates: 'api/certificate/getAllCertificates',
@@ -12,8 +12,12 @@ export const environment = {
   revokeCertificate: 'api/certificate/revokeCertificate',
   isRevoked: 'api/certificate/isRevoked',
   isDesired: 'api/certificate/isVerified',
-  registerUser: 'register'
-
+  registerUser: 'register',
+  apiUrl: 'https://localhost:8443/auth/login',
+  createUser: 'auth/signup',
+  forgotPassword: 'auth/resetPassword',
+  resetPassword: 'auth/changePassword',
+  verify: 'auth/verify'
 };
 
 /*
