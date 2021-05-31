@@ -66,7 +66,7 @@ public class User implements UserDetails {
     private String email;
 
     @Column(name = "enabled")
-    private boolean enabled = true;
+    private boolean enabled = false;
     
 
     @Column(name = "last_password_reset_date")

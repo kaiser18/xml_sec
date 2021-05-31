@@ -24,8 +24,8 @@ export class ResetPasswordComponent implements OnInit {
     private _route: ActivatedRoute) { }
   ngOnInit(): void {
     this.resetPasswordForm = new FormGroup({
-      password: new FormControl('', [Validators.required]),
-      confirm: new FormControl('')
+      password: new FormControl('', [Validators.required, Validators.pattern("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{10,}$")]),
+      confirm: new FormControl('', [Validators.required, Validators.pattern("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{10,}$")])
     });
     this.resetPasswordForm.get('confirm').setValidators([Validators.required,
       this._passConfValidator.validateConfirmPassword(this.resetPasswordForm.get('password'))]);
@@ -53,7 +53,7 @@ export class ResetPasswordComponent implements OnInit {
     },
     error => {
       this.showError = true;
-      this.errorMessage = error;
+      this.errorMessage = 'Password invalid';
     })
   }
 

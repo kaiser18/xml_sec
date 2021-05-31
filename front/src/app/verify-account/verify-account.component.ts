@@ -19,7 +19,7 @@ export class VerifyAccountComponent implements OnInit {
 
   verify() {
     this.service.verify(this.token).subscribe(result =>{
-      this.router.navigate(['/login']);
+      this.router.navigate(['/logIn']);
     })
   }
 }

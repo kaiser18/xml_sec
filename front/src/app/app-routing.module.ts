@@ -19,7 +19,9 @@ import { VerifyAccountComponent } from './verify-account/verify-account.componen
 const routes: Routes = [
   {
     path: "createCertificate",
-    component: CreateCertificateComponent
+    component: CreateCertificateComponent,
+    canActivate: [AuthGuard],
+    data: { roles: [Role.ROLE_ADMIN] }
     },
 
   {
