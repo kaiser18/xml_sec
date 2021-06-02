@@ -7,8 +7,8 @@ import (
 	"log"
 	"net/http"
 
-	"xml_bezbednost/back_go/helpers"
-	"xml_bezbednost/back_go/users"
+	"back_go/auth_service/registration/helpers"
+	"back_go/auth_service/registration/users"
 
 	"github.com/gorilla/mux"
 )

@@ -1,4 +1,4 @@
-module xml_bezbednost/back_go
+module back_go/auth_service
 
 go 1.16
 

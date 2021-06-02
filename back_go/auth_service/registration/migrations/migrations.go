@@ -1,8 +1,9 @@
 package migrations
 
 import (
-	"xml_bezbednost/back_go/helpers"
-	"xml_bezbednost/back_go/interfaces"
+	"back_go/auth_service/registration/helpers"
+	"back_go/auth_service/registration/interfaces"
+
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 

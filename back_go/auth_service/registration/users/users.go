@@ -3,8 +3,9 @@ package users
 import (
 	"time"
 
-	"xml_bezbednost/back_go/helpers"
-	"xml_bezbednost/back_go/interfaces"
+	"back_go/auth_service/registration/helpers"
+	"back_go/auth_service/registration/interfaces"
+
 	"github.com/dgrijalva/jwt-go"
 	//"golang.org/x/crypto/bcrypt"
 )

@@ -3,7 +3,8 @@ package helpers
 import (
 	"regexp"
 
-	"xml_bezbednost/back_go/interfaces"
+	"back_go/auth_service/registration/interfaces"
+
 	"github.com/jinzhu/gorm"
 	_ "github.com/lib/pq"
 	"golang.org/x/crypto/bcrypt"
