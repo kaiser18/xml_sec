@@ -15,11 +15,15 @@ type ResponseUser struct {
 	ID uint
 	Username string
 	Email string
-	//Accounts []ResponseAccount
+	
 }
 
 // Create Validation interface
 type Validation struct {
 	Value string
 	Valid string
+}
+
+type ErrResponse struct {
+	Message string
 }
