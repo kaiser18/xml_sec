@@ -12,6 +12,7 @@ export const environment = {
   revokeCertificate: 'api/certificate/revokeCertificate',
   isRevoked: 'api/certificate/isRevoked',
   isDesired: 'api/certificate/isVerified',
+  registerUser: 'register',
   apiUrl: 'https://localhost:8443/auth/login',
   createUser: 'auth/signup',
   forgotPassword: 'auth/resetPassword',

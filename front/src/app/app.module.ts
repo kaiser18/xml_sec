@@ -17,6 +17,7 @@ import {MatTabsModule} from '@angular/material/tabs';
 import {MatRadioModule} from '@angular/material/radio';
 import { CertificateListComponent } from './certificate-list/certificate-list.component';
 import { UserCertificatesComponent } from './user-certificates/user-certificates.component';
+//import { RegistrationComponent } from './registration/registration.component';
 import { LoginComponent } from './login_logistics/login/login.component';
 import { HomeComponent } from './login_logistics/home/home.component';
 import { MainHomepageComponent } from './login_logistics/main-homepage/main-homepage.component';
@@ -35,6 +36,7 @@ import { VerifyAccountComponent } from './verify-account/verify-account.componen
     CreateCertificateComponent,
     UserCertificatesComponent,
     CertificateListComponent,
+    //RegistrationComponent,
     LoginComponent,
     HomeComponent,
     MainHomepageComponent,

@@ -6,6 +6,7 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
 import { HelloComponent } from './hello/hello.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { UserCertificatesComponent } from './user-certificates/user-certificates.component';
+//import { RegistrationComponent } from './registration/registration.component';
 import { RegisterComponent } from './login_logistics/register/register.component';
 import { LoginComponent } from './login_logistics/login/login.component';
 import { HomeComponent } from './login_logistics/home/home.component';
@@ -34,6 +35,10 @@ const routes: Routes = [
     component: CertificateListComponent
   },
 
+  /*{
+    path: "registration",
+    component: RegistrationComponent
+  },*/
   {
     path: "register",
     component: RegisterComponent
