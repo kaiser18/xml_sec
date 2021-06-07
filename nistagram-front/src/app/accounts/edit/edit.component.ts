@@ -28,15 +28,13 @@ export class EditComponent implements OnInit {
     website: string;
     biography: string;
 
-    sur_tester : string;
-    users: UserModel;
-
 
   constructor(private service : UserService) { }
 
   ngOnInit(): void {
 
         this.getUserData();
+
         this.editForm = new FormGroup({
           'name': new FormControl(),
           'surname': new FormControl(),
@@ -48,20 +46,6 @@ export class EditComponent implements OnInit {
           'website': new FormControl(),
           'biography': new FormControl()
         });
-
-// console.log('DATA---->', this.surname);
-//       this.editForm = new FormGroup({
-//         'name': new FormControl(this.name),
-//         'surname': new FormControl(this.surname),
-//         'username': new FormControl(this.username),
-//         'email': new FormControl(''),
-//         'gender': new FormControl('male'),
-//         'date_of_birth': new FormControl(''),
-//         'phone': new FormControl(''),
-//         'website': new FormControl(''),
-//         'biography': new FormControl('')
-//       })
-
 
   }
 
@@ -106,33 +90,33 @@ export class EditComponent implements OnInit {
   getUserData(){
     return  this.service.getUser(this.user_id = 2).subscribe(data =>{
       this.userModel = data;
-      //this.findRevokedCerts();
-      //this.sur_tester = this.userModel;
+
       this.name = this.userModel.data.Name;
       this.surname = this.userModel.data.Surname;
-      console.log('DATA---->', this.surname);
-      //dobavljac(this.name, this.surname);
-      this.sur_tester = this.surname;
+      this.username = this.userModel.data.Username;
+      this.email = this.userModel.data.Email;
+      this.gender = this.userModel.data.Gender;
+      this.date_of_birth = this.userModel.data.Date_of_birth;
+      this.phone = this.userModel.data.Phone;
+      this.website = this.userModel.data.Website;
+      this.biography = this.userModel.data.Biography;
 
       console.log('DATA---->', this.surname);
+
             this.editForm = new FormGroup({
               'name': new FormControl(this.name),
               'surname': new FormControl(this.surname),
               'username': new FormControl(this.username),
-              'email': new FormControl(''),
-              'gender': new FormControl('male'),
-              'date_of_birth': new FormControl(''),
-              'phone': new FormControl(''),
-              'website': new FormControl(''),
-              'biography': new FormControl('')
+              'email': new FormControl(this.email),
+              'gender': new FormControl(this.gender),
+              'date_of_birth': new FormControl(this.date_of_birth),
+              'phone': new FormControl(this.phone),
+              'website': new FormControl(this.website),
+              'biography': new FormControl(this.biography)
             })
 
     })
   }
 
-  // dobavljac(name, surname){
-  //     this.sur_tester = name;
-  //     return surname;
-  // }
 
 }

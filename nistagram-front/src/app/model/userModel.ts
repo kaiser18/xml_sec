@@ -1,5 +1,5 @@
 export class UserModel {
-    public ID: number;
+    public user_id: number;
     public Name: string;
     public Surname: string;
     public Username: string;
@@ -14,7 +14,7 @@ export class UserModel {
 
     constructor(id: number, name: string, surname: string, username: string, email: string, /*fPassword: string,*/
          gender: string, date_of_birth: string, phone: string, website: string, biography: string) {
-            this.ID = id;
+            this.user_id = id;
             this.Name = name;
             this.Surname = surname;
             this.Username = username;
