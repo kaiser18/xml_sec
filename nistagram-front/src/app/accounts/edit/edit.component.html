@@ -1,0 +1,199 @@
+<!-- <div>
+<article class="PVkFi">
+    <form class="kWXsT" method="POST">
+        <div class="eE-OA">
+            <aside class="sxIVS"><label for="pepName">Name</label></aside>
+            <div class="ada5V">
+                <div class="AC7dP Igw0E IwRSH eGOV_ _4EzTm" style="width: 100%; max-width: 355px;">
+                    <input aria-required="false" id="pepName" placeholder="Name" type="text" class="JLJ-B zyHYP" value="Mad Hive" />
+                </div>
+            </div>
+        </div>
+        <div class="eE-OA">
+            <aside class="sxIVS"><label for="pepUsername">Username</label></aside>
+            <div class="ada5V">
+                <div class="AC7dP Igw0E IwRSH eGOV_ _4EzTm" style="width: 100%; max-width: 355px;">
+                    <input aria-required="true" id="pepUsername" placeholder="Username" type="text" class="JLJ-B zyHYP" value="mad_hive" />
+                </div>
+            </div>
+        </div>
+        <div class="eE-OA">
+            <aside class="sxIVS"><label for="pepWebsite">Website</label></aside>
+            <div class="ada5V">
+                <div class="AC7dP Igw0E IwRSH eGOV_ _4EzTm" style="width: 100%; max-width: 355px;">
+                    <input aria-required="false" id="pepWebsite" placeholder="Website" type="text" class="JLJ-B zyHYP" value="" />
+                </div>
+            </div>
+        </div>
+        <div class="eE-OA">
+            <aside class="sxIVS"><label for="pepBio">Bio</label></aside>
+            <div class="ada5V">
+                <textarea class="p7vTm" id="pepBio"></textarea>
+            </div>
+        </div>
+        <div class="eE-OA">
+            <aside class="sxIVS"><label for="pepEmail">Email</label></aside>
+            <div class="ada5V">
+                <div class="AC7dP Igw0E IwRSH eGOV_ _4EzTm" style="width: 100%; max-width: 355px;">
+                    <input aria-required="false" id="pepEmail" placeholder="Email" type="text" class="JLJ-B zyHYP" value="sasori.lutka1@gmail.com" />
+                </div>
+            </div>
+        </div>
+        <div class="eE-OA">
+            <aside class="sxIVS tvweK"><label></label></aside>
+            <div class="ada5V">
+                <button class="sqdOP L3NKy y3zKF" type="button">Confirm Email</button>
+            </div>
+        </div>
+        <div class="eE-OA">
+            <aside class="sxIVS"><label for="pepPhone Number">Phone Number</label></aside>
+            <div class="ada5V">
+                <div class="AC7dP Igw0E IwRSH eGOV_ _4EzTm" style="width: 100%; max-width: 355px;">
+                    <input aria-required="false" id="pepPhone Number" placeholder="Phone Number" type="text" class="JLJ-B zyHYP" value="" />
+                </div>
+            </div>
+        </div>
+        <div class="Igw0E IwRSH eGOV_ _4EzTm">
+            <div class="eE-OA">
+                <aside class="sxIVS"><label for="pepGender">Gender</label></aside>
+                <div class="ada5V">
+                    <div class="Igw0E _56XdI eGOV_ vwCYk" style="max-width: 355px;">
+                        <button class="sqdOP yWX7d _4pI4F _8A5w5" type="button"><input placeholder="Gender" readonly="" type="text" class="F0B8Y zyHYP" value="" /></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="eE-OA">
+            <aside class="sxIVS tvweK"><label></label></aside>
+            <div class="ada5V">
+                <div class="fi8zo">
+                    <button class="sqdOP L3NKy y3zKF" disabled="" type="button">Submit</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</article>
+</div> -->
+
+
+<div class="container light-style flex-grow-1 container-p-y">
+
+    <h4 class="font-weight-bold py-3 mb-4">
+      Account settings
+    </h4>
+
+    <div class="card overflow-hidden">
+      <div class="row no-gutters row-bordered row-border-light">
+        <div class="col-md-3 pt-0">
+          <div class="list-group list-group-flush account-settings-links">
+            <a class="list-group-item list-group-item-action active" data-toggle="list" href="/accounts/edit">Edit profile</a>
+            <a class="list-group-item list-group-item-action" data-toggle="list" href="#account-change-password">Change password</a>
+            <!-- <a class="list-group-item list-group-item-action" data-toggle="list" href="#account-info">Info</a>
+            <a class="list-group-item list-group-item-action" data-toggle="list" href="#account-social-links">Social links</a>
+            <a class="list-group-item list-group-item-action" data-toggle="list" href="#account-connections">Connections</a>
+            <a class="list-group-item list-group-item-action" data-toggle="list" href="#account-notifications">Notifications</a> -->
+          </div>
+        </div>
+        <div class="col-md-9">
+          <div class="tab-content">
+            <div class="tab-pane fade active show" id="account-edit">
+
+              <div class="card-body media align-items-center">
+                <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" class="d-block ui-w-80">
+                <div class="media-body ml-4">
+                  <label class="btn btn-outline-primary">
+                    Upload new photo
+                    <input type="file" class="account-settings-fileinput">
+                  </label> &nbsp;
+                  <button type="button" class="btn btn-default md-btn-flat">Reset</button>
+                </div>
+              </div>
+              <hr class="border-light m-0">
+
+              <div class="container">
+                  <mat-card >
+                      <mat-tab-group>
+                          <mat-tab label="Edit profile">
+                              <form [formGroup]="editForm" (ngSubmit)="editUser()">
+                                  <mat-form-field class="field">
+                                      <input matInput name="name" placeholder="Name" formControlName="name" />
+                                  </mat-form-field>
+
+                                  <mat-form-field class="field">
+                                      <input matInput name="surname" placeholder="Surname" formControlName="surname" />
+                                  </mat-form-field>
+
+                                  <mat-form-field class="field">
+                                      <input matInput name="username" placeholder="Username" formControlName="username" />
+                                  </mat-form-field>
+
+                                  <mat-form-field class="field">
+                                      <input matInput name="website" placeholder="Website" formControlName="website" />
+                                  </mat-form-field>
+
+                                  <mat-form-field class="field">
+                                      <input matInput name="biography" placeholder="Bio" formControlName="biography" />
+                                  </mat-form-field>
+
+                                  <mat-form-field class="field">
+                                      <input matInput name="email" placeholder="Email" formControlName="email" />
+                                  </mat-form-field>
+
+                                  <mat-form-field class="field">
+                                      <input matInput name="phone" placeholder="Phone number" formControlName="phone" />
+                                  </mat-form-field>
+
+                                  <mat-form-field class="field">
+                                      <input matInput name="date_of_birth" placeholder="Date of birth" formControlName="date_of_birth" />
+                                  </mat-form-field>
+
+                                  <div class="ca-cont">
+                                      <label for="gender" class="ca-margin">Gender: </label><br>
+                                      <mat-radio-group aria-label="Select an option" formControlName="gender">
+                                          <mat-radio-button id="caMale" value="male">Male</mat-radio-button><br>
+                                          <mat-radio-button id="caFemale" value="female">Female</mat-radio-button>
+                                          <mat-radio-button id="caOther" value="other">Other</mat-radio-button>
+                                      </mat-radio-group>
+                                  </div>
+                                  <br>
+                                  <div class="button">
+                                      <button mat-raised-button type="submit">Save changes</button>&nbsp;
+                                      <button type="button" class="btn btn-default">Cancel</button>
+                                  </div>
+                              </form>
+                          </mat-tab>
+                      </mat-tab-group>
+                  </mat-card>
+              </div>
+
+              <!-- <div class="card-body">
+                <div class="form-group">
+                  <label class="form-label">Username</label>
+                  <input type="text" class="form-control mb-1" value="nmaxwell">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Name</label>
+                  <input type="text" class="form-control" value="Nelle Maxwell">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">E-mail</label>
+                  <input type="text" class="form-control mb-1" value="nmaxwell@mail.com">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Company</label>
+                  <input type="text" class="form-control" value="Company Ltd.">
+                </div>
+              </div> -->
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- <div class="text-right mt-3">
+      <button type="button" class="btn btn-primary">Save changes</button>&nbsp;
+      <button type="button" class="btn btn-default">Cancel</button>
+    </div> -->
+
+  </div>

@@ -12,7 +12,8 @@
 	<groupId>bezbednost</groupId>
 	<artifactId>bezbednost</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<!-- <packaging>war</packaging> -->
+	<packaging>jar</packaging>
 	<name>bezbednost</name>
 	<description>BSEP</description>
 

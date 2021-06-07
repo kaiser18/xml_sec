@@ -2,7 +2,7 @@ package users
 
 import (
 	"time"
-	"fmt"
+	//"fmt"
 
 	"back_go/auth_service/registration2/database"
 	"back_go/auth_service/registration2/helpers"
@@ -96,9 +96,7 @@ func Register(name string, surname string, username string, email string, pass s
 
 		generatedPassword := helpers.HashAndSalt([]byte(pass))
 		user := &interfaces.User{Name: name, Surname: surname, Username: username, Email: email, Password: generatedPassword}
-		fmt.Println("&user")
-		fmt.Println(&user)
-		fmt.Println("&user")
+
 		database.DB.Create(&user)
 
 		var response = prepareResponse(user, true)

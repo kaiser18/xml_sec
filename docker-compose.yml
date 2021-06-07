@@ -34,5 +34,12 @@ services:
             - 4200
         ports:
             - "4200:4200"
+    bezbednost:
+        build: ./bezbednost
+        restart: always
+        ports:
+            - "8443:8443"
+        depends_on:
+            - db
 volumes:
     pgdata:
