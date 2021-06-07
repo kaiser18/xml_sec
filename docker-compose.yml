@@ -8,6 +8,8 @@ services:
           - ./pgdata:/var/lib/postgresql/data
         ports:
           - "8001:5432"
+        networks:
+          - backend
         environment:
           - POSTGRES_PASSWORD=postgres
           - POSTGRES_USER=postgres
@@ -24,6 +26,8 @@ services:
             - 23001
         ports:
             - "23001:23001"
+        networks:
+          - backend
         depends_on:
             - db
     nista-front:
@@ -34,5 +38,86 @@ services:
             - 4200
         ports:
             - "4200:4200"
+    gateway:
+        image: nginx:1.19.8-alpine
+        ports:
+          - 9090:9090
+        networks:
+          - backend
+        volumes:
+          - ./back_go/gateway/nginx.conf:/etc/nginx/nginx.conf
+          - ./back_go/gateway/api_gateway.conf:/etc/nginx/api_gateway.conf
+    tracing:
+        image: jaegertracing/all-in-one
+        container_name: jaeger
+        ports:
+          - "6831:6831/udp"
+          - "6832:6832/udp"
+          - "16686:16686"
+          - "14268:14268"
+          - "14250:14250"
+        networks:
+          - backend
+    search-service:
+        image: search:compose_build
+        build:
+          context: ./back_go/search
+          dockerfile: Dockerfile
+        restart: always
+        environment:
+          - JAEGER_SERVICE_NAME=posts
+          - JAEGER_AGENT_HOST=tracing
+          - JAEGER_AGENT_PORT=6831
+          - JAEGER_SAMPLER_MANAGER_HOST_PORT=jaeger:5778
+          - JAEGER_SAMPLER_TYPE=const
+          - JAEGER_SAMPLER_PARAM=1
+          - DBHOST=db
+          - USER=postgres
+          - PASSWORD=postgres
+          - DBNAME=search
+          - DBPORT=5432
+        expose:
+          - 9000
+          - 9001
+        ports:
+          - "9000:9000"
+          - "9001:9001"
+        networks:
+          - backend
+        depends_on:
+          - db
+    app:
+        build:
+          context: ./back_go/post
+          dockerfile: Dockerfile
+        restart: always
+        environment:
+          - JAEGER_SERVICE_NAME=posts
+          - JAEGER_AGENT_HOST=tracing
+          - JAEGER_AGENT_PORT=6831
+          - JAEGER_SAMPLER_MANAGER_HOST_PORT=jaeger:5778
+          - JAEGER_SAMPLER_TYPE=const
+          - JAEGER_SAMPLER_PARAM=1
+          - DBHOST=db
+          - USER=postgres
+          - PASSWORD=postgres
+          - DBNAME=post
+          - DBPORT=5432
+        expose:
+          - 8000
+          - 8090
+          - 8080
+        ports:
+          - "8000:8000"
+          - "8090:8090"
+          - "8080:8080"
+        networks:
+          - backend
+        depends_on:
+          - db
 volumes:
     pgdata:
+networks:
+    backend:
+        name: nistagram
+        driver: bridge
