@@ -5,8 +5,10 @@
 export const environment = {
   production: false,
   baseUrl: 'http://localhost:23002',
+  baseUrlAuth: 'http://localhost:23001',
   editUser: 'edit',
-  getUser: 'user'
+  getUser: 'user',
+  createUser: 'register'
 };
 
 /*

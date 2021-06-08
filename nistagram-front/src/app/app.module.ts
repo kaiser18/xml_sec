@@ -17,11 +17,13 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { EditComponent } from './accounts/edit/edit.component';
 import { AuthInterceptor} from './_helpers/auth.interceptor';
+import { RegistrationComponent } from './registration/registration.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    EditComponent
+    EditComponent,
+    RegistrationComponent
   ],
   imports: [
     BrowserModule,
