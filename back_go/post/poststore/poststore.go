@@ -113,6 +113,7 @@ func (ts *PostStore) CreateStory(ctx context.Context, storyRequest *helloworld.C
 		Description:      storyRequest.Story.Description,
 		CreatedAt:        time.Now(),
 		OnlyCloseFriends: storyRequest.Story.OnlyCloseFriends,
+		IsHighlight:      storyRequest.Story.IsHighlight,
 	}
 
 	newHashtags := []Hashtag{}
@@ -201,12 +202,41 @@ func (ts *PostStore) SavePost(ctx context.Context, request *helloworld.SavePostR
 	}, nil
 }
 
+func (ts *PostStore) RemoveSavedPost(ctx context.Context, in *helloworld.ActionRequest) error {
+	span := tracer.StartSpanFromContext(ctx, "RemoveSavedPost")
+	defer span.Finish()
+
+	var usern Username
+	res := ts.db.FirstOrCreate(&usern, Username{Name: in.Username})
+	if res.Error != nil {
+		return res.Error
+	}
+	ts.db.Exec("DELETE FROM saved_posts WHERE post_id = ? AND username = ?", in.PostId, in.Username)
+	return nil
+}
+
+func (ts *PostStore) IsPostSaved(ctx context.Context, in *helloworld.ActionRequest) (*helloworld.BoolResponse, error) {
+	span := tracer.StartSpanFromContext(ctx, "IsPostSaved")
+	defer span.Finish()
+
+	var saved []SavedPost
+	ts.db.Where("post_id = ? AND username = ?", in.PostId, in.Username).Find(&saved)
+	if len(saved) > 0 {
+		return &helloworld.BoolResponse{
+			Response: true,
+		}, nil
+	}
+	return &helloworld.BoolResponse{
+		Response: false,
+	}, nil
+}
+
 func (ts *PostStore) GetSavedPosts(ctx context.Context, request *helloworld.SavedPostsRequest) ([]SavedPost, error) {
 	span := tracer.StartSpanFromContext(ctx, "GetSavedPosts")
 	defer span.Finish()
 
 	var saved []SavedPost
-	ts.db.Preload("SavedPostCategories").Find(&saved)
+	ts.db.Where("SavedPosts.id in (SELECT s.id FROM savedPosts s, savedPostCategory c WHERE c.id = s.category_id AND username = ? AND c.categoryName = ?)", request.Username, request.CategoryName).Preload("SavedPostCategories").Find(&saved)
 	ts.db.Find(&saved)
 	return saved, nil
 }
@@ -486,10 +516,21 @@ func (ts *PostStore) GetStoriesByIds(ctx context.Context, ids *helloworld.Ids) (
 	defer span.Finish()
 
 	var stories []Story
-	ts.db.Preload("Tags").Preload("Hashtags").Preload("Location").Preload("ImageUrls").Where("Stories.id IN " + MakeRange(ids.Ids) + " ").Find(&stories)
+	ts.db.Preload("Tags").Preload("Hashtags").Preload("Location").Preload("ImageUrls").Where("Stories.id IN " + MakeRange(ids.Ids) + " ").Order("Stories.Created_At desc").Find(&stories)
+
+	now := time.Now()
+	var ret []Story
+	for _, story := range stories {
+		exp := story.CreatedAt.Add(24 * time.Hour)
+		if story.Username == ids.Username {
+			ret = append(ret, story)
+		} else if now.Before(exp) {
+			ret = append(ret, story)
+		}
+	}
 
 	return &helloworld.GetAllStories{
-		Stories: storiesPostgresToProto(stories),
+		Stories: storiesPostgresToProto(ret),
 	}, nil
 }
 
