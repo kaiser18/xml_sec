@@ -7,7 +7,7 @@ export const environment = {
   baseUrl: 'http://localhost:23002',
   editUser: 'edit',
   getUser: 'user',
-  authenticate: 'authenticate'
+  authenticate: 'login'
 };
 
 /*
