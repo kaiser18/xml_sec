@@ -30,6 +30,17 @@ services:
           - backend
         depends_on:
             - db
+    user_service:
+        build: ./back_go/user_service
+        restart: always
+        expose:
+          - 23002
+        ports:
+          - "23002:23002"
+        networks:
+          - backend
+        depends_on:
+          - db
     nista-front:
         build: ./nistagram-front
         restart: always
