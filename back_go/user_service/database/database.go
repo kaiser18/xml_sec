@@ -1,7 +1,7 @@
 package database
 
 import (
-    "back_go/auth_service/registration2/helpers"
+    "back_go/user_service/helpers"
 	"github.com/jinzhu/gorm"
 
     // "gorm.io/gorm"
@@ -20,7 +20,7 @@ func InitDatabase() {
 
 	helpers.HandleErr(err)
 	// Set up connection pool
-	database.DB().SetMaxIdleConns(20)
+	database.DB().SetMaxIdleConns(30)
 	database.DB().SetMaxOpenConns(200)
 	DB = database
 }
