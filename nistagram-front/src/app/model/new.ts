@@ -2,7 +2,7 @@ export class New {
     username: string;
     password: string;
     name: string;
-    surnamename: string;
+    surname: string;
     email: string;
     //clientURI: string;
 
