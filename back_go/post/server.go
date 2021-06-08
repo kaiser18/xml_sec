@@ -2,12 +2,16 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"io"
+	"log"
 	"net/http"
 	"post/poststore"
 
 	"github.com/nikolablesic/proto/helloworld"
 	"github.com/nikolablesic/proto/search"
+	"google.golang.org/grpc/metadata"
+	"google.golang.org/grpc/status"
 
 	tracer "github.com/milossimic/grpc_rest/tracer"
 	otgo "github.com/opentracing/opentracing-go"
@@ -70,6 +74,11 @@ func (s *server) GetCloser() io.Closer {
 }
 
 func (s *server) PostRequest(ctx context.Context, in *helloworld.CreatePostRequest) (*helloworld.Identifier, error) {
+	username := GetUsernameOfLoggedUser(ctx)
+	if len(username) <= 0 {
+		return &helloworld.Identifier{}, status.Error(401, "401 Unauthorized")
+	}
+	in.Post.Username = username
 	id, err := s.store.CreatePost(ctx, in)
 	s.searchClient.PostInfoRequest(ctx, &search.CreatePostInfoRequest{
 		PostInfo: &search.PostInfo{
@@ -122,14 +131,29 @@ func (s *server) GetStoriesByIdsRequest(ctx context.Context, in *helloworld.Ids)
 }
 
 func (s *server) CommentRequest(ctx context.Context, in *helloworld.CreateCommentRequest) (*helloworld.Identifier, error) {
+	username := GetUsernameOfLoggedUser(ctx)
+	if len(username) <= 0 {
+		return &helloworld.Identifier{}, status.Error(401, "401 Unauthorized")
+	}
+	in.Comment.Username = username
 	return s.store.CreateComment(ctx, in)
 }
 
 func (s *server) SavePostRequest(ctx context.Context, in *helloworld.SavePostReq) (*helloworld.Identifier, error) {
+	username := GetUsernameOfLoggedUser(ctx)
+	if len(username) <= 0 {
+		return &helloworld.Identifier{}, status.Error(401, "401 Unauthorized")
+	}
+	in.Post.Username = username
 	return s.store.SavePost(ctx, in)
 }
 
 func (s *server) GetSavedPostsRequest(ctx context.Context, in *helloworld.SavedPostsRequest) (*helloworld.GetAllPosts, error) {
+	username := GetUsernameOfLoggedUser(ctx)
+	if len(username) <= 0 {
+		return &helloworld.GetAllPosts{}, status.Error(401, "401 Unauthorized")
+	}
+	in.Username = username
 	savedPosts, _ := s.store.GetSavedPosts(ctx, in)
 
 	ids := []int32{}
@@ -142,6 +166,11 @@ func (s *server) GetSavedPostsRequest(ctx context.Context, in *helloworld.SavedP
 }
 
 func (s *server) GetCategoriesOfSavedPostsRequest(ctx context.Context, in *helloworld.Filter) (*helloworld.Categories, error) {
+	username := GetUsernameOfLoggedUser(ctx)
+	if len(username) <= 0 {
+		return &helloworld.Categories{}, status.Error(401, "401 Unauthorized")
+	}
+	in.Filter = username
 	return s.store.GetCategoriesByUsername(ctx, in)
 }
 
@@ -150,6 +179,11 @@ func (s *server) GetLocationsRequest(ctx context.Context, in *helloworld.EmptyRe
 }
 
 func (s *server) StoryRequest(ctx context.Context, in *helloworld.CreateStoryRequest) (*helloworld.Identifier, error) {
+	username := GetUsernameOfLoggedUser(ctx)
+	if len(username) <= 0 {
+		return &helloworld.Identifier{}, status.Error(401, "401 Unauthorized")
+	}
+	in.Story.Username = username
 	id, err := s.store.CreateStory(ctx, in)
 	s.searchClient.StoryInfoRequest(ctx, &search.CreateStoryInfoRequest{
 		StoryInfo: &search.StoryInfo{
@@ -170,18 +204,38 @@ func (s *server) GetAllStoriesRequest(ctx context.Context, in *helloworld.EmptyR
 }
 
 func (s *server) LikePostRequest(ctx context.Context, in *helloworld.ImpressionRequest) (*helloworld.EmptyRequest, error) {
+	username := GetUsernameOfLoggedUser(ctx)
+	if len(username) <= 0 {
+		return &helloworld.EmptyRequest{}, status.Error(401, "401 Unauthorized")
+	}
+	in.Request.Username = username
 	return &helloworld.EmptyRequest{}, s.store.LikePost(ctx, in)
 }
 
 func (s *server) DislikePostRequest(ctx context.Context, in *helloworld.ImpressionRequest) (*helloworld.EmptyRequest, error) {
+	username := GetUsernameOfLoggedUser(ctx)
+	if len(username) <= 0 {
+		return &helloworld.EmptyRequest{}, status.Error(401, "401 Unauthorized")
+	}
+	in.Request.Username = username
 	return &helloworld.EmptyRequest{}, s.store.DislikePost(ctx, in)
 }
 
 func (s *server) RemovePostLikeRequest(ctx context.Context, in *helloworld.ActionRequest) (*helloworld.EmptyRequest, error) {
+	username := GetUsernameOfLoggedUser(ctx)
+	if len(username) <= 0 {
+		return &helloworld.EmptyRequest{}, status.Error(401, "401 Unauthorized")
+	}
+	in.Username = username
 	return &helloworld.EmptyRequest{}, s.store.RemovePostLike(ctx, in)
 }
 
 func (s *server) RemovePostDislikeRequest(ctx context.Context, in *helloworld.ActionRequest) (*helloworld.EmptyRequest, error) {
+	username := GetUsernameOfLoggedUser(ctx)
+	if len(username) <= 0 {
+		return &helloworld.EmptyRequest{}, status.Error(401, "401 Unauthorized")
+	}
+	in.Username = username
 	return &helloworld.EmptyRequest{}, s.store.RemovePostDislike(ctx, in)
 }
 
@@ -194,5 +248,52 @@ func (s *server) DeleteStoryRequest(ctx context.Context, in *helloworld.ActionRe
 }
 
 func (s *server) SetHighlightRequest(ctx context.Context, in *helloworld.StoryHighlightRequest) (*helloworld.EmptyRequest, error) {
+	username := GetUsernameOfLoggedUser(ctx)
+	if len(username) <= 0 {
+		return &helloworld.EmptyRequest{}, status.Error(401, "401 Unauthorized")
+	}
+	story, _ := s.store.GetStory(ctx, int(in.Request.StoryId))
+	if story.Username != username {
+		return &helloworld.EmptyRequest{}, status.Error(401, "401 Unauthorized")
+	}
 	return &helloworld.EmptyRequest{}, s.store.SetStoryHighlight(ctx, in)
+}
+
+func (s *server) IsPostSavedRequest(ctx context.Context, in *helloworld.ActionRequest) (*helloworld.BoolResponse, error) {
+	return s.store.IsPostSaved(ctx, in)
+}
+
+func (s *server) RemoveSavedPostRequest(ctx context.Context, in *helloworld.ActionRequest) (*helloworld.EmptyRequest, error) {
+	s.store.RemoveSavedPost(ctx, in)
+	return &helloworld.EmptyRequest{}, nil
+}
+
+func GetUsernameOfLoggedUser(ctx context.Context) string {
+
+	md, _ := metadata.FromIncomingContext(ctx)
+	var token string
+	if len(md["authorization"]) > 0 {
+		token = md["authorization"][0]
+	} else {
+		return ""
+	}
+	var userId string
+	if len(md["grpcgateway-origin"]) > 0 {
+		userId = md["grpcgateway-origin"][0]
+	} else {
+		return ""
+	}
+	return GetUsernameFromTokenAndUserId(token, userId)
+}
+
+func GetUsernameFromTokenAndUserId(token string, id string) string {
+	resp, _ := http.Get("http://search-service:9001/isPostLiked/username/1")
+	defer resp.Body.Close()
+	var data map[string]interface{}
+	err := json.NewDecoder(resp.Body).Decode(&data)
+	if err != nil {
+		return ""
+	}
+	log.Println(data["isLiked"])
+	return "username"
 }

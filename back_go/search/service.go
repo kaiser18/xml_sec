@@ -2,12 +2,17 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"io"
+	"log"
 	"net/http"
 	"search/searchstore"
+	"strings"
 
 	"github.com/nikolablesic/proto/helloworld"
 	"github.com/nikolablesic/proto/search"
+	"google.golang.org/grpc/metadata"
+	"google.golang.org/grpc/status"
 
 	tracer "github.com/milossimic/grpc_rest/tracer"
 	otgo "github.com/opentracing/opentracing-go"
@@ -78,19 +83,27 @@ func (s *server) StoryInfoRequest(ctx context.Context, in *search.CreateStoryInf
 }
 
 func (s *server) GetStoriesByUsernameRequest(ctx context.Context, in *search.ActionRequest) (*search.Stories, error) {
+	username := GetUsernameOfLoggedUser(ctx)
+	if len(username) <= 0 {
+		return &search.Stories{}, status.Error(401, "401 Unauthorized")
+	}
 	storiesInfo, _ := s.store.GetStoriesByUsername(ctx, in)
 
 	ids := []int32{}
 	for _, story := range storiesInfo {
 		ids = append(ids, int32(story.PostID))
 	}
-	stories, err := s.postClient.GetStoriesByIdsRequest(ctx, &helloworld.Ids{Ids: ids})
+	stories, err := s.postClient.GetStoriesByIdsRequest(ctx, &helloworld.Ids{Ids: ids, Username: username})
 	return convertGetAllStoriesToStories(stories), err
 }
 
 func (s *server) GetStoriesForUserRequest(ctx context.Context, in *search.ActionRequest) (*search.Stories, error) {
+	username := GetUsernameOfLoggedUser(ctx)
+	if len(username) <= 0 {
+		return &search.Stories{}, status.Error(401, "401 Unauthorized")
+	}
 	//TODO: Iz usera follow lista
-	usernames := GetFollowList()
+	usernames := GetFollowList(username)
 	storiesInfo, _ := s.store.GetStoriesByUsernames(ctx, usernames)
 
 	ids := []int32{}
@@ -102,7 +115,7 @@ func (s *server) GetStoriesForUserRequest(ctx context.Context, in *search.Action
 	if len(ids) <= 0 {
 		return &search.Stories{}, nil
 	}
-	stories, err := s.postClient.GetStoriesByIdsRequest(ctx, &helloworld.Ids{Ids: ids})
+	stories, err := s.postClient.GetStoriesByIdsRequest(ctx, &helloworld.Ids{Ids: ids, Username: username})
 
 	return convertGetAllStoriesToStories(stories), err
 }
@@ -120,8 +133,13 @@ func (s *server) GetPostsByUsernameRequest(ctx context.Context, in *search.Actio
 }
 
 func (s *server) GetNewsFeedForUsernameRequest(ctx context.Context, in *search.ActionRequest) (*search.Posts, error) {
+	username := GetUsernameOfLoggedUser(ctx)
+	if len(username) <= 0 {
+		return &search.Posts{}, status.Error(401, "401 Unauthorized")
+	}
+	in.Filter = username
 	//TODO: Iz usera follow lista
-	usernames := GetFollowList()
+	usernames := GetFollowList(username)
 	postsInfo, _ := s.store.GetPostsByUsernames(ctx, usernames)
 
 	ids := []int32{}
@@ -139,10 +157,14 @@ func (s *server) GetNewsFeedForUsernameRequest(ctx context.Context, in *search.A
 }
 
 func (s *server) GetPostsByLocationRequest(ctx context.Context, in *search.ActionRequest) (*search.Posts, error) {
+	username := GetUsernameOfLoggedUser(ctx)
+	if len(username) <= 0 {
+		return &search.Posts{}, status.Error(401, "401 Unauthorized")
+	}
 	posts, _ := s.postClient.GetPostsByLocationRequest(ctx, &helloworld.Filter{Filter: in.Filter})
 
 	//TODO: Iz usera follow lista + javni
-	usernames := GetFollowListAndPublic()
+	usernames := GetFollowListAndPublic(username)
 	list := []*helloworld.Post{}
 
 	for _, post := range posts.Posts {
@@ -157,10 +179,14 @@ func (s *server) GetPostsByLocationRequest(ctx context.Context, in *search.Actio
 }
 
 func (s *server) GetPostsByHashtagRequest(ctx context.Context, in *search.ActionRequest) (*search.Posts, error) {
+	username := GetUsernameOfLoggedUser(ctx)
+	if len(username) <= 0 {
+		return &search.Posts{}, status.Error(401, "401 Unauthorized")
+	}
 	posts, _ := s.postClient.GetPostsByHashtagRequest(ctx, &helloworld.Filter{Filter: in.Filter})
 
 	//TODO: Iz usera follow lista + javni
-	usernames := GetFollowListAndPublic()
+	usernames := GetFollowListAndPublic(username)
 	list := []*helloworld.Post{}
 
 	for _, post := range posts.Posts {
@@ -175,10 +201,14 @@ func (s *server) GetPostsByHashtagRequest(ctx context.Context, in *search.Action
 }
 
 func (s *server) GetPostsByTagRequest(ctx context.Context, in *search.ActionRequest) (*search.Posts, error) {
+	username := GetUsernameOfLoggedUser(ctx)
+	if len(username) <= 0 {
+		return &search.Posts{}, status.Error(401, "401 Unauthorized")
+	}
 	posts, _ := s.postClient.GetPostsByTagRequest(ctx, &helloworld.Filter{Filter: in.Filter})
 
 	//Iz usera follow lista + javni
-	usernames := GetFollowListAndPublic()
+	usernames := GetFollowListAndPublic(username)
 	list := []*helloworld.Post{}
 
 	for _, post := range posts.Posts {
@@ -193,10 +223,14 @@ func (s *server) GetPostsByTagRequest(ctx context.Context, in *search.ActionRequ
 }
 
 func (s *server) GetStoriesByLocationRequest(ctx context.Context, in *search.ActionRequest) (*search.Stories, error) {
+	username := GetUsernameOfLoggedUser(ctx)
+	if len(username) <= 0 {
+		return &search.Stories{}, status.Error(401, "401 Unauthorized")
+	}
 	stories, _ := s.postClient.GetStoriesByLocationRequest(ctx, &helloworld.Filter{Filter: in.Filter})
 
 	//TODO: Iz usera follow lista + javni
-	usernames := GetFollowListAndPublic()
+	usernames := GetFollowListAndPublic(username)
 	list := []*helloworld.Story{}
 
 	for _, story := range stories.Stories {
@@ -211,10 +245,14 @@ func (s *server) GetStoriesByLocationRequest(ctx context.Context, in *search.Act
 }
 
 func (s *server) GetStoriesByHashtagRequest(ctx context.Context, in *search.ActionRequest) (*search.Stories, error) {
+	username := GetUsernameOfLoggedUser(ctx)
+	if len(username) <= 0 {
+		return &search.Stories{}, status.Error(401, "401 Unauthorized")
+	}
 	stories, _ := s.postClient.GetStoriesByHashtagRequest(ctx, &helloworld.Filter{Filter: in.Filter})
 
 	//TODO: Iz usera follow lista + javni
-	usernames := GetFollowListAndPublic()
+	usernames := GetFollowListAndPublic(username)
 	list := []*helloworld.Story{}
 
 	for _, story := range stories.Stories {
@@ -229,10 +267,14 @@ func (s *server) GetStoriesByHashtagRequest(ctx context.Context, in *search.Acti
 }
 
 func (s *server) GetStoriesByTagRequest(ctx context.Context, in *search.ActionRequest) (*search.Stories, error) {
+	username := GetUsernameOfLoggedUser(ctx)
+	if len(username) <= 0 {
+		return &search.Stories{}, status.Error(401, "401 Unauthorized")
+	}
 	stories, _ := s.postClient.GetStoriesByTagRequest(ctx, &helloworld.Filter{Filter: in.Filter})
 
 	//Iz usera follow lista + javni
-	usernames := GetFollowListAndPublic()
+	usernames := GetFollowListAndPublic(username)
 	list := []*helloworld.Story{}
 
 	for _, story := range stories.Stories {
@@ -247,6 +289,11 @@ func (s *server) GetStoriesByTagRequest(ctx context.Context, in *search.ActionRe
 }
 
 func (s *server) IsPostLikedRequest(ctx context.Context, in *search.IsLikedRequest) (*search.IsPostLikedResponse, error) {
+	username := GetUsernameOfLoggedUser(ctx)
+	if len(username) <= 0 {
+		return &search.IsPostLikedResponse{}, status.Error(401, "401 Unauthorized")
+	}
+	in.Username = username
 	ids := []int32{}
 	ids = append(ids, int32(in.PostId))
 	posts, err := s.postClient.GetPostsByIdsRequest(ctx, &helloworld.Ids{Ids: ids})
@@ -267,6 +314,11 @@ func (s *server) IsPostLikedRequest(ctx context.Context, in *search.IsLikedReque
 }
 
 func (s *server) IsPostDislikedRequest(ctx context.Context, in *search.IsLikedRequest) (*search.IsPostLikedResponse, error) {
+	username := GetUsernameOfLoggedUser(ctx)
+	if len(username) <= 0 {
+		return &search.IsPostLikedResponse{}, status.Error(401, "401 Unauthorized")
+	}
+	in.Username = username
 	ids := []int32{}
 	ids = append(ids, int32(in.PostId))
 	posts, err := s.postClient.GetPostsByIdsRequest(ctx, &helloworld.Ids{Ids: ids})
@@ -300,13 +352,51 @@ func (s *server) GetCommentsRequest(ctx context.Context, in *search.GetComments)
 	return &search.Comments{}, err
 }
 
-func GetFollowList() []string {
+func (s *server) SearchProfilesRequest(ctx context.Context, in *search.ActionRequest) (*search.Users, error) {
+	//TODO: lista usera
+
+	ret := []*search.User{}
+	if strings.Contains("nikolablesic", in.Filter) {
+		ret = append(ret, &search.User{
+			Name:           "Nikola Blesic",
+			Username:       "nikolablesic",
+			UserProfilePic: "https://www.gettyimages.com/gi-resources/images/500px/983794168.jpg",
+		})
+	}
+	if strings.Contains("helenanisic", in.Filter) {
+		ret = append(ret, &search.User{
+			Name:           "Helena Anisic",
+			Username:       "helenanisic",
+			UserProfilePic: "https://drscdn.500px.org/photo/53713630/m%3D900/v2?sig=0bb4d582aa994ae89d7762015f5c94f6088dcacdacc1bda07dff39be2e982809",
+		})
+	}
+	if strings.Contains("mihailoivic", in.Filter) {
+		ret = append(ret, &search.User{
+			Name:           "Mihailo Ivic",
+			Username:       "mihailoivic",
+			UserProfilePic: "https://iso.500px.com/wp-content/uploads/2015/01/weather_cover-1500x1000.jpg",
+		})
+	}
+	if strings.Contains("jovantimarac", in.Filter) {
+		ret = append(ret, &search.User{
+			Name:           "Jovan Timarac",
+			Username:       "jovantimarac",
+			UserProfilePic: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqAU2U9F2b3_pn-jOQyP4gfs-NsAR36r1qOe05GyTqkJRjC4fBh4equLdIeJBeIeRBLtk&usqp=CAU",
+		})
+	}
+
+	return &search.Users{
+		Users: ret,
+	}, nil
+}
+
+func GetFollowList(username string) []string {
 	ret := []string{}
 	ret = append(ret, "username")
 	return ret
 }
 
-func GetFollowListAndPublic() []string {
+func GetFollowListAndPublic(username string) []string {
 	ret := []string{}
 	ret = append(ret, "username")
 	ret = append(ret, "username1")
@@ -399,4 +489,34 @@ func convertComment(comment *helloworld.Comment) *search.Comment {
 		Username: comment.Username,
 		PostId:   comment.PostId,
 	}
+}
+
+func GetUsernameOfLoggedUser(ctx context.Context) string {
+
+	md, _ := metadata.FromIncomingContext(ctx)
+	var token string
+	if len(md["authorization"]) > 0 {
+		token = md["authorization"][0]
+	} else {
+		return "nikolablesic"
+	}
+	var userId string
+	if len(md["grpcgateway-origin"]) > 0 {
+		userId = md["grpcgateway-origin"][0]
+	} else {
+		return "nikolablesic"
+	}
+	return GetUsernameFromTokenAndUserId(token, userId)
+}
+
+func GetUsernameFromTokenAndUserId(token string, id string) string {
+	resp, _ := http.Get("http://search-service:9001/isPostLiked/username/1")
+	defer resp.Body.Close()
+	var data map[string]interface{}
+	err := json.NewDecoder(resp.Body).Decode(&data)
+	if err != nil {
+		return "nikolablesic"
+	}
+	log.Println(data["isLiked"])
+	return "nikolablesic"
 }
