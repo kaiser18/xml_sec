@@ -8,7 +8,8 @@ export const environment = {
   baseUrlAuth: 'http://localhost:23001',
   editUser: 'edit',
   getUser: 'user',
-  createUser: 'register'
+  createUser: 'register',
+  authenticate: 'login'
 };
 
 /*
