@@ -60,6 +60,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public boolean verifyUser(String token) throws Exception {
 		ConfirmationToken confirmationToken = confirmationTokenRepository.findByConfirmationToken(token);
+		System.out.println(confirmationToken);
 		if (confirmationToken == null || confirmationToken.getExpiryDate().before(new Date(System.currentTimeMillis()))) {
 			throw new Exception("Token is not valid!");
 		}

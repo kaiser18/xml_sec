@@ -10,6 +10,6 @@ export class VerifyAccountService {
   constructor(private http: HttpClient) { }
 
   verify(data: string) {
-    return this.http.post(`${environment.baseUrl}/${environment.createOtherCertificate}`, data)
+    return this.http.post(`${environment.baseUrl}/${environment.verify}`, data)
   }
 }

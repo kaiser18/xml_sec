@@ -34,11 +34,11 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit(): void {
     this.registerForm = new FormGroup({
-      'firstname': new FormControl('', [Validators.required]),
-      'lastname': new FormControl('', [Validators.required]),
-      'username': new FormControl('', [Validators.required]),
-      'email': new FormControl('', [Validators.required]),
-      'password': new FormControl('', [Validators.required])
+      'firstname': new FormControl('', [Validators.required, Validators.pattern("^[A-ZŠĐŽČĆ][a-zšđćčžA-ZŠĐŽČĆ ]*$")]),
+      'lastname': new FormControl('', [Validators.required, Validators.pattern("^[A-ZŠĐŽČĆ][a-zšđćčžA-ZŠĐŽČĆ ]*$")]),
+      'username': new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]),
+      'email': new FormControl('', [Validators.required, Validators.email]),
+      'password': new FormControl('', [Validators.required, Validators.pattern("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{10,}$")])
     })
   }
 
@@ -58,7 +58,7 @@ export class RegisterComponent implements OnInit {
         alert("success");
       },
       error => {
-        alert("error");
+        alert("Could not register.Username is taken or fields are not valid.");
       }
 
     )
