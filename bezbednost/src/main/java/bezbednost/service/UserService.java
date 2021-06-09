@@ -19,4 +19,5 @@ public interface UserService {
     void createPasswordResetTokenForUser(User user, String token);
 	void changeUserPassword(User user, String newPassword);
 	User getUserByPasswordResetToken(String token);
+	String generateQRUrl(User user);
 }

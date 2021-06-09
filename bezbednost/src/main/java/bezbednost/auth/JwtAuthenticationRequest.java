@@ -12,17 +12,28 @@ public class JwtAuthenticationRequest {
 	
 	@ValidPassword
     private String password;
+	
+	private String verificationCode;
 
     public JwtAuthenticationRequest() {
         super();
     }
 
-    public JwtAuthenticationRequest(String email, String password) {
+    public JwtAuthenticationRequest(String email, String password, String verificationCode) {
         this.setEmail(email);
         this.setPassword(password);
+        this.setVerificationCode(verificationCode);
     }
 
-    public String getEmail() {
+    public String getVerificationCode() {
+		return verificationCode;
+	}
+
+	public void setVerificationCode(String verificationCode) {
+		this.verificationCode = verificationCode;
+	}
+
+	public String getEmail() {
         return email;
     }
 

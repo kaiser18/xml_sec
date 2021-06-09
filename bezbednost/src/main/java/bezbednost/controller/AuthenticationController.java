@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.jboss.aerogear.security.otp.Totp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -90,6 +92,13 @@ public class AuthenticationController {
         User user = (User) authentication.getPrincipal();
         String jwt = tokenUtils.generateToken(user.getEmail());
         int expiresIn = tokenUtils.getExpiredIn();
+        
+        
+        System.out.println(authenticationRequest.getVerificationCode());
+        Totp totp = new Totp(user.getSecret());
+        if (!isValidLong(authenticationRequest.getVerificationCode()) || !totp.verify(authenticationRequest.getVerificationCode())) {
+            throw new BadCredentialsException("Invalid verfication code");
+        }
 
         return ResponseEntity.ok(new UserTokenState(jwt, expiresIn, user));
     }
@@ -112,7 +121,7 @@ public class AuthenticationController {
 	        	
 	        	this.userService.save(user);
 	        	ConfirmationToken token = userService.createConfirmationToken(user);
-	        	emailService.sendConfirmationEmail(user, token.getConfirmationToken(), userRequest.getClientURI());
+	        	emailService.sendConfirmationEmail(user, token.getConfirmationToken(), userRequest.getClientURI(), userService.generateQRUrl(user));
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -241,6 +250,15 @@ public class AuthenticationController {
     private boolean isTokenExpired(PasswordResetToken passToken) {
         final Calendar cal = Calendar.getInstance();
         return passToken.getExpiryDate().before(cal.getTime());
+    }
+    
+    private boolean isValidLong(String code) {
+        try {
+            Long.parseLong(code);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return true;
     }
     
 

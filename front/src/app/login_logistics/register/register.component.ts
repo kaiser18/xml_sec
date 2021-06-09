@@ -48,7 +48,7 @@ export class RegisterComponent implements OnInit {
     this.username = this.registerForm.value.username;
     this.email = this.registerForm.value.email;
     this.password = this.registerForm.value.password;
-    this.clientURI = 'http://localhost:4200/verify';
+    this.clientURI = 'https://localhost:4200/verify';
 
     this.user = new New(this.firstname, this.lastname, this.username, this.email, this.password, this.clientURI)
 
