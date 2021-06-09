@@ -3,7 +3,13 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  baseUrl: 'http://localhost:23002',
+  baseUrlAuth: 'http://localhost:23001',
+  editUser: 'edit',
+  getUser: 'user',
+  createUser: 'register',
+  authenticate: 'login'
 };
 
 /*

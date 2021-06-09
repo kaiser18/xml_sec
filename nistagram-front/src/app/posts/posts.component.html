@@ -1,0 +1,5 @@
+<mat-grid-list cols="1" rowHeight="2:1" style="width: 50%; margin: 0 auto; margin-top: 2%;">
+    <ng-image-slider [images]="imageObject"  [imageSize]="{width: '20%', height: '20%'}" #nav (imageClick)="image($event)"></ng-image-slider>
+    <app-post-item *ngFor="let post of loadedPosts; let i = index" [post]="post" [i] = "i">
+    </app-post-item>
+</mat-grid-list>

@@ -3,16 +3,93 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import { MatIconModule} from '@angular/material/icon';
+import {MatCardModule} from '@angular/material/card';
+import { NavigationComponent } from './navigation/navigation.component';
+import { PostsComponent } from './posts/posts.component';
+import { PostItemComponent } from './posts/post-item/post-item.component';
+import { PostListComponent } from './posts/post-list/post-list.component';
+import {MatGridListModule} from '@angular/material/grid-list';
+import {MatButtonModule} from '@angular/material/button';
+import { ProfileComponent } from './profile/profile.component';
+import {MatTabsModule} from '@angular/material/tabs';
+import {MatDialogModule} from '@angular/material/dialog';
+import { ProfileImageDetailComponent } from './profile/profile-image-detail.component';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {MatInputModule} from '@angular/material/input';
+import {MatMenuModule} from '@angular/material/menu';
+import { NewPostComponent } from './new-post/new-post.component';
+import {MatRadioModule} from '@angular/material/radio';
+import {MatChipsModule} from '@angular/material/chips';
+import { FileUploadComponent } from './new-post/file-upload/file-upload.component';
+import { FileUploadService } from './new-post/file-upload/file-upload.service';
+import { HttpClientModule } from '@angular/common/http';
+import { AddToFavouritesDialogComponent } from './posts/post-item/add-to-favourites-dialog/add-to-favourites-dialog.component';
+import {MatSelectModule} from '@angular/material/select';
+import { SavedComponent } from './profile/saved/saved.component';
+import {MatListModule} from '@angular/material/list';
+import { SearchDialogComponent } from './navigation/search-dialog/search-dialog.component';
+import { PostPageComponent } from './posts/post-page/post-page.component';
+import { PostsService } from './posts/posts.service';
+import { PostsDbService } from './posts/posts-db.service';
+import { NgImageSliderModule } from 'ng-image-slider';
+import { SearchComponent } from './search/search.component';
+import { SearchItemComponent } from './search/search-item/search-item.component';
+import { StoryPageComponent } from './profile/story-page/story-page.component';
+import { EditComponent } from './accounts/edit/edit.component';
+import { RegistrationComponent } from './registration/registration.component';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    NavigationComponent,
+    PostsComponent,
+    PostItemComponent,
+    PostListComponent,
+    ProfileComponent,
+    ProfileImageDetailComponent,
+    NewPostComponent,
+    FileUploadComponent,
+    AddToFavouritesDialogComponent,
+    SavedComponent,
+    SearchDialogComponent,
+    PostPageComponent,
+    SearchComponent,
+    SearchItemComponent,
+    StoryPageComponent,
+	AppComponent,
+    EditComponent,
+    RegistrationComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatCardModule,
+    MatGridListModule,
+    MatButtonModule,
+    MatTabsModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    MatMenuModule,
+    MatRadioModule,
+    MatChipsModule,
+    HttpClientModule, 
+    MatSelectModule,
+    MatListModule,
+    NgImageSliderModule
   ],
-  providers: [],
+  providers: [FileUploadService, PostsService, PostsDbService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
