@@ -1,5 +1,7 @@
 package bezbednost.service.impl;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 
@@ -10,7 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import bezbednost.domain.*;
-import bezbednost.dto.UserVerificationDTO;
 import bezbednost.repository.ConfirmationTokenRepository;
 import bezbednost.repository.PasswordTokenRepository;
 import bezbednost.repository.UserRepository;
@@ -32,6 +33,20 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private ConfirmationTokenRepository confirmationTokenRepository;
 
+	public static String QR_PREFIX = 
+			  "https://chart.googleapis.com/chart?chs=200x200&chld=M%%7C0&cht=qr&chl=";
+
+	@Override
+	public String generateQRUrl(User user) {
+		try {
+			return QR_PREFIX + URLEncoder.encode(String.format("otpauth://totp/%s:%s?secret=%s&issuer=%s",
+					"nistagram", user.getEmail(), user.getSecret(), "nistagram"), "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
+	
 	@Override
 	public User findByUsername(String username) throws UsernameNotFoundException {
 		User u = userRepository.findByUsername(username);

@@ -25,8 +25,8 @@ export class AuthenticationService {
         return this.userSubject.value;
     }
 
-    login(email: string, password: string) {
-        return this.http.post<any>(`${environment.apiUrl}`, { email, password })
+    login(email: string, password: string, verificationCode: string) {
+        return this.http.post<any>(`${environment.apiUrl}`, { email, password, verificationCode })
             .pipe(map(response => {
                 // store user details and basic auth credentials in local storage to keep user logged in between page refreshes
                 response.authdata = response.accessToken;

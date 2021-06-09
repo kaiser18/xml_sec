@@ -1,0 +1,1 @@
+ng serve --ssl --ssl-key C:\Users\nikol\OneDrive\Desktop\certificates\localhost.key  --ssl-cert C:\Users\nikol\OneDrive\Desktop\certificates\localhost.crt
