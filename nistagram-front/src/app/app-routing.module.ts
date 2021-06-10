@@ -11,6 +11,7 @@ import { StoryPageComponent } from './profile/story-page/story-page.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { SearchComponent } from './search/search.component';
 
+<<<<<<< HEAD
 const routes: Routes = [
   {path:'', component:PostsComponent},
   {path:'profile', component:ProfileComponent},
@@ -20,6 +21,14 @@ const routes: Routes = [
   {path:'saved', component:SavedComponent},
   {path:'search/:option/:searchWord', component:SearchComponent},
 	{
+=======
+import { EditComponent } from './accounts/edit/edit.component';
+import { RegistrationComponent } from './registration/registration.component';
+import { LoginComponent } from './login/login.component';
+
+const routes: Routes = [
+    {
+>>>>>>> develop
         path: "accounts/edit",
         component: EditComponent
     },

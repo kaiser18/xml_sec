@@ -26,7 +26,6 @@ import {MatRadioModule} from '@angular/material/radio';
 import {MatChipsModule} from '@angular/material/chips';
 import { FileUploadComponent } from './new-post/file-upload/file-upload.component';
 import { FileUploadService } from './new-post/file-upload/file-upload.service';
-import { HttpClientModule } from '@angular/common/http';
 import { AddToFavouritesDialogComponent } from './posts/post-item/add-to-favourites-dialog/add-to-favourites-dialog.component';
 import {MatSelectModule} from '@angular/material/select';
 import { SavedComponent } from './profile/saved/saved.component';
@@ -40,6 +39,9 @@ import { SearchComponent } from './search/search.component';
 import { SearchItemComponent } from './search/search-item/search-item.component';
 import { StoryPageComponent } from './profile/story-page/story-page.component';
 import { EditComponent } from './accounts/edit/edit.component';
+//import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor} from './_helpers/auth.interceptor';
 import { RegistrationComponent } from './registration/registration.component';
 import { LoginComponent } from './login/login.component';
 
@@ -89,7 +91,9 @@ import { LoginComponent } from './login/login.component';
     MatListModule,
     NgImageSliderModule
   ],
-  providers: [FileUploadService, PostsService, PostsDbService],
+  providers: [ FileUploadService, PostsService, PostsDbService,
+      { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

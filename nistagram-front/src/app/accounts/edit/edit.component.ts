@@ -91,15 +91,15 @@ export class EditComponent implements OnInit {
     return  this.service.getUser(this.user_id = 2).subscribe(data =>{
       this.userModel = data;
 
-      this.name = this.userModel.Name;
-      this.surname = this.userModel.Surname;
-      this.username = this.userModel.Username;
-      this.email = this.userModel.Email;
-      this.gender = this.userModel.Gender;
-      this.date_of_birth = this.userModel.Date_of_birth;
-      this.phone = this.userModel.Phone;
-      this.website = this.userModel.Website;
-      this.biography = this.userModel.Biography;
+      this.name = this.userModel.data.Name;
+      this.surname = this.userModel.data.Surname;
+      this.username = this.userModel.data.Username;
+      this.email = this.userModel.data.Email;
+      this.gender = this.userModel.data.Gender;
+      this.date_of_birth = this.userModel.data.Date_of_birth;
+      this.phone = this.userModel.data.Phone;
+      this.website = this.userModel.data.Website;
+      this.biography = this.userModel.data.Biography;
 
       console.log('DATA---->', this.surname);
 

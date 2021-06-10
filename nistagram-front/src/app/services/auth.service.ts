@@ -24,7 +24,7 @@ export class AuthService {
     }
 
     login (credentials: Authentication) {
-        return this.http.post<AuthenticatedUser>(`${environment.baseUrl}/${environment.authenticate}`, credentials)
+        return this.http.post<AuthenticatedUser>(`${environment.baseUrlAuth}/${environment.authenticate}`, credentials)
         .pipe(map(response => {
             localStorage.setItem('user', JSON.stringify(response));
             this.userSubject.next(response);
