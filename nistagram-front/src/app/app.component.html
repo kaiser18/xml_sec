@@ -1,1 +1,31 @@
+<style>
+    .footer-demo {
+  height: 100%; /* Angular material adds "height:100%" to body tag by default. So, ignore this step in real-time application */
+}
+
+.demo-section {
+  border: 1px solid #e2e2e2;
+}
+
+footer {
+  background-color: white;
+  border-top: 1px solid #bbb;
+  text-align: center;
+  height: 5%;
+  margin-top: 2%;
+}
+
+
+#btmFooter {
+  align-self: flex-end;
+}
+
+</style>
+
+<app-navigation></app-navigation>
 <router-outlet></router-outlet>
+<footer class="md-padding">
+    <div id="btmFooter" flex>
+      <p>#Nistagram</p>
+    </div>
+</footer>

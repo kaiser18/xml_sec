@@ -1,0 +1,19 @@
+<mat-grid-list cols="2" rowHeight="100%"   style="width: 50%; margin: 0 auto; ">
+    <mat-grid-tile >
+            <ng-image-slider style="width: 100%; height: 70%; margin: auto 0;" [images]="imageObject"  [imageSize]="{width: '100%', height: '70%'}" #nav ></ng-image-slider>
+    </mat-grid-tile>
+    <mat-grid-tile> 
+      <mat-card style="background-color: white; border: 1px solid #e2e2e2; height: 65%; width: 100%;" >
+    
+        <img  style="float: left; margin-right: 2%;" mat-card-avatar src="https://images.unsplash.com/photo-1556103255-4443dbae8e5a?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cGhvdG9ncmFwaGVyfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80">
+        <mat-card-title style="font-size: medium;">{{story.username}}</mat-card-title>
+        <mat-card-subtitle style="font-size: small;">{{story.locationName}}</mat-card-subtitle>
+        <mat-card-content>
+            <span style="font-size: medium; font-weight: bold;">{{story.username}}</span> &nbsp;
+            <span style="font-size: medium;">{{story.description}}</span>
+            <br>
+        <span style="margin-left: 1%;" *ngFor="let hashtag of story.hashtags">#{{hashtag}}</span>&nbsp;
+        </mat-card-content>
+    </mat-card>
+    </mat-grid-tile>
+</mat-grid-list>

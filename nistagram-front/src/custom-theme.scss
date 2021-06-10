@@ -14,6 +14,7 @@
 // hue. Available color palettes: https://material.io/design/color/
 $nistagram-front-primary: mat-palette($mat-indigo);
 $nistagram-front-accent: mat-palette($mat-pink, A200, A100, A400);
+$nistagram-front-theme: mat-light-theme($nistagram-front-primary, $nistagram-front-accent);
 
 // The warn palette is optional (defaults to red).
 $nistagram-front-warn: mat-palette($mat-red);

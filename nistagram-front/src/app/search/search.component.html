@@ -1,0 +1,10 @@
+<mat-grid-list cols="1" rowHeight="2:1" style="width: 40%; margin: 0 auto; margin-top: 2%;">
+    <app-post-item *ngFor="let post of posts; let i = index" [post]="post" [i] = "i">
+    </app-post-item>
+    <mat-card style=" margin-top: 2%;background-color: white; border: 1px solid #e2e2e2;" *ngFor="let user of users">   
+        <img  style="float: left; margin-right: 2%;" mat-card-avatar src="https://images.unsplash.com/photo-1556103255-4443dbae8e5a?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cGhvdG9ncmFwaGVyfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80">
+        <mat-card-title style="font-size: medium;">{{user.username}}</mat-card-title>
+        <mat-card-subtitle style="font-size: small;">{{post.locationName}}</mat-card-subtitle>
+    </mat-card>
+</mat-grid-list>
+
