@@ -19,13 +19,25 @@ import { EditComponent } from './accounts/edit/edit.component';
 import { AuthInterceptor} from './_helpers/auth.interceptor';
 import { RegistrationComponent } from './registration/registration.component';
 import { LoginComponent } from './login/login.component';
+import { CreateCertificateComponent } from './create-certificate/create-certificate.component';
+import { UserCertificatesComponent } from './user-certificates/user-certificates.component';
+import { CertificateListComponent } from './certificate-list/certificate-list.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { VerifyAccountComponent } from './verify-account/verify-account.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     EditComponent,
     RegistrationComponent,
-    LoginComponent
+    LoginComponent,
+    CreateCertificateComponent,
+    UserCertificatesComponent,
+    CertificateListComponent,
+    ForgotPasswordComponent,
+    ResetPasswordComponent,
+    VerifyAccountComponent
   ],
   imports: [
     BrowserModule,

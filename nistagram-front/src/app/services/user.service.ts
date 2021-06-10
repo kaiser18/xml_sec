@@ -18,15 +18,15 @@ export class UserService {
 
   constructor(private http: HttpClient) { }
 
-  editUser(data: UserModel) {
+/*  editUser(data: UserModel) {
     return this.http.post(`${environment.baseUrl}/${environment.editUser}`, data, {responseType: 'text'});
   }
 
   getUser(user_id: number): Observable<UserModel> {
     return this.http.get<UserModel>(`${environment.baseUrl}/${environment.getUser}/${user_id}`);
-  }
+  } */
 
   createUser(data: New) {
-    return this.http.post(`${environment.baseUrlAuth}/${environment.createUser}`, data, {responseType: 'text'});
+    return this.http.post(`${environment.baseUrl}/${environment.auth}/${environment.createUser}`, data, {responseType: 'text'});
   }
 }
