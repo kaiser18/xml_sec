@@ -1,0 +1,59 @@
+
+ 
+
+ <mat-dialog-content>
+  <mat-grid-list cols="2" style="height: 200px">
+    <mat-grid-tile>
+        <div >
+          <img style="height: 100%; width: 100%;" src="https://images.unsplash.com/photo-1556103255-4443dbae8e5a?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cGhvdG9ncmFwaGVyfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80">
+        </div>
+    </mat-grid-tile>
+    <mat-grid-tile class="description"> 
+      <mat-card style="background-color: white; border: 1px solid #e2e2e2;" >
+    
+        <img  style="float: left; margin-right: 2%;" mat-card-avatar src="https://images.unsplash.com/photo-1556103255-4443dbae8e5a?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cGhvdG9ncmFwaGVyfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80">
+        <mat-card-title style="font-size: medium;">hanisicc</mat-card-title>
+        <mat-card-subtitle style="font-size: small;">Subotica, Serbia</mat-card-subtitle>
+        
+        <mat-card-actions>
+            <button mat-icon-button>
+                <mat-icon class="example-tab-icon">thumb_up</mat-icon>
+            </button>
+            <button mat-icon-button>
+                <mat-icon class="example-tab-icon">thumb_down</mat-icon>
+            </button>
+            <button mat-icon-button>
+                <mat-icon class="example-tab-icon">comment</mat-icon>
+            </button>
+            <button  mat-icon-button style="float: right;">
+                <mat-icon class="example-tab-icon" >bookmark_border</mat-icon>
+            </button>
+        </mat-card-actions>
+        <mat-card-content>
+            <span style="font-size: medium; font-weight: bold;">hanisicc</span> &nbsp;
+            <span style="font-size: medium;">Ovde ide opis slike!</span>
+            <br>
+            <span>#hello #world #nesto</span>
+        </mat-card-content>
+        <a routerLink="/profile">View comments</a>
+        <mat-card-footer style="margin: 0px;">
+            <mat-form-field class="example-full-width">
+                <mat-label>Leave a comment</mat-label>
+                <textarea matInput placeholder="Ex. It makes me feel..."></textarea>
+                
+              </mat-form-field>
+              <button mat-flat-button>
+                Post
+            </button>
+        </mat-card-footer>
+    </mat-card>
+    
+      
+    </mat-grid-tile>
+</mat-grid-list>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Install</button>
+</mat-dialog-actions>
+ </mat-dialog-content>
+  

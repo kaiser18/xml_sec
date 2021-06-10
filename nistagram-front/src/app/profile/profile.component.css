@@ -1,0 +1,13 @@
+.profile-image{
+    background: black;
+}
+
+.profile-image img {
+    opacity: 1;
+    /*filter: alpha(opacity=40);*/
+}
+
+.profile-image img:hover {
+    opacity: 0.6;
+}
+
