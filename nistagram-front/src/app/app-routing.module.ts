@@ -66,31 +66,33 @@ const routes: Routes = [
     },
     {
       path:'', 
-      component:PostsComponent
+      component: PostsComponent
     },
     {
       path:'profile',
-       component:ProfileComponent
+      component: ProfileComponent
     },
     {
       path:'new-post',
-      component:NewPostComponent
+      component: NewPostComponent,
+      canActivate: [AuthGuard],
+      data: {roles: [Role.User]}
     },
     {
       path:'post/:id',
-      component:PostPageComponent
+      component: PostPageComponent
     },
     {
       path:'story/:id',
-      component:StoryPageComponent
+      component: StoryPageComponent
     },
     {
       path:'saved',
-      component:SavedComponent
+      component: SavedComponent
     },
     {
       path:'search/:option/:searchWord',
-      component:SearchComponent
+      component: SearchComponent
     },
 ];
 
