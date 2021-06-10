@@ -32,7 +32,7 @@ export class EditComponent implements OnInit {
   constructor(private service : UserService) { }
 
   ngOnInit(): void {
-/*
+
         this.getUserData();
 
         this.editForm = new FormGroup({
@@ -46,10 +46,10 @@ export class EditComponent implements OnInit {
           'website': new FormControl(),
           'biography': new FormControl()
         });
-        */
+        
   }
 
-/*  public editUser() {
+  public editUser() {
     this.user_id = 2;
     this.name = this.editForm.value.name;
     this.surname = this.editForm.value.surname;
@@ -118,5 +118,5 @@ export class EditComponent implements OnInit {
     })
   }
 
-*/
+
 }
