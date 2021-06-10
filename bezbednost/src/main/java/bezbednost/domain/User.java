@@ -21,9 +21,9 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Version;
 import javax.validation.constraints.Size;
 
+import org.jboss.aerogear.security.otp.api.Base32;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -53,8 +53,20 @@ public class User implements UserDetails {
     @JsonIgnore
     @Column(name = "password")
     private String password;
+    
+    @JsonIgnore
+    @Column(name = "secret", unique=true)
+    private String secret;
 
-    @Size(min=2, max=50)
+    public String getSecret() {
+		return secret;
+	}
+
+	public void setSecret(String secret) {
+		this.secret = secret;
+	}
+
+	@Size(min=2, max=50)
     @Column(name = "first_name", nullable = false)
     private String firstName;
 
@@ -88,6 +100,7 @@ public class User implements UserDetails {
     @OneToMany(mappedBy="user")
     private List<ConfirmationToken> confirmationTokens;
     public User(){
+    	this.secret = Base32.random();
     }
 
     public User(UserRequest userRequest) {
@@ -96,6 +109,7 @@ public class User implements UserDetails {
         this.firstName = userRequest.getFirstname();
         this.lastName = userRequest.getLastname();
         this.username = userRequest.getUsername();
+        this.secret = Base32.random();
     }
 
 

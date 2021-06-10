@@ -32,7 +32,8 @@ export class LoginComponent implements OnInit {
     ngOnInit() {
         this.loginForm = this.formBuilder.group({
             username: ['', Validators.required],
-            password: ['', Validators.required]
+            password: ['', Validators.required],
+            verificationCode: ['', Validators.required]
         });
 
         // get return url from route parameters or default to '/Home'
@@ -50,7 +51,7 @@ export class LoginComponent implements OnInit {
         }
 
         this.loading = true;
-        this.authenticationService.login(this.f.username.value, this.f.password.value)
+        this.authenticationService.login(this.f.username.value, this.f.password.value, this.f.verificationCode.value)
             .pipe(first())
             .subscribe(
                 data => {
@@ -58,7 +59,7 @@ export class LoginComponent implements OnInit {
                 },
                 error => {
                     //this.router.navigate([this.returnUrl]);
-                    this.error = "Username or password is incorrect";
+                    this.error = "Username, password or verification code is incorrect";
                     this.loading = false;
                 });
     }

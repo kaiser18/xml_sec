@@ -45,11 +45,17 @@ public class EmailService {
 	}
 	
 	@Async
-	public void sendConfirmationEmail(User user, String token, String clientURI) throws MailException {
+	public void sendConfirmationEmail(User user, String token, String clientURI, String QRUrl) throws MailException {
 		try {
 			MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 			mimeMessage.setContent("<p>Click this link to complete your registration: <a href=\""+clientURI+"?token=" + token
-					+ "\">Verify</a></p>", "text/html");
+					+ "\">Verify</a></p><br><br><h3>Set up Google Authenticator</h3><br><h5>"
+					+ "1. On your phone, install the Google Authenticator app<br>"
+					+ "2. In the app, tap Get Started<br>"
+					+ "3. Click the \"+\" (plus sign)<br>"
+					+ "4. Click scan a QR Code<br>"
+					+ "5. Scan this QR Code:</h5><br>"
+					+ "<img src=\"" + QRUrl + "\" alt=\"img\" />", "text/html");
 			MimeMessageHelper mail = new MimeMessageHelper(mimeMessage, "utf-8");
 			mail.setTo(user.getEmail());
 			
