@@ -2,7 +2,7 @@ package helpers
 
 import (
 	"encoding/json"
-	"log"
+	//"log"
 	"net/http"
 	//"regexp"
 	"strconv"
@@ -11,12 +11,15 @@ import (
 	"back_go/user_service/interfaces"
 	"github.com/dgrijalva/jwt-go"
 	_ "github.com/lib/pq"
+	log "github.com/sirupsen/logrus"
 	//"golang.org/x/crypto/bcrypt"
+	//"path/filepath"
 )
 
 
 func HandleErr(err error) {
 	if err != nil {
+		log.Error(err)
 		panic(err.Error())
 	}
 }
@@ -27,7 +30,17 @@ func PanicHandler(next http.Handler) http.Handler{
 		defer func() {
 			error := recover()
 			if error != nil {
-				log.Println(error)
+				//log.Println(error)
+				log.WithFields(log.Fields{
+					"method": r.Method,
+					"path": r.URL,
+					"agent": r.UserAgent(),
+					"response": r.Response,
+					"host": r.Host,
+					"proto": r.Proto,
+					"error_description": error,
+					"service": "user_service",
+				}).Error("request details")
 
 				resp := interfaces.ErrResponse{Message: "Internal server error"}
 				json.NewEncoder(w).Encode(resp)

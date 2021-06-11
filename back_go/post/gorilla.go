@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"log"
+	//"log"
 	"net"
 	"net/http"
 
@@ -13,10 +13,13 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	otgo "github.com/opentracing/opentracing-go"
 	"google.golang.org/grpc"
+	"post/logger"
+	log "github.com/sirupsen/logrus"
 )
 
 func main() {
 	log.Println("Zapocinjem...")
+	logger.FileOpen()
 	searchConn, err := grpc.Dial("search-service:9000", grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("failed to dial search service: %s", err)
@@ -66,6 +69,7 @@ func main() {
 	if err != nil {
 		log.Fatalln("Failed to dial server:", err)
 	}
+	log.Info(conn)
 
 	gwmux := runtime.NewServeMux()
 	// Register Greeter
