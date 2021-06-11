@@ -16,8 +16,8 @@ var DB *gorm.DB
 // Create InitDatabase function
 func InitDatabase() {
 
-	database, err := gorm.Open("postgres", "host=db port=5432 user=postgres dbname=users password=postgres sslmode=disable")
-	//database, err := gorm.Open("postgres", "host=127.0.0.1 port=5432 user=postgres dbname=mrdocker password=petarpanizvoncica sslmode=disable")
+	//database, err := gorm.Open("postgres", "host=db port=5432 user=postgres dbname=users password=postgres sslmode=disable")
+	database, err := gorm.Open("postgres", "host=127.0.0.1 port=5433 user=postgres dbname=bezbednost password=root sslmode=disable")
 
 	helpers.HandleErr(err)
 	// Set up connection pool

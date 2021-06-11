@@ -50,7 +50,7 @@ export class EditComponent implements OnInit {
   }
 
   public editUser() {
-    this.user_id = 2;
+    this.user_id = 202;
     this.name = this.editForm.value.name;
     this.surname = this.editForm.value.surname;
     this.username = this.editForm.value.username;
@@ -88,18 +88,18 @@ export class EditComponent implements OnInit {
   }
 
   getUserData(){
-    return  this.service.getUser(this.user_id = 2).subscribe(data =>{
-      this.userModel = data;
+    return  this.service.getUser(this.user_id = 202).subscribe(data =>{
+    //  this.userModel = data;
 
-      this.name = this.userModel.data.Name;
-      this.surname = this.userModel.data.Surname;
-      this.username = this.userModel.data.Username;
-      this.email = this.userModel.data.Email;
-      this.gender = this.userModel.data.Gender;
-      this.date_of_birth = this.userModel.data.Date_of_birth;
-      this.phone = this.userModel.data.Phone;
-      this.website = this.userModel.data.Website;
-      this.biography = this.userModel.data.Biography;
+      this.name = data.Name;
+      this.surname = data.Surname;
+      this.username = data.Username;
+      this.email = data.Email;
+      this.gender = data.Gender;
+      this.date_of_birth = data.Date_of_birth;
+      this.phone = data.Phone;
+      this.website = data.Website;
+      this.biography = data.Biography;
 
       console.log('DATA---->', this.surname);
 

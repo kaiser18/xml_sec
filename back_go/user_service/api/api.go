@@ -15,36 +15,35 @@ import (
 )
 
 type User struct {
-	Name string
-	Surname string
-	Username string
-	Email string
-	Password string
+	FirstName string
+	LastName  string
+	Username  string
+	Email     string
+	Password  string
 }
 
 type UserInfo struct {
-    User_id uint
-    Gender string
+	User_id       uint
+	Gender        string
 	Date_of_birth string
-	Phone string
-	Website string
-	Biography string
+	Phone         string
+	Website       string
+	Biography     string
 }
 
 type WholeUser struct {
-	Name string
-	Surname string
-	Username string
-	Email string
-	Password string
-	User_id uint
-    Gender string
+	FirstName     string
+	LastName      string
+	Username      string
+	Email         string
+	Password      string
+	User_id       uint
+	Gender        string
 	Date_of_birth string
-	Phone string
-	Website string
-	Biography string
+	Phone         string
+	Website       string
+	Biography     string
 }
-
 
 // Create readBody function
 func readBody(r *http.Request) []byte {
@@ -66,18 +65,18 @@ func apiResponse(call map[string]interface{}, w http.ResponseWriter) {
 	}
 }
 
-func edit_user(w http.ResponseWriter, r *http.Request){
-    // Refactor login to use readBody
-    body := readBody(r)
+func edit_user(w http.ResponseWriter, r *http.Request) {
+	// Refactor login to use readBody
+	body := readBody(r)
 
 	var formattedBody WholeUser
 
 	err := json.Unmarshal(body, &formattedBody)
 	helpers.HandleErr(err)
 
-    edit := users.EditUser(formattedBody.Name, formattedBody.Surname, formattedBody.Username, formattedBody.Email,
-         formattedBody.User_id, formattedBody.Gender, formattedBody.Date_of_birth, formattedBody.Phone, formattedBody.Website, formattedBody.Biography)
-    // Refactor register to use apiResponse function
+	edit := users.EditUser(formattedBody.FirstName, formattedBody.LastName, formattedBody.Username, formattedBody.Email,
+		formattedBody.User_id, formattedBody.Gender, formattedBody.Date_of_birth, formattedBody.Phone, formattedBody.Website, formattedBody.Biography)
+	// Refactor register to use apiResponse function
 	apiResponse(edit, w)
 }
 
@@ -90,13 +89,12 @@ func getUser(w http.ResponseWriter, r *http.Request) {
 	apiResponse(user, w)
 }
 
-
 func StartApi() {
 	router := mux.NewRouter()
 	// Add panic handler middleware
 	router.Use(helpers.PanicHandler)
 	router.HandleFunc("/edit", edit_user).Methods("POST")
-    //router.HandleFunc("/login", login).Methods("POST")
+	//router.HandleFunc("/login", login).Methods("POST")
 	//router.HandleFunc("/register", register).Methods("POST")
 	router.HandleFunc("/user/{id}", getUser).Methods("GET")
 	fmt.Println("App is working on port :23002")

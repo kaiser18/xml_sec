@@ -27,6 +27,6 @@ export class UserService {
   } 
 
   createUser(data: New) {
-    return this.http.post(`${environment.baseUrlUser}/${environment.auth}/${environment.createUser}`, data, {responseType: 'text'});
+    return this.http.post(`${environment.baseUrl}/${environment.auth}/${environment.createUser}`, data, {responseType: 'text'});
   }
 }

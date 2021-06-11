@@ -41,14 +41,25 @@ services:
           - backend
         depends_on:
           - db
-    nista-front:
-        build: ./nistagram-front
+    bezbednost:
+        build: ./bezbednost
         restart: always
-        #environment:
         expose:
-            - 4200
+            - 8443
         ports:
-            - "4200:4200"
+            - "8443:8443"
+        networks:
+            - backend
+        depends_on:
+            - db
+    #nista-front:
+       # build: ./nistagram-front
+       # restart: always
+        #environment:
+       # expose:
+       #     - 4200
+       # ports:
+       #     - "4200:4200"
     gateway:
         image: nginx:1.19.8-alpine
         ports:

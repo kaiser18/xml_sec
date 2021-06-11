@@ -23,8 +23,8 @@ const routes: Routes = [
     {
       path: "accounts/edit",
       component: EditComponent,
-      canActivate: [AuthGuard],
-      data: {roles: [Role.User]}
+   //   canActivate: [AuthGuard],
+   //   data: {roles: [Role.User]}
     },
     {
       path: "registration",
