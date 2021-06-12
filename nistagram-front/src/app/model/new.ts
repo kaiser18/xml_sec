@@ -1,18 +1,16 @@
 export class New {
+    firstname: string;
+    lastname: string;
     username: string;
-    password: string;
-    name: string;
-    surname: string;
     email: string;
-    //clientURI: string;
+    password: string;
 
 
     constructor(name: string, surname: string, username: string, email: string, password: string) {
-            this.name = name;
-            this.surname = surname;
+            this.firstname = name;
+            this.lastname = surname;
             this.username = username;
             this.email = email;
             this.password = password;
-            //this.clientURI = clientURI;
 	}
 }

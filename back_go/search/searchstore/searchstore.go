@@ -11,6 +11,7 @@ import (
 	"github.com/nikolablesic/proto/search"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	log "github.com/sirupsen/logrus"
 )
 
 type SearchStore struct {
@@ -29,6 +30,7 @@ func New() (*SearchStore, error) {
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Shanghai", host, user, password, dbname, dbport)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
+		log.Error(err)
 		return nil, err
 	}
 	ts.db = db
@@ -128,6 +130,7 @@ func MakeRange(usernames []string) string {
 func (ts *SearchStore) Close() error {
 	db, err := ts.db.DB()
 	if err != nil {
+		log.Error(err)
 		return err
 	}
 

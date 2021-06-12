@@ -8,6 +8,7 @@ import (
 	"back_go/user_service/helpers"
 	"back_go/user_service/interfaces"
 	"github.com/dgrijalva/jwt-go"
+	log "github.com/sirupsen/logrus"
 	//"golang.org/x/crypto/bcrypt"
 )
 // Refactor prepareToken
@@ -44,8 +45,8 @@ func prepareResponse(user *interfaces.User, withToken bool) map[string]interface
 func prepareFullResponse(user *interfaces.User, userInfo *interfaces.UserInfo, withToken bool) map[string]interface{} {
 	responseUser := &interfaces.ResponseWholeUser{
 		ID: user.ID,
-		Name: user.Name,
-		Surname: user.Surname,
+		Name: user.First_name,
+		Surname: user.Last_name,
 		Username: user.Username,
 		Email: user.Email,
 		Gender: userInfo.Gender,
@@ -69,6 +70,7 @@ func MigrateInfo() {
 
     userX := &interfaces.UserInfo{}
     database.DB.AutoMigrate(&userX)
+	log.Info("Table initialization successful")
 }
 
 func CheckForNewUsers() {
@@ -102,10 +104,10 @@ func EditUser(name string, surname string, username string, email string,
 		return map[string]interface{}{"message": "cant edit non-existent user"}
 	}
 
-	user := &interfaces.User{Name: name, Surname: surname, Username: username, Email: email}
+	user := &interfaces.User{First_name: name, Last_name: surname, Username: username, Email: email}
 	if !(database.DB.Where("id = ? ", user_id).First(&user).RecordNotFound()) {
-		user.Name = name
-		user.Surname = surname
+		user.First_name = name
+		user.Last_name = surname
 		user.Username = username
 		user.Email = email
 

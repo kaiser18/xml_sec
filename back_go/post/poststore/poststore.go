@@ -12,6 +12,7 @@ import (
 	tracer "github.com/milossimic/grpc_rest/tracer"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	log "github.com/sirupsen/logrus"
 )
 
 type PostStore struct {
@@ -30,6 +31,7 @@ func New() (*PostStore, error) {
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Shanghai", host, user, password, dbname, dbport)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
+		log.Error(err)
 		return nil, err
 	}
 	ts.db = db
@@ -43,6 +45,7 @@ func (ts *PostStore) CreatePost(ctx context.Context, postRequest *helloworld.Cre
 
 	location, err := ts.CreateLocationIfNotExists(postRequest.Post.LocationName)
 	if err != nil {
+		log.Error(err)
 		ts.db.Rollback()
 		return &helloworld.Identifier{
 			Id: int32(-1),
@@ -60,6 +63,7 @@ func (ts *PostStore) CreatePost(ctx context.Context, postRequest *helloworld.Cre
 	for _, hashtag := range postRequest.Post.Hashtags {
 		h, err := ts.CreateHashtagIfNotExists(hashtag)
 		if err != nil {
+			log.Error(err)
 			ts.db.Rollback()
 			return &helloworld.Identifier{
 				Id: int32(-1),
@@ -73,6 +77,7 @@ func (ts *PostStore) CreatePost(ctx context.Context, postRequest *helloworld.Cre
 	for _, tag := range postRequest.Post.Tags {
 		t, err := ts.CreateHashtagIfNotExists(tag)
 		if err != nil {
+			log.Error(err)
 			ts.db.Rollback()
 			return &helloworld.Identifier{
 				Id: int32(-1),
@@ -101,6 +106,7 @@ func (ts *PostStore) CreateStory(ctx context.Context, storyRequest *helloworld.C
 
 	location, err := ts.CreateLocationIfNotExists(storyRequest.Story.LocationName)
 	if err != nil {
+		log.Error(err)
 		ts.db.Rollback()
 		return &helloworld.Identifier{
 			Id: int32(-1),
@@ -120,6 +126,7 @@ func (ts *PostStore) CreateStory(ctx context.Context, storyRequest *helloworld.C
 	for _, hashtag := range storyRequest.Story.Hashtags {
 		h, err := ts.CreateHashtagIfNotExists(hashtag)
 		if err != nil {
+			log.Error(err)
 			ts.db.Rollback()
 			return &helloworld.Identifier{
 				Id: int32(-1),
@@ -133,6 +140,7 @@ func (ts *PostStore) CreateStory(ctx context.Context, storyRequest *helloworld.C
 	for _, tag := range storyRequest.Story.Tags {
 		t, err := ts.CreateHashtagIfNotExists(tag)
 		if err != nil {
+			log.Error(err)
 			ts.db.Rollback()
 			return &helloworld.Identifier{
 				Id: int32(-1),
@@ -180,12 +188,14 @@ func (ts *PostStore) SavePost(ctx context.Context, request *helloworld.SavePostR
 	var usern Username
 	res := ts.db.FirstOrCreate(&usern, Username{Name: request.Post.Username})
 	if res.Error != nil {
+		log.Error(res.Error)
 		return &helloworld.Identifier{}, res.Error
 	}
 
 	var cat SavedPostCategory
 	res = ts.db.FirstOrCreate(&cat, SavedPostCategory{Username: request.Post.Username, CategoryName: request.Post.CategoryName})
 	if res.Error != nil {
+		log.Error(res.Error)
 		return &helloworld.Identifier{}, res.Error
 	}
 
@@ -209,6 +219,7 @@ func (ts *PostStore) RemoveSavedPost(ctx context.Context, in *helloworld.ActionR
 	var usern Username
 	res := ts.db.FirstOrCreate(&usern, Username{Name: in.Username})
 	if res.Error != nil {
+		log.Error(res.Error)
 		return res.Error
 	}
 	ts.db.Exec("DELETE FROM saved_posts WHERE post_id = ? AND username = ?", in.PostId, in.Username)
@@ -285,6 +296,7 @@ func (ts *PostStore) LikePost(ctx context.Context, likeRequest *helloworld.Impre
 	var usern Username
 	res := ts.db.FirstOrCreate(&usern, Username{Name: likeRequest.Request.Username})
 	if res.Error != nil {
+		log.Error(res.Error)
 		return res.Error
 	}
 	ts.db.Exec("INSERT into post_like (post_id, username_id) VALUES (?,?)", likeRequest.Request.PostId, usern.ID)
@@ -298,6 +310,7 @@ func (ts *PostStore) DislikePost(ctx context.Context, dislikeRequest *helloworld
 	var usern Username
 	res := ts.db.FirstOrCreate(&usern, Username{Name: dislikeRequest.Request.Username})
 	if res.Error != nil {
+		log.Error(res.Error)
 		return res.Error
 	}
 	ts.db.Exec("INSERT into post_dislike (post_id, username_id) VALUES (?,?)", dislikeRequest.Request.PostId, usern.ID)
@@ -311,6 +324,7 @@ func (ts *PostStore) RemovePostLike(ctx context.Context, likeRequest *helloworld
 	var usern Username
 	res := ts.db.FirstOrCreate(&usern, Username{Name: likeRequest.Username})
 	if res.Error != nil {
+		log.Error(res.Error)
 		return res.Error
 	}
 	ts.db.Exec("DELETE FROM post_like WHERE post_id = ? AND username_id = ?", likeRequest.PostId, usern.ID)
@@ -324,6 +338,7 @@ func (ts *PostStore) RemovePostDislike(ctx context.Context, dislikeRequest *hell
 	var usern Username
 	res := ts.db.FirstOrCreate(&usern, Username{Name: dislikeRequest.Username})
 	if res.Error != nil {
+		log.Error(res.Error)
 		return res.Error
 	}
 	ts.db.Exec("DELETE FROM post_dislike WHERE post_id = ? AND username_id = ?", dislikeRequest.PostId, usern.ID)
@@ -334,6 +349,7 @@ func (ts *PostStore) CreateLocationIfNotExists(locationName string) (*Location, 
 	var location Location
 	res := ts.db.FirstOrCreate(&location, Location{Name: locationName})
 	if res.Error != nil {
+		log.Error(res.Error)
 		return nil, res.Error
 	}
 	return &location, nil
@@ -343,6 +359,7 @@ func (ts *PostStore) CreateHashtagIfNotExists(tagName string) (*Hashtag, error) 
 	var tag Hashtag
 	res := ts.db.FirstOrCreate(&tag, Hashtag{Name: tagName})
 	if res.Error != nil {
+		log.Error(res.Error)
 		return nil, res.Error
 	}
 	return &tag, nil
@@ -352,6 +369,7 @@ func (ts *PostStore) CreateUsernameIfNotExists(username string) (*Username, erro
 	var usern Username
 	res := ts.db.FirstOrCreate(&usern, Username{Name: username})
 	if res.Error != nil {
+		log.Error(res.Error)
 		return nil, res.Error
 	}
 	return &usern, nil
@@ -666,6 +684,7 @@ func (ts *PostStore) SetStoryHighlight(ctx context.Context, highlightRequest *he
 func (ts *PostStore) Close() error {
 	db, err := ts.db.DB()
 	if err != nil {
+		log.Error(err)
 		return err
 	}
 

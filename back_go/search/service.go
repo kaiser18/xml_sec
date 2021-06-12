@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"io"
-	"log"
+	//"log"
 	"net/http"
 	"search/searchstore"
 	"strings"
@@ -17,6 +17,7 @@ import (
 	tracer "github.com/milossimic/grpc_rest/tracer"
 	otgo "github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/ext"
+	log "github.com/sirupsen/logrus"
 )
 
 var grpcGatewayTag = otgo.Tag{Key: string(ext.Component), Value: "grpc-gateway"}
@@ -37,6 +38,15 @@ func tracingWrapper(h http.Handler) http.Handler {
 			defer serverSpan.Finish()
 		}
 		h.ServeHTTP(w, r)
+		log.WithFields(log.Fields{
+			"method": r.Method,
+			"path": r.URL,
+			"agent": r.UserAgent(),
+			"response": r.Response,
+			"host": r.Host,
+			"proto": r.Proto,
+			"service": "search",
+		}).Info("request details")
 	})
 }
 
@@ -53,6 +63,7 @@ type server struct {
 func NewServer(postClient helloworld.GreeterClient) (*server, error) {
 	store, err := searchstore.New()
 	if err != nil {
+		log.Error(err)
 		return nil, err
 	}
 
@@ -67,10 +78,12 @@ func NewServer(postClient helloworld.GreeterClient) (*server, error) {
 }
 
 func (s *server) GetTracer() otgo.Tracer {
+	log.Info(s.tracer)
 	return s.tracer
 }
 
 func (s *server) GetCloser() io.Closer {
+	log.Info(s.closer)
 	return s.closer
 }
 
@@ -117,6 +130,10 @@ func (s *server) GetStoriesForUserRequest(ctx context.Context, in *search.Action
 	}
 	stories, err := s.postClient.GetStoriesByIdsRequest(ctx, &helloworld.Ids{Ids: ids, Username: username})
 
+	if err != nil {
+		log.Error(err)
+	}
+
 	return convertGetAllStoriesToStories(stories), err
 }
 
@@ -128,6 +145,10 @@ func (s *server) GetPostsByUsernameRequest(ctx context.Context, in *search.Actio
 		ids = append(ids, int32(post.PostID))
 	}
 	posts, err := s.postClient.GetPostsByIdsRequest(ctx, &helloworld.Ids{Ids: ids})
+
+	if err != nil {
+		log.Error(err)
+	}
 
 	return convertGetAllPostsToPosts(posts), err
 }
@@ -152,6 +173,10 @@ func (s *server) GetNewsFeedForUsernameRequest(ctx context.Context, in *search.A
 		return &search.Posts{}, nil
 	}
 	posts, err := s.postClient.GetPostsByIdsRequest(ctx, &helloworld.Ids{Ids: ids})
+
+	if err != nil {
+		log.Error(err)
+	}
 
 	return convertGetAllPostsToPosts(posts), err
 }
@@ -342,6 +367,10 @@ func (s *server) GetCommentsRequest(ctx context.Context, in *search.GetComments)
 	ids := []int32{}
 	ids = append(ids, in.PostId)
 	posts, err := s.postClient.GetPostsByIdsRequest(ctx, &helloworld.Ids{Ids: ids})
+
+	if err != nil {
+		log.Error(err)
+	}
 
 	for _, post := range posts.Posts {
 		return &search.Comments{

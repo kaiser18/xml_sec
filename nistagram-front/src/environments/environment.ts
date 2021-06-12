@@ -4,12 +4,29 @@
 
 export const environment = {
   production: false,
-  baseUrl: 'http://localhost:23002',
-  baseUrlAuth: 'http://localhost:23001',
+  baseUrlUser: 'http://localhost:23002',
+ // baseUrlAuth: 'http://localhost:23001',
   editUser: 'edit',
   getUser: 'user',
-  createUser: 'register',
-  authenticate: 'login'
+//  createUser: 'register',
+//  authenticate: 'login', 
+
+  baseUrl: 'https://localhost:8443',
+  certificate: 'api/certificate',
+  createRootCertificate: 'generateRoot',
+  createOtherCertificate: 'generateOther',
+  getAllCertificates: 'getAllCertificates',
+  getAllCertificatesByEmail: 'getAllCertificatesByEmail',
+  revokeCertificate: 'revokeCertificate',
+  isRevoked: 'isRevoked',
+  isDesired: 'isVerified',
+  auth: 'auth',
+  login: 'login',
+  createUser: 'signup',
+  forgotPassword: 'resetPassword',
+  resetPassword: 'changePassword',
+  verify: 'verify'
+
 };
 
 /*

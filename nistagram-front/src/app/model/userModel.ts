@@ -10,7 +10,7 @@ export class UserModel {
     public Phone: string;
     public Website: string;
     public Biography: string;
-    public data: Array<any>;
+    public data: any;
 
     constructor(id: number, name: string, surname: string, username: string, email: string, /*fPassword: string,*/
          gender: string, date_of_birth: string, phone: string, website: string, biography: string) {
