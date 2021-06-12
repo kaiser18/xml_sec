@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"io"
-	"log"
+	//"log"
 	"net/http"
 	"post/poststore"
 
@@ -16,6 +16,7 @@ import (
 	tracer "github.com/milossimic/grpc_rest/tracer"
 	otgo "github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/ext"
+	log "github.com/sirupsen/logrus"
 )
 
 var grpcGatewayTag = otgo.Tag{Key: string(ext.Component), Value: "grpc-gateway"}
@@ -36,6 +37,16 @@ func tracingWrapper(h http.Handler) http.Handler {
 			defer serverSpan.Finish()
 		}
 		h.ServeHTTP(w, r)
+
+		log.WithFields(log.Fields{
+			"method": r.Method,
+			"path": r.URL,
+			"agent": r.UserAgent(),
+			"response": r.Response,
+			"host": r.Host,
+			"proto": r.Proto,
+			"service": "post",
+		}).Info("request details")
 	})
 }
 
@@ -52,6 +63,7 @@ const name = "post_service"
 func NewServer(searchClient search.SearchClient) (*server, error) {
 	store, err := poststore.New()
 	if err != nil {
+		log.Error(err)
 		return nil, err
 	}
 
@@ -66,10 +78,12 @@ func NewServer(searchClient search.SearchClient) (*server, error) {
 }
 
 func (s *server) GetTracer() otgo.Tracer {
+	log.Info(s.tracer)
 	return s.tracer
 }
 
 func (s *server) GetCloser() io.Closer {
+	log.Info(s.closer)
 	return s.closer
 }
 
@@ -87,6 +101,9 @@ func (s *server) PostRequest(ctx context.Context, in *helloworld.CreatePostReque
 			CreatedAt: in.Post.CreatedAt,
 		},
 	})
+	if err != nil {
+		log.Error(err)
+	}
 	return id, err
 }
 
@@ -192,6 +209,9 @@ func (s *server) StoryRequest(ctx context.Context, in *helloworld.CreateStoryReq
 			CreatedAt: in.Story.CreatedAt,
 		},
 	})
+	if err != nil {
+		log.Error(err)
+	}
 	return id, err
 }
 
@@ -292,6 +312,7 @@ func GetUsernameFromTokenAndUserId(token string, id string) string {
 	var data map[string]interface{}
 	err := json.NewDecoder(resp.Body).Decode(&data)
 	if err != nil {
+		log.Error(err)
 		return ""
 	}
 	log.Println(data["isLiked"])

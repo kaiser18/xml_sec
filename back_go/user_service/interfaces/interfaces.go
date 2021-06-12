@@ -2,21 +2,13 @@ package interfaces
 
 import "github.com/jinzhu/gorm"
 
-/*type User struct {
-	gorm.Model
-	Name string
-	Surname string
-    Username string
-	Email string
-	Password string
-} */
-
 type User struct {
-	Email      string
-	Enable     bool
+	//gorm.Model
+	ID         uint
 	First_name string
 	Last_name  string
 	Username   string
+	Email      string
 	Password   string
 }
 

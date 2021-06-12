@@ -8,7 +8,6 @@ import (
 	"net/http"
 
 	"back_go/auth_service/registration2/helpers"
-	//"back_go/auth_service/registration2/useraccounts"
 	"back_go/auth_service/registration2/users"
 
 	"github.com/gorilla/mux"
