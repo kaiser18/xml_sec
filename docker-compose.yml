@@ -13,42 +13,53 @@ services:
         environment:
           - POSTGRES_PASSWORD=postgres
           - POSTGRES_USER=postgres
-    auth_service:
-        build: ./back_go/auth_service
+    #auth_service:
+    #    build: ./back_go/auth_service
+    #    restart: always
+    #    environment:
+    #      - DBHOST=db
+    #      - USER=postgres
+    #      - PASSWORD=postgres
+    #      - DBNAME=mrdocker
+    #      - DBPORT=5432
+    #    expose:
+    #        - 23001
+    #    ports:
+    #        - "23001:23001"
+    #    networks:
+    #      - backend
+    #    depends_on:
+    #        - db
+    #user_service:
+    #    build: ./back_go/user_service
+    #    restart: always
+    #    expose:
+    #      - 23002
+    #    ports:
+    #      - "23002:23002"
+    #    networks:
+    #      - backend
+    #    depends_on:
+    #      - db
+    bezbednost:
+        build: ./bezbednost
         restart: always
-        environment:
-          - DBHOST=db
-          - USER=postgres
-          - PASSWORD=postgres
-          - DBNAME=mrdocker
-          - DBPORT=5432
         expose:
-            - 23001
+            - 8443
         ports:
-            - "23001:23001"
+            - "8443:8443"
         networks:
-          - backend
+            - backend
         depends_on:
             - db
-    user_service:
-        build: ./back_go/user_service
-        restart: always
-        expose:
-          - 23002
-        ports:
-          - "23002:23002"
-        networks:
-          - backend
-        depends_on:
-          - db
-    nista-front:
-        build: ./nistagram-front
-        restart: always
-        #environment:
-        expose:
-            - 4200
-        ports:
-            - "4200:4200"
+    #nista-front:
+    #    build: ./nistagram-front
+    #    restart: always
+    #    #environment:
+    #    expose:
+    #        - 4200
+    #    ports:
+    #        - "4200:4200"
     gateway:
         image: nginx:1.19.8-alpine
         ports:

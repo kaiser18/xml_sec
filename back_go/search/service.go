@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"io"
 	"log"
 	"net/http"
@@ -498,25 +497,18 @@ func GetUsernameOfLoggedUser(ctx context.Context) string {
 	if len(md["authorization"]) > 0 {
 		token = md["authorization"][0]
 	} else {
-		return "nikolablesic"
+		return ""
 	}
-	var userId string
-	if len(md["grpcgateway-origin"]) > 0 {
-		userId = md["grpcgateway-origin"][0]
-	} else {
-		return "nikolablesic"
-	}
-	return GetUsernameFromTokenAndUserId(token, userId)
+	return GetUsernameFromToken(token)
 }
 
-func GetUsernameFromTokenAndUserId(token string, id string) string {
-	resp, _ := http.Get("http://search-service:9001/isPostLiked/username/1")
+func GetUsernameFromToken(token string) string {
+	resp, _ := http.Get("https://bezbednost:8443/auth/getUsernameByToken/" + token)
 	defer resp.Body.Close()
-	var data map[string]interface{}
-	err := json.NewDecoder(resp.Body).Decode(&data)
+	b, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return "nikolablesic"
+		log.Fatalln(err)
 	}
-	log.Println(data["isLiked"])
-	return "nikolablesic"
+	log.Println(string(b))
+	return string(b)
 }

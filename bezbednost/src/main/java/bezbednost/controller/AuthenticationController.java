@@ -30,6 +30,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -232,6 +233,16 @@ public class AuthenticationController {
             	return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
         }
+    }
+    
+    @GetMapping("/getUsernameByToken")
+    public ResponseEntity<String> getUsernameByToken(@RequestHeader("Authorization") String token) {
+    	String email = this.tokenUtils.getEmailFromToken(token);
+        User user = (User) this.userDetailsService.loadUserByUsername(email);
+        if(user == null){
+        	return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        return ResponseEntity.ok(user.getUsername());
     }
     
     
