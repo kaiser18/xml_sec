@@ -10,6 +10,7 @@ require (
 	github.com/milossimic/grpc_rest v0.0.0-20210416121518-ae0bd731a39a
 	github.com/nikolablesic/proto v0.0.0-20210608085640-a0c8e927b584
 	github.com/opentracing/opentracing-go v1.2.0
+	github.com/sirupsen/logrus v1.4.2
 	github.com/uber/jaeger-client-go v2.29.1+incompatible // indirect
 	golang.org/x/crypto v0.0.0-20210513164829-c07d793c2f9a // indirect
 	golang.org/x/net v0.0.0-20210525063256-abc453219eb5 // indirect

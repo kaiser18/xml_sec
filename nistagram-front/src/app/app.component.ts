@@ -1,18 +1,32 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { PostsDbService } from './posts/posts-db.service';
+import { Component } from '@angular/core';
+import { AuthenticatedUser } from './model/authenticatedUser';
+import { Role } from './model/role';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  encapsulation: ViewEncapsulation.None
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   title = 'nistagram-front';
-  constructor(){
+  user: AuthenticatedUser;
 
+  constructor(private authService: AuthService) {}
+
+  public isAdmin() {
+    return this.authService.getUserValue() && this.authService.getUserValue().role == Role.Admin;
   }
-  ngOnInit(){
+
+  public isUser() {
+    return this,this.authService.getUserValue() && this.authService.getUserValue().role == Role.User;
   }
-  
+
+  public isNotLogged() {
+    return !this.authService.getUserValue();
+  }
+
+  logout() {
+    this.authService.logout();
+  }
 }

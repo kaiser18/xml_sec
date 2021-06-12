@@ -8,14 +8,6 @@ import { UserService } from '../services/user.service';
   templateUrl: './registration.component.html',
   styleUrls: ['./registration.component.css']
 })
-/*export class RegisterComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
-}*/
 
 export class RegistrationComponent implements OnInit {
 

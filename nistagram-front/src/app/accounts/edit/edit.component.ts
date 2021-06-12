@@ -46,11 +46,11 @@ export class EditComponent implements OnInit {
           'website': new FormControl(),
           'biography': new FormControl()
         });
-
+        
   }
 
   public editUser() {
-    this.user_id = 2;
+    this.user_id = 321;
     this.name = this.editForm.value.name;
     this.surname = this.editForm.value.surname;
     this.username = this.editForm.value.username;
@@ -88,7 +88,7 @@ export class EditComponent implements OnInit {
   }
 
   getUserData(){
-    return  this.service.getUser(this.user_id = 2).subscribe(data =>{
+    return  this.service.getUser(this.user_id = 321).subscribe(data =>{
       this.userModel = data;
 
       this.name = this.userModel.data.Name;
@@ -101,7 +101,7 @@ export class EditComponent implements OnInit {
       this.website = this.userModel.data.Website;
       this.biography = this.userModel.data.Biography;
 
-      console.log('DATA---->', this.surname);
+      console.log('DATA---->', this.userModel.data);
 
             this.editForm = new FormGroup({
               'name': new FormControl(this.name),
