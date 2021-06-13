@@ -13,30 +13,33 @@ export class LoginComponent implements OnInit {
 
   loginForm: FormGroup;
   invalidLogin: boolean;
-  username: string;
+  email: string;
   password: string;
+  verificationCode: string;
   credentials: Authentication;
 
   constructor(private authService: AuthService, private router: Router) { }
 
   ngOnInit(): void {
     this.loginForm = new FormGroup({
-      'username' : new FormControl(null, Validators.required),
-      'password' : new FormControl(null, Validators.required)
+      'email' : new FormControl(null, Validators.required),
+      'password' : new FormControl(null, Validators.required),
+      'verificationCode' : new FormControl(null, Validators.required)
     });
   }
 
   signIn(){
-    this.username = this.loginForm.value.username;
+    this.email = this.loginForm.value.email;
     this.password = this.loginForm.value.password;
+    this.verificationCode = this.loginForm.value.verificationCode;
 
-    this.credentials = new Authentication(this.username, this.password);
+    this.credentials = new Authentication(this.email, this.password, this.verificationCode);
     this.authService.login(this.credentials).subscribe(
       result => {
           this.router.navigate(['/']);
       },
       error => {
-        alert("Invalid username or password");
+        alert("Invalid email, password or verification code");
       }
     );
   }

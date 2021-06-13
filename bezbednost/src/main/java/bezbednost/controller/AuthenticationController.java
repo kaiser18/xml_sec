@@ -2,11 +2,6 @@ package bezbednost.controller;
 
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,12 +10,10 @@ import javax.validation.Valid;
 
 import org.jboss.aerogear.security.otp.Totp;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,25 +21,21 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import bezbednost.async.service.EmailService;
 import bezbednost.auth.JwtAuthenticationRequest;
 import bezbednost.domain.ConfirmationToken;
-import bezbednost.domain.GenericResponse;
 import bezbednost.domain.PasswordResetToken;
-import bezbednost.domain.Role;
 import bezbednost.domain.User;
 import bezbednost.domain.UserRequest;
 import bezbednost.domain.UserTokenState;
 import bezbednost.dto.ForgotPassDTO;
 import bezbednost.dto.ResetPasswordDTO;
-import bezbednost.dto.UserVerificationDTO;
 import bezbednost.exception.ResourceConflictException;
 import bezbednost.repository.PasswordTokenRepository;
 import bezbednost.repository.RoleRepository;
@@ -235,14 +224,28 @@ public class AuthenticationController {
         }
     }
     
-    @GetMapping("/getUsernameByToken")
-    public ResponseEntity<String> getUsernameByToken(@RequestHeader("Authorization") String token) {
+    @GetMapping("/getUsernameByToken/{token}")
+    public ResponseEntity<String> getUsernameByToken(@PathVariable String token) {
+    	String[] parts = token.split(" ");
+    	if(parts.length < 1)
+    		return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    	token = parts[1];
     	String email = this.tokenUtils.getEmailFromToken(token);
         User user = (User) this.userDetailsService.loadUserByUsername(email);
         if(user == null){
         	return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         return ResponseEntity.ok(user.getUsername());
+    }
+    
+    @PreAuthorize("hasAuthority('READ_POST_PRIVILEGE')")
+    @GetMapping("/hasReadPostPermission")
+    public void hasReadPostPermission() {
+    }
+    
+    @PreAuthorize("hasAuthority('WRITE_POST_PRIVILEGE')")
+    @GetMapping("/hasWritePostPermission")
+    public void hasWritePostPermission() {
     }
     
     

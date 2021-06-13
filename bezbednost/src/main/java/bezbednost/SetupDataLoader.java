@@ -58,11 +58,16 @@ public class SetupDataLoader implements
         = createPrivilegeIfNotFound("GENERATE_KEYSTORE_PRIVILEGE");
         Privilege deleteKeystorePrivilege
         = createPrivilegeIfNotFound("DELETE_KEYSTORE_PRIVILEGE");
+        Privilege readPostPrivilege
+        = createPrivilegeIfNotFound("READ_POST_PRIVILEGE");
+        Privilege writePostPrivilege
+        = createPrivilegeIfNotFound("WRITE_POST_PRIVILEGE");
  
         List<Privilege> adminPrivileges = Arrays.asList(
-        		readCertPrivilege, createCertPrivilege, readAllCertPrivilege, readAllSignPrivilege, createCertPrivilege, revokeCertPrivilege, genKeystorePrivilege, deleteKeystorePrivilege);
+        		readCertPrivilege, createCertPrivilege, readAllCertPrivilege, readAllSignPrivilege, createCertPrivilege, revokeCertPrivilege, genKeystorePrivilege, deleteKeystorePrivilege, readPostPrivilege, writePostPrivilege);
         createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
-        createRoleIfNotFound("ROLE_USER", Arrays.asList(createCertPrivilege));
+        createRoleIfNotFound("ROLE_USER", Arrays.asList(createCertPrivilege, readPostPrivilege, writePostPrivilege));
+
 
         Role adminRole = roleRepository.findRoleByName("ROLE_ADMIN"); 
         User user = new User();
@@ -76,10 +81,11 @@ public class SetupDataLoader implements
         
         Role userRole = roleRepository.findRoleByName("ROLE_USER");
         User u = new User();
-        u.setFirstName("Test");
-        u.setLastName("Test");
-        u.setPassword(passwordEncoder.encode("test"));
-        u.setEmail("ttest@test.com");
+        u.setFirstName("Nikola");
+        u.setLastName("Blesic");
+        u.setPassword(passwordEncoder.encode("Nikola123."));
+        u.setEmail("nikola@nikola.com");
+        u.setSecret("QGJQOZDYG7FGVLHP");
         u.setRoles(Arrays.asList(userRole));
         u.setEnabled(true);
         userRepository.save(u);

@@ -46,7 +46,7 @@ services:
     gateway:
         image: nginx:1.19.8-alpine
         ports:
-          - 9090:9090
+          - "9090:9090"
         networks:
           - backend
         volumes:

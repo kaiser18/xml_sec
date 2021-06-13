@@ -4,12 +4,12 @@
             <div id="loginForm">
                 <div class="inputField">
                     <mat-form-field appearance="fill" id="username-ff">
-                        <mat-label>Username*</mat-label>
-                        <input matInput id="username" placeholder="Username" name="username-ff"
-                            formControlName="username" class="civca">
+                        <mat-label>Email*</mat-label>
+                        <input matInput id="email" placeholder="Email" name="email-ff"
+                            formControlName="email" class="civca">
                         <mat-error
-                            *ngIf="!loginForm.get('username').valid && loginForm.get('username').touched && loginForm.get('username').errors['required']">
-                            Please enter username</mat-error>
+                            *ngIf="!loginForm.get('email').valid && loginForm.get('email').touched && loginForm.get('email').errors['required']">
+                            Please enter email</mat-error>
                     </mat-form-field>
                 </div>
 
@@ -21,6 +21,17 @@
                         <mat-error
                             *ngIf="!loginForm.get('password').valid && loginForm.get('password').touched && loginForm.get('password').errors['required']">
                             Please enter password</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="inputField">
+                    <mat-form-field appearance="fill" id="verificationCode-ff">
+                        <mat-label>Verification code*</mat-label>
+                        <input matInput type="verificationCode" id="verificationCode" placeholder="Code" name="verificationCode-ff"
+                            formControlName="verificationCode" class="civca">
+                        <mat-error
+                            *ngIf="!loginForm.get('verificationCode').valid && loginForm.get('verificationCode').touched && loginForm.get('verificationCode').errors['required']">
+                            Please enter verification code</mat-error>
                     </mat-form-field>
                 </div>
 

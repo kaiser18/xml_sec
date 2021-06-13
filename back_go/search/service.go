@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"io"
+
 	//"log"
 	"net/http"
 	"search/searchstore"
@@ -38,13 +39,13 @@ func tracingWrapper(h http.Handler) http.Handler {
 		}
 		h.ServeHTTP(w, r)
 		log.WithFields(log.Fields{
-			"method": r.Method,
-			"path": r.URL,
-			"agent": r.UserAgent(),
+			"method":   r.Method,
+			"path":     r.URL,
+			"agent":    r.UserAgent(),
 			"response": r.Response,
-			"host": r.Host,
-			"proto": r.Proto,
-			"service": "search",
+			"host":     r.Host,
+			"proto":    r.Proto,
+			"service":  "search",
 		}).Info("request details")
 	})
 }
@@ -532,12 +533,13 @@ func GetUsernameOfLoggedUser(ctx context.Context) string {
 }
 
 func GetUsernameFromToken(token string) string {
-	resp, _ := http.Get("https://bezbednost:8443/auth/getUsernameByToken/" + token)
+	return "nikolablesic"
+	/*resp, _ := http.Get("https://bezbednost:8443/auth/getUsernameByToken/" + token)
 	defer resp.Body.Close()
-	b, err := io.ReadAll(resp.Body)
+	b, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		log.Fatalln(err)
 	}
 	log.Println(string(b))
-	return string(b)
+	return string(b)*/
 }
