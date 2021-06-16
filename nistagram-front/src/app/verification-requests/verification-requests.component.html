@@ -1,0 +1,23 @@
+<div class="container">
+    <div id="verificationRequests" [dataSource]="verificationRequests" class="row" *ngFor="let request of verificationRequests">
+        <mat-card>
+            <mat-card-header>
+                <mat-card-title>
+                    <p class="title-paragraph"> {{request.name}} {{request.surname}}</p>
+                </mat-card-title>
+                <mat-card-subtitle>
+                    <p class="subtitle-paragraph"> {{request.category}}</p>
+                </mat-card-subtitle>
+            </mat-card-header>
+            
+            <!--<mat-card-content>
+                <p class="content-paragraph"> slika </p>
+            </mat-card-content>
+            -->
+            <mat-card-actions>
+                <button mat-raised-button id="button" (click)="updateStatus(request.id, !request.approved ,$event.target)">Accept</button>
+                <button mat-raised-button id="button" (click="updateStatus(request.id, !request.approved ,$event.target)">Decline</button>
+            </mat-card-actions>
+        </mat-card>
+    </div>
+</div>

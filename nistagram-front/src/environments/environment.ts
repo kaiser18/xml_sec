@@ -26,8 +26,12 @@ export const environment = {
   forgotPassword: 'resetPassword',
   resetPassword: 'changePassword',
   verify: 'verify',
-  verifyProfile: 'verifyProfile'
+  verifyProfile: 'verifyProfile',
 
+ //TODO: baseUrlAdmin
+  admin: 'admin',
+  verificationRequests: 'verificationRequests',
+  updateStatus: 'updateStatus'
 };
 
 /*

@@ -19,6 +19,7 @@ import { VerifyAccountComponent } from './verify-account/verify-account.componen
 import { AuthGuard } from './authguard/auth.guard';
 import { Role } from './model/role';
 import { VerifyProfileComponent } from './verify-profile/verify-profile.component';
+import { VerificationRequestsComponent } from './verification-requests/verification-requests.component';
 
 const routes: Routes = [
     {
@@ -98,6 +99,10 @@ const routes: Routes = [
     {
       path: 'profile/verify',
       component: VerifyProfileComponent
+    },
+    {
+      path: 'admin/verificationRequests',
+      component: VerificationRequestsComponent
     }
 ];
 
