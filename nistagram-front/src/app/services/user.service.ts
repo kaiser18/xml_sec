@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { UserModel } from '../model/userModel';
 import { New } from '../model/new';
+import { VerifyProfileRequest } from '../model/verifyProfileRequest';
 
 @Injectable({
   providedIn: 'root'
@@ -28,5 +29,9 @@ export class UserService {
 
   createUser(data: New) {
     return this.http.post(`${environment.baseUrl}/${environment.auth}/${environment.createUser}`, data, {responseType: 'text'});
+  }
+
+  verifyProfile(data: VerifyProfileRequest) {
+    return this.http.post(`${environment.baseUrlUser}/${environment.verifyProfile}`, data, {responseType: 'text'});
   }
 }

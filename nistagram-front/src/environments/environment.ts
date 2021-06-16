@@ -25,7 +25,8 @@ export const environment = {
   createUser: 'signup',
   forgotPassword: 'resetPassword',
   resetPassword: 'changePassword',
-  verify: 'verify'
+  verify: 'verify',
+  verifyProfile: 'verifyProfile'
 
 };
 

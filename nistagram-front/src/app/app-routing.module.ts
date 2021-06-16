@@ -18,6 +18,7 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
 import { VerifyAccountComponent } from './verify-account/verify-account.component';
 import { AuthGuard } from './authguard/auth.guard';
 import { Role } from './model/role';
+import { VerifyProfileComponent } from './verify-profile/verify-profile.component';
 
 const routes: Routes = [
     {
@@ -94,6 +95,10 @@ const routes: Routes = [
       path:'search/:option/:searchWord',
       component: SearchComponent
     },
+    {
+      path: 'profile/verify',
+      component: VerifyProfileComponent
+    }
 ];
 
 @NgModule({
