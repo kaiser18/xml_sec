@@ -49,6 +49,16 @@ type WholeUser struct {
 	Biography     string
 }
 
+type UserProfileSettings struct {
+ 	User_id uint
+	Username string
+	Private_profile bool
+	Accept_unfollowed_account_messages bool
+	Tagging bool
+	Muted_accounts string
+	Blocked_accounts string
+}
+
 // Create readBody function
 func readBody(r *http.Request) []byte {
 	body, err := ioutil.ReadAll(r.Body)
@@ -94,6 +104,29 @@ func edit_user(w http.ResponseWriter, r *http.Request) {
 	}).Info("request details")
 }
 
+func edit_user_profile_settings(w http.ResponseWriter, r *http.Request) {
+
+	body := readBody(r)
+	var formattedBody UserProfileSettings
+
+	err := json.Unmarshal(body, &formattedBody)
+	helpers.HandleErr(err)
+
+	edit := users.EditUserProfile(formattedBody.User_id, formattedBody.Private_profile, formattedBody.Accept_unfollowed_account_messages,
+		formattedBody.Tagging, formattedBody.Muted_accounts, formattedBody.Blocked_accounts)
+	// Refactor register to use apiResponse function
+	apiResponse(edit, w)
+}
+
+func getUserProfileSettings(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	userId := vars["id"]
+	//auth := r.Header.Get("Authorization")
+
+	user := users.GetUserProfileSettings(userId)
+	apiResponse(user, w)
+}
+
 func getUser(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	userId := vars["id"]
@@ -113,12 +146,29 @@ func getUser(w http.ResponseWriter, r *http.Request) {
 	}).Info("request details")
 }
 
+func userMuteBlockOption(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	option := vars["option"]
+	//auth := r.Header.Get("Authorization")
+	body := readBody(r)
+	var formattedBody UserProfileSettings
+
+	err := json.Unmarshal(body, &formattedBody)
+	helpers.HandleErr(err)
+
+	user := users.UserMuteBlockOption(option, formattedBody.Username, formattedBody.Muted_accounts, formattedBody.Blocked_accounts)
+	apiResponse(user, w)
+}
+
 func StartApi() {
 	router := mux.NewRouter()
 	// Add panic handler middleware
 	router.Use(helpers.PanicHandler)
 	router.HandleFunc("/edit", edit_user).Methods("POST")
+	router.HandleFunc("/accounts/edit/profile_settings", edit_user_profile_settings).Methods("POST")
+	router.HandleFunc("/accounts/user_settings/{id}", getUserProfileSettings).Methods("GET")
 	router.HandleFunc("/user/{id}", getUser).Methods("GET")
+	router.HandleFunc("/user/report/{option}", userMuteBlockOption).Methods("POST")
 	log.Info("App is working on port :23002")
 	fmt.Println("App is working on port :23002")
 	log.Fatal(http.ListenAndServe(":23002", router))
