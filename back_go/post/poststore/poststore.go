@@ -10,9 +10,9 @@ import (
 	"github.com/nikolablesic/proto/helloworld"
 
 	tracer "github.com/milossimic/grpc_rest/tracer"
+	log "github.com/sirupsen/logrus"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	log "github.com/sirupsen/logrus"
 )
 
 type PostStore struct {
@@ -477,6 +477,28 @@ func (ts *PostStore) GetPostsByLocation(ctx context.Context, filter *helloworld.
 	var posts []Post
 	ts.db.Where(`Posts.id in (SELECT p.id FROM posts p, locations l WHERE p.location_id = l.id AND l.name = ?)`, filter.Filter).Preload("Tags").Preload("Hashtags").Preload("Location").Preload("ImageUrls").Preload("Comments").Preload("Likes").Preload("Dislikes").Find(&posts)
 
+	return &helloworld.GetAllPosts{
+		Posts: postsPostgresToProto(posts),
+	}, nil
+}
+
+func (ts *PostStore) GetLikedPosts(ctx context.Context, username string) (*helloworld.GetAllPosts, error) {
+	span := tracer.StartSpanFromContext(ctx, "GetLikedPosts")
+	defer span.Finish()
+
+	var posts []Post
+	ts.db.Where(`Posts.id in (select p.id from posts p, post_like pl, usernames u where p.id = pl.post_id and pl.username_id = u.id and u.name = ?)`, username).Preload("Tags").Preload("Hashtags").Preload("Location").Preload("ImageUrls").Preload("Comments").Preload("Likes").Preload("Dislikes").Find(&posts)
+	return &helloworld.GetAllPosts{
+		Posts: postsPostgresToProto(posts),
+	}, nil
+}
+
+func (ts *PostStore) GetDislikedPosts(ctx context.Context, username string) (*helloworld.GetAllPosts, error) {
+	span := tracer.StartSpanFromContext(ctx, "GetDislikedPosts")
+	defer span.Finish()
+
+	var posts []Post
+	ts.db.Where(`Posts.id in (select p.id from posts p, post_dislike pd, usernames u where p.id = pd.post_id and pd.username_id = u.id and u.name = ?)`, username).Preload("Tags").Preload("Hashtags").Preload("Location").Preload("ImageUrls").Preload("Comments").Preload("Likes").Preload("Dislikes").Find(&posts)
 	return &helloworld.GetAllPosts{
 		Posts: postsPostgresToProto(posts),
 	}, nil

@@ -2,7 +2,9 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"io"
+	"strings"
 
 	//"log"
 	"net/http"
@@ -125,6 +127,22 @@ func (s *server) GetPostsByTagRequest(ctx context.Context, in *helloworld.Filter
 
 func (s *server) GetPostsByLocationRequest(ctx context.Context, in *helloworld.Filter) (*helloworld.GetAllPosts, error) {
 	return s.store.GetPostsByLocation(ctx, in)
+}
+
+func (s *server) GetLikedPostsRequest(ctx context.Context, in *helloworld.EmptyRequest) (*helloworld.GetAllPosts, error) {
+	username := GetUsernameOfLoggedUser(ctx)
+	if len(username) <= 0 {
+		return &helloworld.GetAllPosts{}, status.Error(401, "401 Unauthorized")
+	}
+	return s.store.GetLikedPosts(ctx, username)
+}
+
+func (s *server) GetDislikedPostsRequest(ctx context.Context, in *helloworld.EmptyRequest) (*helloworld.GetAllPosts, error) {
+	username := GetUsernameOfLoggedUser(ctx)
+	if len(username) <= 0 {
+		return &helloworld.GetAllPosts{}, status.Error(401, "401 Unauthorized")
+	}
+	return s.store.GetDislikedPosts(ctx, username)
 }
 
 func (s *server) GetPostsByIdsRequest(ctx context.Context, in *helloworld.Ids) (*helloworld.GetAllPosts, error) {
@@ -301,13 +319,19 @@ func GetUsernameOfLoggedUser(ctx context.Context) string {
 }
 
 func GetUsernameFromToken(token string) string {
-	return "nikolablesic"
-	/*resp, _ := http.Get("https://bezbednost:8443/auth/getUsernameByToken/" + token)
+	parts := strings.Fields(token)
+	fmt.Println(parts[1])
+	//req, _ := http.NewRequest("GET", "https://bezbednost:8443/auth/getUsernameByToken/"+parts[1], nil)
+	resp, err := http.Get("http://bezbednost:8081/auth/getUsernameByToken/" + parts[1])
+	if err != nil {
+		fmt.Println(err)
+		return ""
+	}
 	defer resp.Body.Close()
 	b, err := io.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Println(err)
 	}
 	log.Println(string(b))
-	return string(b)*/
+	return string(b)
 }

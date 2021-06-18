@@ -1,0 +1,8 @@
+2021-06-15 16:38:18,569 | INFO | org.springframework.boot.web.embedded.tomcat.TomcatWebServer | Tomcat initialized with port(s): 8443 (https) 8081 (http)
+2021-06-15 16:38:18,613 | INFO | org.apache.juli.logging.DirectJDKLog | Initializing ProtocolHandler ["https-jsse-nio-8443"]
+2021-06-15 16:38:18,615 | INFO | org.apache.juli.logging.DirectJDKLog | Initializing ProtocolHandler ["http-nio-8081"]
+2021-06-15 16:38:19,492 | INFO | org.apache.juli.logging.DirectJDKLog | Starting service [Tomcat]
+2021-06-15 16:38:19,492 | INFO | org.apache.juli.logging.DirectJDKLog | Starting Servlet engine: [Apache Tomcat/9.0.41]
+2021-06-15 16:38:19,823 | INFO | org.apache.juli.logging.DirectJDKLog | Initializing Spring embedded WebApplicationContext
+2021-06-15 16:38:19,825 | INFO | org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext | Root WebApplicationContext: initialization completed in 8609 ms
+2021-06-15 16:38:20,652 | INFO | org.hibernate.jpa.internal.util.LogHelper | HHH000204: Processing PersistenceUnitInfo [name: default]

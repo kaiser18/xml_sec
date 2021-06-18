@@ -1,0 +1,8 @@
+2021-06-15 16:38:20,796 | INFO | org.hibernate.Version | HHH000412: Hibernate ORM core version 5.4.25.Final
+2021-06-15 16:38:21,202 | INFO | org.hibernate.annotations.common.reflection.java.JavaReflectionManager | HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-06-15 16:38:21,505 | INFO | com.zaxxer.hikari.HikariDataSource | HikariPool-1 - Starting...
+2021-06-15 16:38:22,309 | INFO | com.zaxxer.hikari.HikariDataSource | HikariPool-1 - Start completed.
+2021-06-15 16:38:22,371 | INFO | org.hibernate.dialect.Dialect | HHH000400: Using dialect: org.hibernate.dialect.PostgreSQL95Dialect
+2021-06-15 16:38:29,863 | INFO | org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator | HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-06-15 16:38:29,905 | INFO | org.springframework.orm.jpa.AbstractEntityManagerFactoryBean | Initialized JPA EntityManagerFactory for persistence unit 'default'
+2021-06-15 16:38:29,956 | INFO | org.springframework.boot.devtools.autoconfigure.OptionalLiveReloadServer | LiveReload server is running on port 35729
