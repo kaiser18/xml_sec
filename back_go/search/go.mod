@@ -8,7 +8,7 @@ require (
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.4.0
 	github.com/jackc/pgproto3/v2 v2.0.7 // indirect
 	github.com/milossimic/grpc_rest v0.0.0-20210416121518-ae0bd731a39a
-	github.com/nikolablesic/proto v0.0.0-20210616091206-f624a2610851
+	github.com/nikolablesic/proto v0.0.0-20210619093340-6cbd88323a95
 	github.com/opentracing/opentracing-go v1.2.0
 	github.com/sirupsen/logrus v1.4.2
 	github.com/uber/jaeger-client-go v2.29.1+incompatible // indirect

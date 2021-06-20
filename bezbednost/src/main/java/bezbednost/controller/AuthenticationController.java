@@ -240,14 +240,14 @@ public class AuthenticationController {
         return ResponseEntity.ok(user.getUsername());
     }
     
-    @PreAuthorize("hasAuthority('READ_POST_PRIVILEGE')")
-    @GetMapping("/hasReadPostPermission")
-    public void hasReadPostPermission() {
+    @PreAuthorize("hasAuthority('ADMIN_PRIVILEGE')")
+    @GetMapping("/isAdmin")
+    public void isAdmin() {
     }
     
-    @PreAuthorize("hasAuthority('WRITE_POST_PRIVILEGE')")
-    @GetMapping("/hasWritePostPermission")
-    public void hasWritePostPermission() {
+    @PreAuthorize("hasAuthority('ADMIN_PRIVILEGE') || hasAuthority('USER_PRIVILEGE')")
+    @GetMapping("/isUser")
+    public void isUser() {
     }
     
     
