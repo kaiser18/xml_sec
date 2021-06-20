@@ -59,6 +59,16 @@ type UserProfileSettings struct {
 	Blocked_accounts string
 }
 
+type UserNotificationSettings struct {
+	User_id uint
+	Likes string
+	Comments string
+	Accepted_follow_requests string
+	Posts string
+	Stories string
+	Messages string
+}
+
 // Create readBody function
 func readBody(r *http.Request) []byte {
 	body, err := ioutil.ReadAll(r.Body)
@@ -104,6 +114,25 @@ func edit_user(w http.ResponseWriter, r *http.Request) {
 	}).Info("request details")
 }
 
+func getUser(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	userId := vars["id"]
+	auth := r.Header.Get("Authorization")
+
+	user := users.GetUser(userId, auth)
+	apiResponse(user, w)
+
+	log.WithFields(log.Fields{
+		"method":   r.Method,
+		"path":     r.URL,
+		"agent":    r.UserAgent(),
+		"response": r.Response,
+		"host":     r.Host,
+		"proto":    r.Proto,
+		"service":  "user_service",
+	}).Info("request details")
+}
+
 func edit_user_profile_settings(w http.ResponseWriter, r *http.Request) {
 
 	body := readBody(r)
@@ -127,23 +156,27 @@ func getUserProfileSettings(w http.ResponseWriter, r *http.Request) {
 	apiResponse(user, w)
 }
 
-func getUser(w http.ResponseWriter, r *http.Request) {
+func edit_notification_settings(w http.ResponseWriter, r *http.Request) {
+
+	body := readBody(r)
+	var formattedBody UserNotificationSettings
+
+	err := json.Unmarshal(body, &formattedBody)
+	helpers.HandleErr(err)
+
+	edit := users.EditUserNotification(formattedBody.User_id, formattedBody.Likes, formattedBody.Comments,
+		formattedBody.Accepted_follow_requests, formattedBody.Posts, formattedBody.Stories, formattedBody.Messages)
+
+	apiResponse(edit, w)
+}
+
+func getUserNotificationSettings(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	userId := vars["id"]
-	auth := r.Header.Get("Authorization")
+	//auth := r.Header.Get("Authorization")
 
-	user := users.GetUser(userId, auth)
+	user := users.GetUserNotificationSettings(userId)
 	apiResponse(user, w)
-
-	log.WithFields(log.Fields{
-		"method":   r.Method,
-		"path":     r.URL,
-		"agent":    r.UserAgent(),
-		"response": r.Response,
-		"host":     r.Host,
-		"proto":    r.Proto,
-		"service":  "user_service",
-	}).Info("request details")
 }
 
 func userMuteBlockOption(w http.ResponseWriter, r *http.Request) {
@@ -165,9 +198,11 @@ func StartApi() {
 	// Add panic handler middleware
 	router.Use(helpers.PanicHandler)
 	router.HandleFunc("/edit", edit_user).Methods("POST")
+	router.HandleFunc("/user/{id}", getUser).Methods("GET")
 	router.HandleFunc("/accounts/edit/profile_settings", edit_user_profile_settings).Methods("POST")
 	router.HandleFunc("/accounts/user_settings/{id}", getUserProfileSettings).Methods("GET")
-	router.HandleFunc("/user/{id}", getUser).Methods("GET")
+	router.HandleFunc("/accounts/edit/notification_settings", edit_notification_settings).Methods("POST")
+	router.HandleFunc("/accounts/notification_settings/{id}", getUserNotificationSettings).Methods("GET")
 	router.HandleFunc("/user/report/{option}", userMuteBlockOption).Methods("POST")
 	log.Info("App is working on port :23002")
 	fmt.Println("App is working on port :23002")

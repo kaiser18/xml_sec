@@ -84,6 +84,22 @@ func userProfileSettingsResponse(user *interfaces.UserProfileSettings) map[strin
 	return response
 }
 
+func userNotificationResponse(user *interfaces.UserNotificationSettings) map[string]interface{} {
+	responseUser := &interfaces.UserNotificationSettings{
+		User_id: user.User_id,
+		Likes: user.Likes,
+		Comments: user.Comments,
+		Accepted_follow_requests: user.Accepted_follow_requests,
+		Posts: user.Posts,
+		Stories: user.Stories,
+		Messages: user.Messages,
+
+	}
+	var response = map[string]interface{}{"message": "all is fine"}
+	response["data"] = responseUser
+	return response
+}
+
 
 func MigrateInfo() {
 
@@ -92,6 +108,9 @@ func MigrateInfo() {
 
 	userY := &interfaces.UserProfileSettings{}
 	database.DB.AutoMigrate(&userY)
+
+	userZ := &interfaces.UserNotificationSettings{}
+	database.DB.AutoMigrate(&userZ)
 
 	CheckForNewUsers()
 	log.Info("Table initialization successful")
@@ -109,6 +128,10 @@ func CheckForNewUsers() {
 		user_profile_settings := &interfaces.UserProfileSettings{User_id: users[i].ID}
 		if database.DB.Where("user_id = ? ", users[i].ID).First(&user_profile_settings).RecordNotFound() {
         	database.DB.Create(&user_profile_settings)
+		}
+		user_notification_settings := &interfaces.UserNotificationSettings{User_id: users[i].ID}
+		if database.DB.Where("user_id = ? ", users[i].ID).First(&user_notification_settings).RecordNotFound() {
+        	database.DB.Create(&user_notification_settings)
 		}
     }
 }
@@ -298,5 +321,47 @@ func UserMuteBlockOption(option string, username string, muted_acc string, block
 	database.DB.Save(&user_profile_settings)
 
 	var response = userProfileSettingsResponse(user_profile_settings)
+	return response
+}
+
+func EditUserNotification(user_id uint, likes string, comments string, accepted_follow_requests string,
+	 posts string, stories string, messages string) map [string]interface{} {
+
+	CheckForNewUsers()
+
+	user_notification_settings := &interfaces.UserNotificationSettings{}
+	if !(database.DB.Where("user_id = ? ", user_id).First(&user_notification_settings).RecordNotFound()) {
+	    user_notification_settings.Likes = likes
+		user_notification_settings.Comments = comments
+		user_notification_settings.Accepted_follow_requests = accepted_follow_requests
+		user_notification_settings.Posts = posts
+		user_notification_settings.Stories = stories
+		user_notification_settings.Messages = messages
+
+		database.DB.Save(&user_notification_settings)
+	} else {
+		//database.DB.Create(&user_info)
+		return map[string]interface{}{"message": "cant edit user profile of non-existent user"}
+	}
+
+	user := &interfaces.User{}
+	if database.DB.Where("id = ? ",user_id).First(&user).RecordNotFound() {
+		return map[string]interface{}{"message": "User not found"}
+	}
+
+	var response = prepareResponse(user, false)
+	return response
+}
+
+func GetUserNotificationSettings(user_id string) map[string]interface{} {
+
+	CheckForNewUsers()
+	user_notification_settings := &interfaces.UserNotificationSettings{}
+
+	if database.DB.Where("user_id = ? ", user_id).First(&user_notification_settings).RecordNotFound() {
+		return map[string]interface{}{"message": "User not found"}
+	}
+
+	var response = userNotificationResponse(user_notification_settings)
 	return response
 }

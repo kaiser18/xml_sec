@@ -51,6 +51,17 @@ type UserProfileSettings struct {
 	Blocked_accounts string
 }
 
+type UserNotificationSettings struct {
+	ID uint
+	User_id uint
+	Likes string
+	Comments string
+	Accepted_follow_requests string
+	Posts string
+	Stories string
+	Messages string
+}
+
 // Create Validation interface
 type Validation struct {
 	Value string
