@@ -53,6 +53,7 @@ import { VerifyAccountComponent } from './verify-account/verify-account.componen
 import { PushNotificationsComponent } from './accounts/push-notifications/push-notifications.component';
 import { PrivacyComponent } from './accounts/privacy/privacy.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ReportDialogComponent } from './posts/post-item/report-dialog/report-dialog.component';
 
 @NgModule({
   declarations: [
@@ -83,7 +84,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     ResetPasswordComponent,
     VerifyAccountComponent,
     PushNotificationsComponent,
-    PrivacyComponent
+    PrivacyComponent,
+    ReportDialogComponent
   ],
   imports: [
     BrowserModule,

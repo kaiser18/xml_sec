@@ -16,7 +16,7 @@ export const environment = {
 //  createUser: 'register',
 //  authenticate: 'login',
 
-  baseUrl: 'https://localhost:8443',
+  baseUrl: 'http://localhost:8081',
   certificate: 'api/certificate',
   createRootCertificate: 'generateRoot',
   createOtherCertificate: 'generateOther',

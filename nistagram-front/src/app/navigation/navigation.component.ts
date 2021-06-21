@@ -15,13 +15,16 @@ export class SearchDialogData {
   encapsulation: ViewEncapsulation.None
 })
 export class NavigationComponent implements OnInit {
-  loggedInUser = true;
+  loggedInUser = false;
   searchOptions = ['hashtag','location','profile','tag'];
   chosenSearchOption: string = 'hashtag';
   searchWord: string;
   constructor(public dialog: MatDialog, private router: Router) { }
 
   ngOnInit(): void {
+    if(localStorage.getItem("access_token")!=null){
+      this.loggedInUser = true;
+    }
   }
  
   openDialog(): void {
@@ -36,5 +39,12 @@ export class NavigationComponent implements OnInit {
       console.log(this.chosenSearchOption)
       this.router.navigate(['search',this.chosenSearchOption,this.searchWord]);
     });
+  }
+
+  logOut(){
+    localStorage.clear();
+    console.log(localStorage.getItem("access_token"));
+    this.loggedInUser = false;
+    //location.reload();
   }
 }

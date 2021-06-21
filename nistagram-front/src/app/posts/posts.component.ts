@@ -12,7 +12,21 @@ import { Story } from './story.model';
   styleUrls: ['./posts.component.css']
 })
 export class PostsComponent implements OnInit {
-  loadedPosts: Post[] = [];
+  loadedPosts: Post[] = [
+    {
+      id: 1,
+      username: "username",
+      locationName: "Palic",
+      description: "opis",
+      createdAt: "",
+      hashtags: ["nesty", "nesto"],
+      tags: ["nesto", "mesty"],
+      imageUrls: ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsJ774VL7RjYJGKgiFM2E1DmvLT3NeldlBWA&usqp=CAU"],
+      numberOfLikes: 152,
+      numberOfDislikes: 6,
+      comments: ["beautiful"]
+    }
+  ];
   loadedStories: Story[] = [];
   isFetching = false;
   error = null;
@@ -35,7 +49,7 @@ export class PostsComponent implements OnInit {
         console.log(this.loadedPosts);
         }
     );
-    this.loadedPosts = this.postsService.getNewsfeed();
+    //this.loadedPosts = this.postsService.getNewsfeed();
 
     this.subscriptionStory = this.postsService.storiesChanged
         .subscribe(
