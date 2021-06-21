@@ -8,7 +8,7 @@
       <input placeholder="Search" aria-label="Search" style="border: 1px solid #e2e2e2; background-color: #fafafa; text-align: center; border-radius: 4px;" [(ngModel)]="searchWord" matInput>
       <mat-icon (click)="openDialog()" style="cursor: pointer;">search</mat-icon>
     </div>
-    
+
     <div *ngIf="loggedInUser" style="display: contents;">
       <div>
         <mat-icon routerLink="/" style="cursor: pointer">home</mat-icon>
@@ -17,7 +17,7 @@
       <mat-menu #menu="matMenu">
         <button mat-menu-item routerLink="/profile">Profile</button>
         <button mat-menu-item routerLink="/new-post">Post</button>
-        <button mat-menu-item>Settings</button> 
+        <button mat-menu-item routerLink="/accounts/edit">Settings</button> 
         <hr>
         <button mat-menu-item>Log out</button>
       </mat-menu>
