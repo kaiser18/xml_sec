@@ -32,6 +32,7 @@
         <mat-menu #menu="matMenu">
             <button mat-menu-item *ngFor="let tag of post.tags">@{{tag}}</button>
         </mat-menu>
+        <button mat-button style="float: right;"><mat-icon (click)="openReportDialog()">report</mat-icon></button>
         <button  mat-icon-button style="float: right;">
             <mat-icon *ngIf="!favouritePost()" class="example-tab-icon" (click)="openDialog()" >bookmark_border</mat-icon>
             <mat-icon *ngIf="favouritePost()" class="example-tab-icon" (click)="removeFromFavourite()" >bookmark</mat-icon>

@@ -50,6 +50,7 @@ import { CertificateListComponent } from './certificate-list/certificate-list.co
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { VerifyAccountComponent } from './verify-account/verify-account.component';
+import { ReportDialogComponent } from './posts/post-item/report-dialog/report-dialog.component';
 
 @NgModule({
   declarations: [
@@ -78,7 +79,8 @@ import { VerifyAccountComponent } from './verify-account/verify-account.componen
     CertificateListComponent,
     ForgotPasswordComponent,
     ResetPasswordComponent,
-    VerifyAccountComponent
+    VerifyAccountComponent,
+    ReportDialogComponent
   ],
   imports: [
     BrowserModule,

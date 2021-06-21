@@ -19,7 +19,7 @@
         <button mat-menu-item routerLink="/new-post">Post</button>
         <button mat-menu-item>Settings</button> 
         <hr>
-        <button mat-menu-item>Log out</button>
+        <button mat-menu-item (click)="logOut()">Log out</button>
       </mat-menu>
     </div>
     <div *ngIf="!loggedInUser">

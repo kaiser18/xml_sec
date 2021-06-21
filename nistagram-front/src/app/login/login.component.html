@@ -24,17 +24,6 @@
                     </mat-form-field>
                 </div>
 
-                <div class="inputField">
-                    <mat-form-field appearance="fill" id="verificationCode-ff">
-                        <mat-label>Verification code*</mat-label>
-                        <input matInput type="verificationCode" id="verificationCode" placeholder="Code" name="verificationCode-ff"
-                            formControlName="verificationCode" class="civca">
-                        <mat-error
-                            *ngIf="!loginForm.get('verificationCode').valid && loginForm.get('verificationCode').touched && loginForm.get('verificationCode').errors['required']">
-                            Please enter verification code</mat-error>
-                    </mat-form-field>
-                </div>
-
                 <div style="float: left;">
                     <a routerLink="/forgotPassword">Forgot password</a>
                 </div>
@@ -44,7 +33,7 @@
                     <a routerLink="/registration">Register now</a>
                 </div>
                 <button mat-flat-button name="button-ff" style="float: right;" color="primary" type="submit"
-                    [disabled]="!loginForm.valid">Login</button>
+                    >Login</button>
             </div>      
         </form>
     </mat-card>
