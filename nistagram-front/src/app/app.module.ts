@@ -50,6 +50,9 @@ import { CertificateListComponent } from './certificate-list/certificate-list.co
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { VerifyAccountComponent } from './verify-account/verify-account.component';
+import { PushNotificationsComponent } from './accounts/push-notifications/push-notifications.component';
+import { PrivacyComponent } from './accounts/privacy/privacy.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -78,7 +81,9 @@ import { VerifyAccountComponent } from './verify-account/verify-account.componen
     CertificateListComponent,
     ForgotPasswordComponent,
     ResetPasswordComponent,
-    VerifyAccountComponent
+    VerifyAccountComponent,
+    PushNotificationsComponent,
+    PrivacyComponent
   ],
   imports: [
     BrowserModule,
@@ -98,10 +103,11 @@ import { VerifyAccountComponent } from './verify-account/verify-account.componen
     MatMenuModule,
     MatRadioModule,
     MatChipsModule,
-    HttpClientModule, 
+    HttpClientModule,
     MatSelectModule,
     MatListModule,
-    NgImageSliderModule
+    NgImageSliderModule,
+    NgbModule
   ],
   providers: [ FileUploadService, PostsService, PostsDbService,
       { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}

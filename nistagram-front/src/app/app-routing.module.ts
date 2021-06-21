@@ -18,6 +18,8 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
 import { VerifyAccountComponent } from './verify-account/verify-account.component';
 import { AuthGuard } from './authguard/auth.guard';
 import { Role } from './model/role';
+import { PushNotificationsComponent } from './accounts/push-notifications/push-notifications.component';
+import { PrivacyComponent } from './accounts/privacy/privacy.component';
 
 const routes: Routes = [
     {
@@ -25,6 +27,14 @@ const routes: Routes = [
       component: EditComponent,
    //   canActivate: [AuthGuard],
    //   data: {roles: [Role.User]}
+    },
+    {
+      path: "accounts/push_notifications",
+      component: PushNotificationsComponent,
+    },
+    {
+      path: "accounts/privacy",
+      component: PrivacyComponent,
     },
     {
       path: "registration",
@@ -65,7 +75,7 @@ const routes: Routes = [
       component: VerifyAccountComponent
     },
     {
-      path:'', 
+      path:'',
       component: PostsComponent
     },
     {

@@ -41,6 +41,27 @@ type UserInfo struct {
 	Biography     string
 }
 
+type UserProfileSettings struct {
+	ID uint
+	User_id uint
+	Private_profile bool
+	Accept_unfollowed_account_messages bool
+	Tagging bool
+	Muted_accounts string
+	Blocked_accounts string
+}
+
+type UserNotificationSettings struct {
+	ID uint
+	User_id uint
+	Likes string
+	Comments string
+	Accepted_follow_requests string
+	Posts string
+	Stories string
+	Messages string
+}
+
 // Create Validation interface
 type Validation struct {
 	Value string

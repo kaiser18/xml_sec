@@ -1,0 +1,101 @@
+<div class="container light-style flex-grow-1 container-p-y">
+    <h3 class="font-weight-bold py-3 mb-4">
+       <b>Account settings</b>
+    </h3>
+   <div class="card overflow-hidden">
+      <div class="row no-gutters row-bordered row-border-light">
+         <div class="col-md-3 pt-0">
+            <div class="list-group list-group-flush account-settings-links">
+               <a class="list-group-item list-group-item-action" data-toggle="list" href="/accounts/edit">Edit profile</a>
+               <a class="list-group-item list-group-item-action" data-toggle="list" href="#account-change-password">Change password</a>
+               <a class="list-group-item list-group-item-action" data-toggle="list" href="/accounts/privacy">Privacy and Security</a>
+               <a class="list-group-item list-group-item-action active" data-toggle="list" href="/accounts/push_notifications">Push Notifications</a>
+            </div>
+         </div>
+         <div class="col-md-9">
+            <div class="tab-content">
+
+               <div class="container">
+                  <mat-card>
+                  <form [formGroup]="editForm" (ngSubmit)="editUser()">
+                      <div class="ca-cont">
+                         <label for="likes" class="ca-margin">Likes: </label><br>
+                         <mat-radio-group aria-label="Select an option" formControlName="likes">
+                            <mat-radio-button  value="off">Off</mat-radio-button>
+                            <br>
+                            <mat-radio-button  value="from_people_i_follow">From People I Follow</mat-radio-button>
+                            <br>
+                            <mat-radio-button  value="from_everyone">From Everyone</mat-radio-button>
+                         </mat-radio-group>
+                      </div>
+                      <br><hr class="border-light m-0"><br>
+                      <div class="ca-cont">
+                         <label for="comments" class="ca-margin">Comments: </label><br>
+                         <mat-radio-group aria-label="Select an option" formControlName="comments">
+                            <mat-radio-button  value="off">Off</mat-radio-button>
+                            <br>
+                            <mat-radio-button  value="from_people_i_follow">From People I Follow</mat-radio-button>
+                            <br>
+                            <mat-radio-button  value="from_everyone">From Everyone</mat-radio-button>
+                         </mat-radio-group>
+                      </div>
+                      <br><hr class="border-light m-0"><br>
+                      <div class="ca-cont">
+                         <label for="accepted_follow_requests" class="ca-margin">Accepted Follow Requests: </label><br>
+                         <mat-radio-group aria-label="Select an option" formControlName="accepted_follow_requests">
+                            <mat-radio-button  value="off">Off</mat-radio-button>
+                            <br>
+                            <mat-radio-button  value="from_everyone">From Everyone</mat-radio-button>
+                         </mat-radio-group>
+                      </div>
+                      <br><hr class="border-light m-0"><br>
+                      <div class="ca-cont">
+                         <label for="posts" class="ca-margin">Posts: </label><br>
+                         <mat-radio-group aria-label="Select an option" formControlName="posts">
+                            <mat-radio-button  value="off">Off</mat-radio-button>
+                            <br>
+                            <mat-radio-button  value="from_people_i_follow">From People I Follow</mat-radio-button>
+                            <br>
+                            <mat-radio-button  value="from_everyone">From Everyone</mat-radio-button>
+                         </mat-radio-group>
+                      </div>
+                      <br><hr class="border-light m-0"><br>
+                      <div class="ca-cont">
+                         <label for="stories" class="ca-margin">Stories: </label><br>
+                         <mat-radio-group aria-label="Select an option" formControlName="stories">
+                            <mat-radio-button  value="off">Off</mat-radio-button>
+                            <br>
+                            <mat-radio-button  value="from_people_i_follow">From People I Follow</mat-radio-button>
+                            <br>
+                            <mat-radio-button  value="from_everyone">From Everyone</mat-radio-button>
+                         </mat-radio-group>
+                      </div>
+                      <br><hr class="border-light m-0"><br>
+                      <div class="ca-cont">
+                         <label for="messages" class="ca-margin">Messages: </label><br>
+                         <mat-radio-group aria-label="Select an option" formControlName="messages">
+                            <mat-radio-button  value="off">Off</mat-radio-button>
+                            <br>
+                            <mat-radio-button  value="from_people_i_follow">From People I Follow</mat-radio-button>
+                            <br>
+                            <mat-radio-button  value="from_everyone">From Everyone</mat-radio-button>
+                         </mat-radio-group>
+                      </div>
+                      <br>
+                      <div class="button">
+                         <button mat-raised-button type="submit">Save changes</button>&nbsp;
+                         <button type="button" class="btn btn-default"><a href="">Cancel</a></button>
+                      </div>
+                  </form>
+                  </mat-card>
+               </div>
+
+            </div>
+         </div>
+      </div>
+   </div>
+   <!-- <div class="text-right mt-3">
+      <button type="button" class="btn btn-primary">Save changes</button>&nbsp;
+      <button type="button" class="btn btn-default">Cancel</button>
+      </div> -->
+</div>

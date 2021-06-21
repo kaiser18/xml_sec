@@ -17,19 +17,20 @@
                 height: 150px;" src="https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80">
             </div>
         </mat-grid-tile>
-        <mat-grid-tile> 
+        <mat-grid-tile>
             <figure class="mat-figure nesto">
                 <h2>hanisicc</h2> &nbsp;
                 <button mat-flat-button color="primary">Follow</button>
+                <br><button class="btn btn-outline-primary" (click)="open('autofocus')">3Dots</button>
                 <br>
             </figure>
-            
+
         </mat-grid-tile>
     </mat-grid-list>
 <hr>
 
 <mat-tab-group >
-    <mat-tab label="Post"> 
+    <mat-tab label="Post">
         <mat-grid-list cols="3" rowHeight="1:1" gutterSize="5px">
             <mat-grid-tile style="cursor: pointer;" class="profile-image" [routerLink] = "['/post', post.id]" *ngFor="let post of posts" >
                 <img [src]="post.imageUrls[0]">
@@ -53,5 +54,3 @@
     <mat-tab label="Saved"><app-saved></app-saved></mat-tab>
 </mat-tab-group>
 </div>
-
- 
