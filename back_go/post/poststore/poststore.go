@@ -578,7 +578,9 @@ func MakeRange(ids []int32) string {
 	var sb strings.Builder
 	sb.WriteString("(")
 	for _, id := range ids {
+		sb.WriteString("'")
 		sb.WriteString(fmt.Sprint(id))
+		sb.WriteString("'")
 		sb.WriteString(", ")
 	}
 	s := sb.String()

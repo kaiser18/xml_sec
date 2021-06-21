@@ -2,7 +2,9 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"io"
+	"io/ioutil"
 
 	//"log"
 	"net/http"
@@ -97,9 +99,6 @@ func (s *server) StoryInfoRequest(ctx context.Context, in *search.CreateStoryInf
 
 func (s *server) GetStoriesByUsernameRequest(ctx context.Context, in *search.ActionRequest) (*search.Stories, error) {
 	username := GetUsernameOfLoggedUser(ctx)
-	if len(username) <= 0 {
-		return &search.Stories{}, status.Error(401, "401 Unauthorized")
-	}
 	storiesInfo, _ := s.store.GetStoriesByUsername(ctx, in)
 
 	ids := []int32{}
@@ -112,10 +111,6 @@ func (s *server) GetStoriesByUsernameRequest(ctx context.Context, in *search.Act
 
 func (s *server) GetStoriesForUserRequest(ctx context.Context, in *search.ActionRequest) (*search.Stories, error) {
 	username := GetUsernameOfLoggedUser(ctx)
-	if len(username) <= 0 {
-		return &search.Stories{}, status.Error(401, "401 Unauthorized")
-	}
-	//TODO: Iz usera follow lista
 	usernames := GetFollowList(username)
 	storiesInfo, _ := s.store.GetStoriesByUsernames(ctx, usernames)
 
@@ -155,11 +150,6 @@ func (s *server) GetPostsByUsernameRequest(ctx context.Context, in *search.Actio
 
 func (s *server) GetNewsFeedForUsernameRequest(ctx context.Context, in *search.ActionRequest) (*search.Posts, error) {
 	username := GetUsernameOfLoggedUser(ctx)
-	if len(username) <= 0 {
-		return &search.Posts{}, status.Error(401, "401 Unauthorized")
-	}
-	in.Filter = username
-	//TODO: Iz usera follow lista
 	usernames := GetFollowList(username)
 	postsInfo, _ := s.store.GetPostsByUsernames(ctx, usernames)
 
@@ -183,12 +173,7 @@ func (s *server) GetNewsFeedForUsernameRequest(ctx context.Context, in *search.A
 
 func (s *server) GetPostsByLocationRequest(ctx context.Context, in *search.ActionRequest) (*search.Posts, error) {
 	username := GetUsernameOfLoggedUser(ctx)
-	if len(username) <= 0 {
-		return &search.Posts{}, status.Error(401, "401 Unauthorized")
-	}
 	posts, _ := s.postClient.GetPostsByLocationRequest(ctx, &helloworld.Filter{Filter: in.Filter})
-
-	//TODO: Iz usera follow lista + javni
 	usernames := GetFollowListAndPublic(username)
 	list := []*helloworld.Post{}
 
@@ -205,12 +190,7 @@ func (s *server) GetPostsByLocationRequest(ctx context.Context, in *search.Actio
 
 func (s *server) GetPostsByHashtagRequest(ctx context.Context, in *search.ActionRequest) (*search.Posts, error) {
 	username := GetUsernameOfLoggedUser(ctx)
-	if len(username) <= 0 {
-		return &search.Posts{}, status.Error(401, "401 Unauthorized")
-	}
 	posts, _ := s.postClient.GetPostsByHashtagRequest(ctx, &helloworld.Filter{Filter: in.Filter})
-
-	//TODO: Iz usera follow lista + javni
 	usernames := GetFollowListAndPublic(username)
 	list := []*helloworld.Post{}
 
@@ -227,12 +207,7 @@ func (s *server) GetPostsByHashtagRequest(ctx context.Context, in *search.Action
 
 func (s *server) GetPostsByTagRequest(ctx context.Context, in *search.ActionRequest) (*search.Posts, error) {
 	username := GetUsernameOfLoggedUser(ctx)
-	if len(username) <= 0 {
-		return &search.Posts{}, status.Error(401, "401 Unauthorized")
-	}
 	posts, _ := s.postClient.GetPostsByTagRequest(ctx, &helloworld.Filter{Filter: in.Filter})
-
-	//Iz usera follow lista + javni
 	usernames := GetFollowListAndPublic(username)
 	list := []*helloworld.Post{}
 
@@ -249,12 +224,7 @@ func (s *server) GetPostsByTagRequest(ctx context.Context, in *search.ActionRequ
 
 func (s *server) GetStoriesByLocationRequest(ctx context.Context, in *search.ActionRequest) (*search.Stories, error) {
 	username := GetUsernameOfLoggedUser(ctx)
-	if len(username) <= 0 {
-		return &search.Stories{}, status.Error(401, "401 Unauthorized")
-	}
 	stories, _ := s.postClient.GetStoriesByLocationRequest(ctx, &helloworld.Filter{Filter: in.Filter})
-
-	//TODO: Iz usera follow lista + javni
 	usernames := GetFollowListAndPublic(username)
 	list := []*helloworld.Story{}
 
@@ -271,12 +241,7 @@ func (s *server) GetStoriesByLocationRequest(ctx context.Context, in *search.Act
 
 func (s *server) GetStoriesByHashtagRequest(ctx context.Context, in *search.ActionRequest) (*search.Stories, error) {
 	username := GetUsernameOfLoggedUser(ctx)
-	if len(username) <= 0 {
-		return &search.Stories{}, status.Error(401, "401 Unauthorized")
-	}
 	stories, _ := s.postClient.GetStoriesByHashtagRequest(ctx, &helloworld.Filter{Filter: in.Filter})
-
-	//TODO: Iz usera follow lista + javni
 	usernames := GetFollowListAndPublic(username)
 	list := []*helloworld.Story{}
 
@@ -293,12 +258,7 @@ func (s *server) GetStoriesByHashtagRequest(ctx context.Context, in *search.Acti
 
 func (s *server) GetStoriesByTagRequest(ctx context.Context, in *search.ActionRequest) (*search.Stories, error) {
 	username := GetUsernameOfLoggedUser(ctx)
-	if len(username) <= 0 {
-		return &search.Stories{}, status.Error(401, "401 Unauthorized")
-	}
 	stories, _ := s.postClient.GetStoriesByTagRequest(ctx, &helloworld.Filter{Filter: in.Filter})
-
-	//Iz usera follow lista + javni
 	usernames := GetFollowListAndPublic(username)
 	list := []*helloworld.Story{}
 
@@ -420,15 +380,28 @@ func (s *server) SearchProfilesRequest(ctx context.Context, in *search.ActionReq
 }
 
 func GetFollowList(username string) []string {
+	if username == "" {
+		return GetPublicList()
+	}
 	ret := []string{}
 	ret = append(ret, "username")
+	ret = append(ret, "test")
 	return ret
 }
 
 func GetFollowListAndPublic(username string) []string {
+	if username == "" {
+		return GetPublicList()
+	}
 	ret := []string{}
 	ret = append(ret, "username")
 	ret = append(ret, "username1")
+	return ret
+}
+
+func GetPublicList() []string {
+	ret := []string{}
+	ret = append(ret, "test")
 	return ret
 }
 
@@ -533,13 +506,18 @@ func GetUsernameOfLoggedUser(ctx context.Context) string {
 }
 
 func GetUsernameFromToken(token string) string {
-	return "nikolablesic"
-	/*resp, _ := http.Get("https://bezbednost:8443/auth/getUsernameByToken/" + token)
+	parts := strings.Fields(token)
+	fmt.Println(parts[1])
+	resp, err := http.Get("http://bezbednost:8081/auth/getUsernameByToken/" + parts[1])
+	if err != nil {
+		fmt.Println(err)
+		return ""
+	}
 	defer resp.Body.Close()
 	b, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		log.Fatalln(err)
 	}
-	log.Println(string(b))
-	return string(b)*/
+	fmt.Println(string(b))
+	return string(b)
 }
