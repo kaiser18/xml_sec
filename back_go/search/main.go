@@ -14,13 +14,14 @@ import (
 	"google.golang.org/grpc"
 
 	"search/logger"
+
 	log "github.com/sirupsen/logrus"
 )
 
 func main() {
 	log.Println("Zapocinjem...")
 	logger.FileOpen()
-	postConn, err := grpc.Dial("app:8080", grpc.WithInsecure())
+	postConn, err := grpc.Dial("post:8080", grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("failed to dial post service: %s", err)
 	}

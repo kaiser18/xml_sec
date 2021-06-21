@@ -9,9 +9,9 @@ import (
 
 	tracer "github.com/milossimic/grpc_rest/tracer"
 	"github.com/nikolablesic/proto/search"
+	log "github.com/sirupsen/logrus"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	log "github.com/sirupsen/logrus"
 )
 
 type SearchStore struct {
@@ -117,7 +117,9 @@ func MakeRange(usernames []string) string {
 	var sb strings.Builder
 	sb.WriteString("(")
 	for _, username := range usernames {
+		sb.WriteString("'")
 		sb.WriteString(username)
+		sb.WriteString("'")
 		sb.WriteString(", ")
 	}
 	s := sb.String()

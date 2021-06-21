@@ -58,15 +58,15 @@ public class SetupDataLoader implements
         = createPrivilegeIfNotFound("GENERATE_KEYSTORE_PRIVILEGE");
         Privilege deleteKeystorePrivilege
         = createPrivilegeIfNotFound("DELETE_KEYSTORE_PRIVILEGE");
-        Privilege readPostPrivilege
-        = createPrivilegeIfNotFound("READ_POST_PRIVILEGE");
-        Privilege writePostPrivilege
-        = createPrivilegeIfNotFound("WRITE_POST_PRIVILEGE");
+        Privilege adminPrivilege
+        = createPrivilegeIfNotFound("ADMIN_PRIVILEGE");
+        Privilege userPrivilege
+        = createPrivilegeIfNotFound("USER_PRIVILEGE");
  
         List<Privilege> adminPrivileges = Arrays.asList(
-        		readCertPrivilege, createCertPrivilege, readAllCertPrivilege, readAllSignPrivilege, createCertPrivilege, revokeCertPrivilege, genKeystorePrivilege, deleteKeystorePrivilege, readPostPrivilege, writePostPrivilege);
+        		readCertPrivilege, createCertPrivilege, readAllCertPrivilege, readAllSignPrivilege, createCertPrivilege, revokeCertPrivilege, genKeystorePrivilege, deleteKeystorePrivilege, adminPrivilege, userPrivilege);
         createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
-        createRoleIfNotFound("ROLE_USER", Arrays.asList(createCertPrivilege, readPostPrivilege, writePostPrivilege));
+        createRoleIfNotFound("ROLE_USER", Arrays.asList(createCertPrivilege, userPrivilege));
 
 
         Role adminRole = roleRepository.findRoleByName("ROLE_ADMIN"); 
@@ -75,6 +75,7 @@ public class SetupDataLoader implements
         user.setLastName("Test");
         user.setPassword(passwordEncoder.encode("test"));
         user.setEmail("test@test.com");
+        user.setUsername("test");
         user.setRoles(Arrays.asList(adminRole));
         user.setEnabled(true);
         userRepository.save(user);
@@ -85,6 +86,7 @@ public class SetupDataLoader implements
         u.setLastName("Blesic");
         u.setPassword(passwordEncoder.encode("Nikola123."));
         u.setEmail("nikola@nikola.com");
+        u.setUsername("nikola");
         u.setSecret("QGJQOZDYG7FGVLHP");
         u.setRoles(Arrays.asList(userRole));
         u.setEnabled(true);

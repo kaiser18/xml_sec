@@ -29,8 +29,10 @@ services:
         restart: always
         expose:
             - 8443
+            - 8081
         ports:
             - "8443:8443"
+            - "8081:8081"
         networks:
             - backend
         depends_on:
@@ -63,6 +65,34 @@ services:
           - "14250:14250"
         networks:
           - backend
+    admin:
+        image: admin:compose_build
+        build:
+          context: ./back_go/admin
+          dockerfile: Dockerfile
+        restart: always
+        environment:
+          - JAEGER_SERVICE_NAME=posts
+          - JAEGER_AGENT_HOST=tracing
+          - JAEGER_AGENT_PORT=6831
+          - JAEGER_SAMPLER_MANAGER_HOST_PORT=jaeger:5778
+          - JAEGER_SAMPLER_TYPE=const
+          - JAEGER_SAMPLER_PARAM=1
+          - DBHOST=db
+          - USER=postgres
+          - PASSWORD=postgres
+          - DBNAME=admin
+          - DBPORT=5432
+        expose:
+          - 9007
+          - 9008
+        ports:
+          - "9007:9007"
+          - "9008:9008"
+        networks:
+          - backend
+        depends_on:
+          - db
     search-service:
         image: search:compose_build
         build:
@@ -91,7 +121,7 @@ services:
           - backend
         depends_on:
           - db
-    app:
+    post:
         build:
           context: ./back_go/post
           dockerfile: Dockerfile

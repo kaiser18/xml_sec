@@ -47,6 +47,9 @@ import bezbednost.service.impl.CustomUserDetailService;
 @RequestMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AuthenticationController {
 
+	@Autowired
+	private LoggingController logger;
+	
     @Autowired
     private TokenUtils tokenUtils;
 
@@ -84,12 +87,12 @@ public class AuthenticationController {
         int expiresIn = tokenUtils.getExpiredIn();
         
         
-        System.out.println(authenticationRequest.getVerificationCode());
+        /*System.out.println(authenticationRequest.getVerificationCode());
         Totp totp = new Totp(user.getSecret());
         if (!isValidLong(authenticationRequest.getVerificationCode()) || !totp.verify(authenticationRequest.getVerificationCode())) {
             throw new BadCredentialsException("Invalid verfication code");
-        }
-
+        }*/
+        logger.LOGGER.info("User is successfully authenticated.");
         return ResponseEntity.ok(new UserTokenState(jwt, expiresIn, user));
     }
 
@@ -99,8 +102,10 @@ public class AuthenticationController {
         try {
             
             User existUser = this.userService.findUserByEmail(userRequest.getEmail());
-            if (existUser != null)
+            if (existUser != null) {
+            	logger.LOGGER.error("User registered with taken email.");
                 throw new ResourceConflictException(userRequest.getId(), "Username already exists");
+            }
 	            User user = new User();
 	        	user.setEmail(userRequest.getEmail());
 	        	user.setUsername(userRequest.getUsername());
@@ -112,7 +117,8 @@ public class AuthenticationController {
 	        	this.userService.save(user);
 	        	ConfirmationToken token = userService.createConfirmationToken(user);
 	        	emailService.sendConfirmationEmail(user, token.getConfirmationToken(), userRequest.getClientURI(), userService.generateQRUrl(user));
-            return new ResponseEntity<>(HttpStatus.CREATED);
+	        	logger.LOGGER.info("User register success.");
+	        	return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -226,10 +232,6 @@ public class AuthenticationController {
     
     @GetMapping("/getUsernameByToken/{token}")
     public ResponseEntity<String> getUsernameByToken(@PathVariable String token) {
-    	String[] parts = token.split(" ");
-    	if(parts.length < 1)
-    		return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-    	token = parts[1];
     	String email = this.tokenUtils.getEmailFromToken(token);
         User user = (User) this.userDetailsService.loadUserByUsername(email);
         if(user == null){
@@ -238,14 +240,14 @@ public class AuthenticationController {
         return ResponseEntity.ok(user.getUsername());
     }
     
-    @PreAuthorize("hasAuthority('READ_POST_PRIVILEGE')")
-    @GetMapping("/hasReadPostPermission")
-    public void hasReadPostPermission() {
+    @PreAuthorize("hasAuthority('ADMIN_PRIVILEGE')")
+    @GetMapping("/isAdmin")
+    public void isAdmin() {
     }
     
-    @PreAuthorize("hasAuthority('WRITE_POST_PRIVILEGE')")
-    @GetMapping("/hasWritePostPermission")
-    public void hasWritePostPermission() {
+    @PreAuthorize("hasAuthority('ADMIN_PRIVILEGE') || hasAuthority('USER_PRIVILEGE')")
+    @GetMapping("/isUser")
+    public void isUser() {
     }
     
     
