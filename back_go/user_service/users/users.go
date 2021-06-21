@@ -197,7 +197,7 @@ func GetUser(id string, jwt string) map[string]interface{} {
 	 //}
 }
 
-func EditUserProfile(user_id uint, is_private bool, accept_messages bool, tagging bool, muted_accs string, blocked_accs string) map [string]interface{} {
+func EditUserProfile(user_id uint, is_private bool, accept_messages bool, tagging bool) map [string]interface{} {
 
 	CheckForNewUsers()
 
@@ -251,16 +251,17 @@ func BlockedMutedParser(cell string) []int {
 	return nil
 }
 
-func UserMuteBlockOption(option string, username string, muted_acc string, blocked_acc string) map[string]interface{} {
+func UserMuteBlockOption(option string, user_id uint, muted_blocked_username string /*muted_acc string, blocked_acc string*/) map[string]interface{} {
 
 	CheckForNewUsers()
 	user_profile_settings := &interfaces.UserProfileSettings{}
 	user_main := &interfaces.User{}
 
-	if database.DB.Where("username = ? ", username).First(&user_main).RecordNotFound() {
+	if database.DB.Where("username = ? ", muted_blocked_username).First(&user_main).RecordNotFound() {
 		return map[string]interface{}{"message": "User not found"}
 	}
-	user_id := user_main.ID
+	muted_acc := strconv.Itoa(int(user_main.ID))
+	blocked_acc := strconv.Itoa(int(user_main.ID))
 
 	if database.DB.Where("user_id = ? ", user_id).First(&user_profile_settings).RecordNotFound() {
 		return map[string]interface{}{"message": "User not found"}

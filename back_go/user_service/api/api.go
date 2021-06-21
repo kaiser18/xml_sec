@@ -51,12 +51,11 @@ type WholeUser struct {
 
 type UserProfileSettings struct {
  	User_id uint
-	Username string
+	//Username string
 	Private_profile bool
 	Accept_unfollowed_account_messages bool
 	Tagging bool
-	Muted_accounts string
-	Blocked_accounts string
+	Muted_blocked_accounts string
 }
 
 type UserNotificationSettings struct {
@@ -142,7 +141,7 @@ func edit_user_profile_settings(w http.ResponseWriter, r *http.Request) {
 	helpers.HandleErr(err)
 
 	edit := users.EditUserProfile(formattedBody.User_id, formattedBody.Private_profile, formattedBody.Accept_unfollowed_account_messages,
-		formattedBody.Tagging, formattedBody.Muted_accounts, formattedBody.Blocked_accounts)
+		formattedBody.Tagging)
 	// Refactor register to use apiResponse function
 	apiResponse(edit, w)
 }
@@ -189,7 +188,7 @@ func userMuteBlockOption(w http.ResponseWriter, r *http.Request) {
 	err := json.Unmarshal(body, &formattedBody)
 	helpers.HandleErr(err)
 
-	user := users.UserMuteBlockOption(option, formattedBody.Username, formattedBody.Muted_accounts, formattedBody.Blocked_accounts)
+	user := users.UserMuteBlockOption(option, formattedBody.User_id, formattedBody.Muted_blocked_accounts)
 	apiResponse(user, w)
 }
 
