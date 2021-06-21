@@ -84,6 +84,59 @@ func (ts *AdminStore) GetReport(ctx context.Context, id int) (ReportRequest, err
 	return report, nil
 }
 
+func (ts *AdminStore) CreateVerificationRequest(ctx context.Context, name string, surname string, category string, username string) (int, error) {
+	span := tracer.StartSpanFromContext(ctx, "CreateVerificationRequest")
+	defer span.Finish()
+
+	verificationReq := VerificationRequest{
+		Name:     name,
+		Surname:  surname,
+		Category: category,
+		Username: username,
+	}
+
+	ts.db.Create(&verificationReq)
+
+	return verificationReq.ID, nil
+}
+
+func (ts *AdminStore) GetVerificationRequests(ctx context.Context) ([]VerificationRequest, error) {
+	span := tracer.StartSpanFromContext(ctx, "GetVerificationRequests")
+	defer span.Finish()
+
+	var requests []VerificationRequest
+	ts.db.Find(&requests)
+
+	return requests, nil
+}
+
+func (ts *AdminStore) GetVerificationRequestById(ctx context.Context, id int) (VerificationRequest, error) {
+	span := tracer.StartSpanFromContext(ctx, "GetVerificationRequestById")
+	defer span.Finish()
+
+	var request VerificationRequest
+	ts.db.Find(&request, id)
+
+	return request, nil
+}
+
+func (ts *AdminStore) UpdateVerificationRequestStatus(ctx context.Context, id int, status bool) error {
+	span := tracer.StartSpanFromContext(ctx, "UpdateVerificationStatus")
+	defer span.Finish()
+
+	verificationReq, err := ts.GetVerificationRequestById(ctx, id)
+
+	if err != nil {
+		return err
+	}
+
+	verificationReq.Approved = status
+
+	ts.db.Save(&verificationReq)
+
+	return nil
+}
+
 func (ts *AdminStore) Close() error {
 	db, err := ts.db.DB()
 	if err != nil {

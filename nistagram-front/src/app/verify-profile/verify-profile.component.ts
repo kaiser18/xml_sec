@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { VerifyProfileRequest } from '../model/verifyProfileRequest';
+import { AuthService } from '../services/auth.service';
 import { UserService } from '../services/user.service';
 
 @Component({
@@ -15,11 +16,12 @@ export class VerifyProfileComponent implements OnInit {
   name: string;
   surname: string;
   category: string;
+  username: string;
  // photo: string;
 
   request: VerifyProfileRequest;
 
-  constructor(private service: UserService) { }
+  constructor(private service: UserService, private authService: AuthService) { }
 
   ngOnInit(): void {
     this.verifyForm = new FormGroup({
@@ -44,8 +46,9 @@ export class VerifyProfileComponent implements OnInit {
   createRequest() : VerifyProfileRequest{
     this.name = this.verifyForm.value.name;
     this.surname = this.verifyForm.value.surname;
+    this.username = this.authService.getUserValue().username;
     
-    this.request = new VerifyProfileRequest(this.name, this.surname, this.category)
+    this.request = new VerifyProfileRequest(this.name, this.surname, this.category, this.username)
     return this.request;
   }
 

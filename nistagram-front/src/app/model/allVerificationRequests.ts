@@ -3,7 +3,7 @@ export class AllVerificationRequests {
     public name: string;
     public surname: string;
     public category: string;
-    approved: boolean;
+    public approved: boolean;
     // idImage
 
     constructor(id: number, name: string, surname: string, category: string, approved: boolean) {
