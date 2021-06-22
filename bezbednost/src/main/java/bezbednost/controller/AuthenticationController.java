@@ -266,7 +266,7 @@ public class AuthenticationController {
     }
 
     @PreAuthorize("hasAuthority('ADMIN_PRIVILEGE')")
-    @GetMapping("/isAdmin/{id}")
+    @GetMapping("/blockUser/{id}")
     public void blockUser(@PathVariable Long id) {
     	User user = this.userService.findById(id);
     	this.userService.blockUser(user);

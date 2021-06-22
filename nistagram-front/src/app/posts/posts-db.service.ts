@@ -23,6 +23,7 @@ export class PostsDbService {
             })
           .pipe(
             map(posts => {
+              console.log(posts);
                 posts = {...posts["posts"]};
                 console.log(posts);
                 const postsArray: Post[] = [];
@@ -359,15 +360,8 @@ reportPost(id: number, type: string){
   }
 
   getUsername(token: string){
-  return this.http.get<any>(`http://localhost:8081/auth/getUsernameByToken/${token}`)
-  .subscribe(
-    responseData => {
-      console.log(responseData);
-    },
-    error => {
-      this.error.next(error.message);
-    }
-  );
+  return this.http.get(`http://localhost:8081/auth/getUsernameByToken/${token}`, {responseType: 'text'})
+  
   }
 
   getUserId(token: string){

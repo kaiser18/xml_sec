@@ -1,0 +1,34 @@
+<div class="container">
+    <form [formGroup]="verifyForm" (ngSubmit)="sendVerification()">
+        <mat-form-field class="field">
+            <input matInput name="name" placeholder="Name" formControlName="name" />
+        </mat-form-field>
+
+        <mat-form-field class="field">
+            <input matInput name="surname" placeholder="Surname" formControlName="surname" />
+        </mat-form-field>
+        <mat-form-field>
+            <mat-select id="category" name="category" formControlName="category" placeholder="Choose a category" (selectionChange)=selectedCategory($event)>
+                <mat-option value="Artist">Artist</mat-option>
+                <mat-option value="Musician">Musician</mat-option>
+                <mat-option value="Blogger">Blogger</mat-option>
+                <mat-option value="Clothing">Clothing</mat-option>
+                <mat-option value="Community">Community</mat-option>
+                <mat-option value="Education">Education</mat-option>
+                <mat-option value="Entrepreneur">Entrepreneur</mat-option>
+                <mat-option value="Health&Beauty">Health&Beauty</mat-option>
+                <mat-option value="Restaurant">Restaurant</mat-option>
+                <mat-option value="Shopping">Shopping</mat-option>
+                <mat-option value="Product">Product</mat-option>
+            </mat-select>
+        </mat-form-field>
+      <!--  <div class="inputField" style="margin-top:10px">
+            <input type="file" #file id="photo" name="photo" formControlName="photo" (change)="uploadFile(file.files)"
+                style="display: none;">
+            <button type="button" mat-raised-button (click)="file.click()">Upload Image</button>
+        </div> -->
+        <div class="button">
+            <button mat-raised-button type="submit">Send verification</button>
+        </div>
+    </form>
+</div>

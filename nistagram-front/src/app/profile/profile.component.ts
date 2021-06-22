@@ -12,6 +12,7 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UserService } from '../services/user.service';
 import { UserModel } from '../model/userModel';
 import { MutedBlockedAccounts } from '../model/userProfileSettings';
+import { ActivatedRoute, Params } from '@angular/router';
 
 export interface DialogData {
   animal: string;
@@ -33,8 +34,13 @@ export class ProfileComponent implements OnInit {
   loadedStories: Story[] = [];
   loadedHighlights: Story[] = [];
   username: string;
+  myUsername: string;
+  paramsSubscription: Subscription;
+  myProfile = false;
+  likedPosts: Post[];
+  dislikedPosts: Post[];
 
-  constructor(private _modalService: NgbModal, public dialog: MatDialog, private profileService: ProfileService, private postDbService: PostsDbService, private postService: PostsService) {}
+  constructor(private activeRoute: ActivatedRoute, private _modalService: NgbModal, public dialog: MatDialog, private profileService: ProfileService, private postDbService: PostsDbService, private postService: PostsService) {}
 
   openDialog(): void {
     const dialogRef = this.dialog.open(ProfileImageDetailComponent, {
@@ -50,14 +56,46 @@ export class ProfileComponent implements OnInit {
   }
   ngOnInit(): void {
 
-    this.profileService.getPostsByUsername('username')
+    this.activeRoute.params
+    .subscribe(
+      (params: Params) => {
+        this.username = params['username'];
+        console.log(this.username);
+        this.postDbService.getUsername(localStorage.getItem("access_token"))
+        .subscribe(
+          responseData => {
+            console.log(responseData);
+            this.myUsername = responseData;
+            if(this.myUsername === this.username){
+              this.myProfile = true;
+            }
+          }
+        );
+      }
+  );
+
+    this.profileService.getLikedPosts()
+    .subscribe(
+      (posts: Post[]) => {
+        this.likedPosts = posts;
+      }
+    )
+    this.profileService.getDislikedPosts()
+    .subscribe(
+      (posts: Post[]) => {
+        this.dislikedPosts = posts;
+      }
+    )
+    
+    this.profileService.getPostsByUsername(this.username)
     .subscribe(
       (posts: Post[]) => {
         this.posts = posts;
+        console.log(this.posts);
       }
     )
 
-    this.postDbService.getStoriesByUser('username')
+    this.postDbService.getStoriesByUser(this.username)
     .subscribe(
       (loadedStories: Story[]) => {
         this.loadedStories = loadedStories;

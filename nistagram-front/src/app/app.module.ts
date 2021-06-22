@@ -50,6 +50,8 @@ import { CertificateListComponent } from './certificate-list/certificate-list.co
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { VerifyAccountComponent } from './verify-account/verify-account.component';
+import { VerifyProfileComponent } from './verify-profile/verify-profile.component';
+import { VerificationRequestsComponent } from './verification-requests/verification-requests.component';
 import { PushNotificationsComponent } from './accounts/push-notifications/push-notifications.component';
 import { PrivacyComponent } from './accounts/privacy/privacy.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -84,6 +86,8 @@ import { ReportsComponent } from './reports/reports.component';
     ForgotPasswordComponent,
     ResetPasswordComponent,
     VerifyAccountComponent,
+    VerifyProfileComponent,
+    VerificationRequestsComponent,
     PushNotificationsComponent,
     PrivacyComponent,
     ReportDialogComponent,

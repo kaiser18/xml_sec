@@ -31,7 +31,12 @@ export class NavigationComponent implements OnInit {
     }
     console.log("ldkkfkls");
     this.postsDbService.getUsername(localStorage.getItem("access_token"))
-
+    .subscribe(
+      responseData => {
+        console.log(responseData);
+        this.username = responseData;
+      }
+    );
 
     this.postsDbService.isAdmin()
     .subscribe( 
