@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { UserPrivacySettings } from '../../model/userProfileSettings';
 import { UserService } from '../../services/user.service';
+import { PostsDbService } from '../../posts/posts-db.service';
 
 
 @Component({
@@ -23,7 +24,7 @@ export class PrivacyComponent implements OnInit {
     tagging: boolean;
 
 
-  constructor(private service : UserService) { }
+  constructor(private service : UserService, private postsDbService: PostsDbService) { }
 
   ngOnInit(): void {
 
@@ -38,7 +39,10 @@ export class PrivacyComponent implements OnInit {
   }
 
   public editUser() {
-    this.user_id = 2;
+      this.postsDbService.getUserId(localStorage.getItem("access_token")).subscribe(
+          responseData => { this.user_id = responseData;
+
+    //this.user_id = 2;
     this.private_acc = this.CACheck_Private();
     this.accept_msgs = this.CACheck_Messages();
     this.tagging = this.CACheck_Tagging();
@@ -54,6 +58,7 @@ export class PrivacyComponent implements OnInit {
           alert("error");
         }
       )
+      });
   }
 
   private CACheck_Private() : boolean {
@@ -84,7 +89,11 @@ export class PrivacyComponent implements OnInit {
   }
 
   getUserData(){
-    return  this.service.getUserProfileSettings(this.user_id = 2).subscribe(data =>{
+
+      this.postsDbService.getUserId(localStorage.getItem("access_token")).subscribe(
+          responseData => { this.user_id = responseData;
+
+    return  this.service.getUserProfileSettings(this.user_id).subscribe(data =>{
       this.userPrivacySettings = data;
 
       this.private_acc = this.userPrivacySettings.data.Private_profile;
@@ -100,6 +109,7 @@ export class PrivacyComponent implements OnInit {
             })
 
     })
+    });
   }
 
   private CACheck_GetPrivate(value) : string {
