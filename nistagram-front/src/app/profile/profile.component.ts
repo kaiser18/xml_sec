@@ -82,11 +82,11 @@ export class ProfileComponent implements OnInit {
   template: `
   <div class="modal-body">
     <div class="dots3">
-        <button type="button" ngbAutofocus class="btn btn-danger" (click)="muteANDblock('block')">{{option_block}}</button>
-        <br><!--br><hr class="border-light m-0"><br-->
-        <button type="button" ngbAutofocus class="btn btn-danger" (click)="muteANDblock('mute')">{{option_mute}}</button><br>
-        <br><hr class="border-light m-0"><br>
-        <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('cancel click')">Cancel</button>
+        <button type="button" style="width:100%;" ngbAutofocus class="btn btn-danger" (click)="muteANDblock('block')">{{option_block}}</button>
+        <br><hr class="border-light m-0">
+        <button type="button" style="width:100%;" ngbAutofocus class="btn btn-danger" (click)="muteANDblock('mute')">{{option_mute}}</button>
+        <br><hr class="border-light m-0">
+        <button type="button" style="width:100%;" class="btn btn-outline-secondary" (click)="modal.dismiss('cancel click')">Cancel</button>
     </div>
   </div>
   `
@@ -122,46 +122,6 @@ export class NgbdModalConfirmAutofocus implements OnInit {
       this.username_id = "donjuan";
       //this.option_mute = "Mute this user";
       //this.option_block = "Block this user";
-
-      /*if (html_option == "mute" || html_option == "init_only") {
-          for (var val of this.optionModel.muted) {
-              this.service.getUser(val).subscribe(data => {
-                  this.userModel = data;
-                  this.muted_usernames.set(val, this.userModel.data.Username);
-                  //console.log('UsersMAP---->', this.muted_usernames.get(val));
-              })
-              console.log('UsersXXX---->');
-              if (this.muted_usernames.get(val) != this.username_id) {
-                  this.url_option = "mute";
-                  this.option_mute = "Mute this user";
-              } else {
-                  this.url_option = "unmute";
-                  this.option_mute = "Unmute this user";
-                  break;
-              }
-          }
-      }
-      if (html_option == "block" || html_option == "init_only") {
-          for (var val of this.optionModel.blocked) {
-              this.service.getUser(val).subscribe(data => {
-                  this.userModel = data;
-                  this.blocked_usernames.set(val, this.userModel.data.Username);
-              })
-
-              if (this.blocked_usernames.get(val) != this.username_id) {
-                  this.url_option = "block";
-                  this.option_block = "Block this user";
-              } else {
-                  this.url_option = "unblock";
-                  this.option_block = "Unblock this user";
-                  break;
-              }
-          }
-      }
-
-      if (html_option != "init_only") {
-          this.muteBlockUser(this.url_option, this.user_id, this.username_id);
-      }*/
       //-----------
       if (html_option == "mute" || html_option == "init_only") {
           if (this.optionModel.muted != null) {
@@ -204,7 +164,7 @@ export class NgbdModalConfirmAutofocus implements OnInit {
               var flag = 0;
               var iterations = this.optionModel.blocked.length;
               for (var val of this.optionModel.blocked) {
-                  this.blocked_usernames.set(val, "this.userModel.data.Username");
+                  //this.blocked_usernames.set(val, "this.userModel.data.Username");
                   this.service.getUser(val).subscribe(data => {
                       this.userModel = data;
                       this.blocked_usernames.set(val, this.userModel.data.Username);
@@ -219,6 +179,7 @@ export class NgbdModalConfirmAutofocus implements OnInit {
                           //break;
                       }
                       console.log(this.blocked_usernames, " => MAPPPP...");
+                      console.log(flag, " => FLAG...");
                       if ((html_option != "init_only") && (!--iterations)) {
                           this.muteBlockUser(this.url_option, this.user_id, this.username_id);
                           //console.log(val, " => This is the last iteration in block...");
