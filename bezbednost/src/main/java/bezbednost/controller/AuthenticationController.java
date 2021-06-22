@@ -86,6 +86,9 @@ public class AuthenticationController {
         String jwt = tokenUtils.generateToken(user.getEmail());
         int expiresIn = tokenUtils.getExpiredIn();
         
+        if (user.isBlocked()) {
+            throw new BadCredentialsException("Blocked");
+        }
         
         /*System.out.println(authenticationRequest.getVerificationCode());
         Totp totp = new Totp(user.getSecret());
@@ -231,13 +234,13 @@ public class AuthenticationController {
     }
     
     @GetMapping("/getUsernameByToken/{token}")
-    public ResponseEntity<String> getUsernameByToken(@PathVariable String token) {
+    public String getUsernameByToken(@PathVariable String token) {
     	String email = this.tokenUtils.getEmailFromToken(token);
         User user = (User) this.userDetailsService.loadUserByUsername(email);
         if(user == null){
-        	return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        	return "";
         }
-        return ResponseEntity.ok(user.getUsername());
+        return user.getUsername();
     }
     
     @PreAuthorize("hasAuthority('ADMIN_PRIVILEGE')")
@@ -248,6 +251,13 @@ public class AuthenticationController {
     @PreAuthorize("hasAuthority('ADMIN_PRIVILEGE') || hasAuthority('USER_PRIVILEGE')")
     @GetMapping("/isUser")
     public void isUser() {
+    }
+    
+    @PreAuthorize("hasAuthority('ADMIN_PRIVILEGE')")
+    @GetMapping("/isAdmin/{id}")
+    public void blockUser(@PathVariable Long id) {
+    	User user = this.userService.findById(id);
+    	this.userService.blockUser(user);
     }
     
     

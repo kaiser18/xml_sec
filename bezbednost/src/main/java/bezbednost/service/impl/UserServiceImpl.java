@@ -116,6 +116,12 @@ public class UserServiceImpl implements UserService {
 		return userRepository.findUserByToken(token);
 	}
 
+	@Override
+	public void blockUser(User user) {
+		user.setBlocked(true);
+		userRepository.save(user);
+	}
+
 
 
 }

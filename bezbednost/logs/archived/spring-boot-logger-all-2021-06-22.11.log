@@ -1,0 +1,8 @@
+2021-06-22 11:19:45,547 | INFO | org.hibernate.annotations.common.reflection.java.JavaReflectionManager | HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-06-22 11:19:45,872 | INFO | com.zaxxer.hikari.HikariDataSource | HikariPool-1 - Starting...
+2021-06-22 11:19:47,008 | INFO | com.zaxxer.hikari.HikariDataSource | HikariPool-1 - Start completed.
+2021-06-22 11:19:47,057 | INFO | org.hibernate.dialect.Dialect | HHH000400: Using dialect: org.hibernate.dialect.PostgreSQL95Dialect
+2021-06-22 11:19:50,293 | WARN | org.hibernate.engine.jdbc.spi.SqlExceptionHelper$StandardWarningHandler | SQL Warning Code: 0, SQLState: 00000
+2021-06-22 11:19:50,293 | WARN | org.hibernate.engine.jdbc.spi.SqlExceptionHelper$StandardWarningHandler | relation "confirmation_token" does not exist, skipping
+2021-06-22 11:19:50,299 | WARN | org.hibernate.engine.jdbc.spi.SqlExceptionHelper$StandardWarningHandler | SQL Warning Code: 0, SQLState: 00000
+2021-06-22 11:19:50,299 | WARN | org.hibernate.engine.jdbc.spi.SqlExceptionHelper$StandardWarningHandler | relation "password_reset_token" does not exist, skipping
