@@ -48,8 +48,8 @@
         <br>
         <span style="margin-left: 1%;" *ngFor="let hashtag of post.hashtags">#{{hashtag}}</span>&nbsp;
     </mat-card-actions>       
-    <a (click)="viewPost()">View comments</a>
-    <mat-card-footer style="margin: 0px;">
+    <a (click)="viewPost()" *ngIf="!isAdmin">View comments</a>
+    <mat-card-footer style="margin: 0px;" *ngIf="!isAdmin">
         <mat-form-field class="example-full-width">
             <mat-label>Leave a comment</mat-label>
             <textarea matInput placeholder="Ex. It makes me feel..." [(ngModel)]="comment"></textarea>
@@ -59,4 +59,18 @@
             Post
         </button>
     </mat-card-footer>
+    <mat-card-action *ngIf="isAdmin">
+        <label>What do you want to do with this report?</label>
+        <br>
+        <mat-radio-group aria-label="What do you want to do with this report?"[(ngModel)]="action" >
+            <mat-radio-button value="1">Delete report</mat-radio-button>
+            <mat-radio-button value="2">Delete post</mat-radio-button>
+            <mat-radio-button value="3">Block user</mat-radio-button>
+            <br>
+            <button mat-flat-button color="primary" (click)="report()">Confirm
+            </button>
+        </mat-radio-group>
+        <br>
+        
+    </mat-card-action>
 </mat-card>

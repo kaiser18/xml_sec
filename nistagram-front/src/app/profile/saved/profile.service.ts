@@ -47,4 +47,11 @@ export class ProfileService {
         )
         
         }
+
+
+
+        getUsername(token: string){
+          return this.http.get<string>(`http://localhost:8081/auth/getUsernameByToken/${token}`)
+          
+        }
 }

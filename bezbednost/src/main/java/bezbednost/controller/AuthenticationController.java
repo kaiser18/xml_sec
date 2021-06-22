@@ -245,12 +245,14 @@ public class AuthenticationController {
     
     @PreAuthorize("hasAuthority('ADMIN_PRIVILEGE')")
     @GetMapping("/isAdmin")
-    public void isAdmin() {
+    public boolean isAdmin() {
+    	return true;
     }
     
     @PreAuthorize("hasAuthority('ADMIN_PRIVILEGE') || hasAuthority('USER_PRIVILEGE')")
     @GetMapping("/isUser")
-    public void isUser() {
+    public boolean isUser() {
+    	return true;
     }
     
     @PreAuthorize("hasAuthority('ADMIN_PRIVILEGE')")

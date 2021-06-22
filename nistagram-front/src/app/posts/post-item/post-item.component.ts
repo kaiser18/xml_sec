@@ -33,11 +33,19 @@ export class PostItemComponent implements OnInit {
   isPostDisliked: boolean;
   reportPost = false;
   loggedUser = false;
-
+  isAdmin = false;
+  action;
   ngOnInit(): void {
     if(localStorage.getItem("access_token")!=null){
       this.loggedUser = true;
     }
+    this.postsDbService.isAdmin()
+    .subscribe( 
+      responseData =>{
+        this.isAdmin = responseData;
+        console.log(responseData);
+    })
+
     console.log(this.post); 
     this.post.imageUrls.forEach(element => {
       this.imageObject.push({image:element, thumbImage: element})
@@ -131,5 +139,16 @@ export class PostItemComponent implements OnInit {
       console.log(this.reportPost);
       this.postsDbService.reportPost(this.post.id, "POST");
     });
+  }
+
+  report(){
+    console.log(this.action)
+    if(this.action === "1"){
+      this.postsDbService.deleteReport(this.post.id);
+    }
+    if(this.action === "2"){
+      this.postsDbService.removePublication(this.post.id);
+    }
+    
   }
 }
