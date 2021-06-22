@@ -246,3 +246,42 @@ func GetUsernameFromToken(token string) string {
 	log.Println(string(b))
 	return string(b)
 }
+
+func (s *server) GetVerificationRequestsRequest(ctx context.Context, in *admin.Empty) (*admin.VerificationRequests, error) {
+	requests, err := s.store.GetVerificationRequests(ctx)
+	if err != nil {
+		log.Error(err)
+		return &admin.VerificationRequests{}, err
+	}
+
+	ret := []*admin.VerificationResp{}
+
+	for _, vr := range requests {
+		ret = append(ret, &admin.VerificationResp{
+			Id:       int32(vr.ID),
+			Name:     vr.Name,
+			Surname:  vr.Surname,
+			Category: vr.Category,
+			Username: vr.Username,
+			Approved: vr.Approved,
+		})
+	}
+	return &admin.VerificationRequests{
+		VerificationRequests: ret,
+	}, nil
+}
+
+func (s *server) VerificationRequest(ctx context.Context, in *admin.CreateVerificationRequest) (*admin.Identifier, error) {
+	id, err := s.store.CreateVerificationRequest(ctx, in.Request.Name, in.Request.Surname, in.Request.Category, in.Request.Username)
+
+	if err != nil {
+		log.Error(err)
+	}
+	return &admin.Identifier{
+		Id: int32(id),
+	}, err
+}
+
+func (s *server) UpdateVerificationRequest(ctx context.Context, in *admin.UpdateVerificationReq) (*admin.Empty, error) {
+	return &admin.Empty{}, s.store.UpdateVerificationRequestStatus(ctx, int(in.Request.Id), in.Request.Approved)
+}

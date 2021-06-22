@@ -15,3 +15,13 @@ type Report struct {
 	ImageUrls        []string  `json:"imageUrls"`
 	Type             string    `json:"type"`
 }
+
+type VerifyProfileRequest struct {
+	Id       int    `json:"id"`
+	Name     string `json:"name"`
+	Surname  string `json:"surname"`
+	Category string `json:"category"`
+	Username string `json:"username"`
+	//IdImage  string `json:"idImage"`
+	Approved bool `json:"approved"`
+}

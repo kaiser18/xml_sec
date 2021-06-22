@@ -18,6 +18,8 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
 import { VerifyAccountComponent } from './verify-account/verify-account.component';
 import { AuthGuard } from './authguard/auth.guard';
 import { Role } from './model/role';
+import { VerifyProfileComponent } from './verify-profile/verify-profile.component';
+import { VerificationRequestsComponent } from './verification-requests/verification-requests.component';
 import { PushNotificationsComponent } from './accounts/push-notifications/push-notifications.component';
 import { PrivacyComponent } from './accounts/privacy/privacy.component';
 import { ReportsComponent } from './reports/reports.component';
@@ -106,9 +108,17 @@ const routes: Routes = [
       component: SearchComponent
     },
     {
-      path:'reports',
-      component: ReportsComponent
+      path: 'profile/verify',
+      component: VerifyProfileComponent
     },
+    {
+      path: 'admin/verificationRequests',
+      component: VerificationRequestsComponent
+    },
+    {
+      path: 'reports',
+      component: ReportsComponent
+    }
 ];
 
 @NgModule({
