@@ -1,4 +1,4 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Subject } from "rxjs";
 import { map } from "rxjs/operators";
@@ -16,7 +16,9 @@ export class NewPostService {
     return this.http.post<{id: number}>(`http://localhost:8090/post`,
     newPost,
     {
-      observe: 'response'
+      observe: 'response',
+      headers: new HttpHeaders()
+      .set('Authorization', "Bearer " + localStorage.getItem('access_token'))
     }
   )
   .subscribe(
@@ -33,7 +35,9 @@ export class NewPostService {
     return this.http.post<{id: number}>(`http://localhost:8090/story`,
     newStory,
     {
-      observe: 'response'
+      observe: 'response',
+      headers: new HttpHeaders()
+      .set('Authorization', "Bearer " + localStorage.getItem('access_token'))
     }
   )
   .subscribe(

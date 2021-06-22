@@ -1,0 +1,8 @@
+2021-06-22 11:19:51,193 | INFO | org.springframework.boot.devtools.autoconfigure.OptionalLiveReloadServer | LiveReload server is running on port 35729
+2021-06-22 11:19:53,637 | WARN | org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration | spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2021-06-22 11:19:55,842 | INFO | org.springframework.security.web.DefaultSecurityFilterChain | Will secure Ant [pattern='/auth/login', POST] with []
+2021-06-22 11:19:55,843 | INFO | org.springframework.security.web.DefaultSecurityFilterChain | Will secure Ant [pattern='/auth/logout', POST] with []
+2021-06-22 11:19:55,844 | INFO | org.springframework.security.web.DefaultSecurityFilterChain | Will secure Ant [pattern='/auth/signup', POST] with []
+2021-06-22 11:19:55,845 | INFO | org.springframework.security.web.DefaultSecurityFilterChain | Will secure Ant [pattern='/auth/resetPassword', POST] with []
+2021-06-22 11:19:55,846 | INFO | org.springframework.security.web.DefaultSecurityFilterChain | Will secure Ant [pattern='/auth/changePassword', POST] with []
+2021-06-22 11:19:55,849 | INFO | org.springframework.security.web.DefaultSecurityFilterChain | Will secure Ant [pattern='/auth/verify', POST] with []

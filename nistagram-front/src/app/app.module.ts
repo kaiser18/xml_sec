@@ -52,6 +52,11 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
 import { VerifyAccountComponent } from './verify-account/verify-account.component';
 import { VerifyProfileComponent } from './verify-profile/verify-profile.component';
 import { VerificationRequestsComponent } from './verification-requests/verification-requests.component';
+import { PushNotificationsComponent } from './accounts/push-notifications/push-notifications.component';
+import { PrivacyComponent } from './accounts/privacy/privacy.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ReportDialogComponent } from './posts/post-item/report-dialog/report-dialog.component';
+import { ReportsComponent } from './reports/reports.component';
 
 @NgModule({
   declarations: [
@@ -82,7 +87,11 @@ import { VerificationRequestsComponent } from './verification-requests/verificat
     ResetPasswordComponent,
     VerifyAccountComponent,
     VerifyProfileComponent,
-    VerificationRequestsComponent
+    VerificationRequestsComponent,
+    PushNotificationsComponent,
+    PrivacyComponent,
+    ReportDialogComponent,
+    ReportsComponent
   ],
   imports: [
     BrowserModule,
@@ -102,10 +111,11 @@ import { VerificationRequestsComponent } from './verification-requests/verificat
     MatMenuModule,
     MatRadioModule,
     MatChipsModule,
-    HttpClientModule, 
+    HttpClientModule,
     MatSelectModule,
     MatListModule,
     NgImageSliderModule,
+    NgbModule
   ],
   providers: [ FileUploadService, PostsService, PostsDbService,
       { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}

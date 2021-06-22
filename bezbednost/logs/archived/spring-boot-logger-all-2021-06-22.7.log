@@ -1,0 +1,12 @@
+2021-06-22 11:16:22,920 | INFO | org.apache.juli.logging.DirectJDKLog | Starting ProtocolHandler ["http-nio-8081"]
+2021-06-22 11:16:24,311 | INFO | org.springframework.boot.web.embedded.tomcat.TomcatWebServer | Tomcat started on port(s): 8081 (http) with context path ''
+2021-06-22 11:16:25,573 | WARN | org.hibernate.engine.jdbc.spi.SqlExceptionHelper | SQL Error: 0, SQLState: 23505
+2021-06-22 11:16:25,575 | ERROR | org.hibernate.engine.jdbc.spi.SqlExceptionHelper | ERROR: duplicate key value violates unique constraint "uk_mir5x0ab3j667gkiy62u7ayo6"
+  Detail: Key (is_blocked)=(f) already exists.
+2021-06-22 11:16:26,479 | INFO | org.apache.juli.logging.DirectJDKLog | Pausing ProtocolHandler ["http-nio-8081"]
+2021-06-22 11:16:26,510 | INFO | org.apache.juli.logging.DirectJDKLog | Stopping service [Tomcat]
+2021-06-22 11:16:26,520 | INFO | org.apache.juli.logging.DirectJDKLog | Stopping ProtocolHandler ["http-nio-8081"]
+2021-06-22 11:16:26,526 | INFO | org.apache.juli.logging.DirectJDKLog | Destroying ProtocolHandler ["http-nio-8081"]
+2021-06-22 11:16:26,534 | INFO | org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLoggingListener | 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.

@@ -1,9 +1,10 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Subject, throwError } from "rxjs";
 import { catchError, map, tap } from "rxjs/operators";
 import { Post } from "./post.model";
 import { PostsService } from "./posts.service";
+import { Report } from "./report.model";
 import { Story } from "./story.model";
 
 @Injectable({ providedIn: 'root' })
@@ -16,9 +17,13 @@ export class PostsDbService {
 
       getNewsfeed(username: string){
           console.log('hellllllo')
-            return this.http.get<Post[]>(`http://localhost:9090/api/getNewsFeedForUsername/${username}`)
+            return this.http.get<Post[]>(`http://localhost:9090/api/getNewsFeedForUsername/${username}`, {
+              headers: new HttpHeaders()
+                .set('Authorization', "Bearer " + localStorage.getItem('access_token'))
+            })
           .pipe(
             map(posts => {
+              console.log(posts);
                 posts = {...posts["posts"]};
                 console.log(posts);
                 const postsArray: Post[] = [];
@@ -38,18 +43,30 @@ export class PostsDbService {
 
       getPostById(postId: number){
         console.log('hellllllo')
-          return this.http.get<Post>(`http://localhost:9090/api/post/${postId}`)
+          return this.http.get<Post>(`http://localhost:9090/api/post/${postId}`,
+          {
+            headers: new HttpHeaders()
+      .set('Authorization', "Bearer " + localStorage.getItem('access_token'))
+          })
         
     }
 
     getStoryById(postId: number){
       console.log('hellllllo')
-        return this.http.get<Story>(`http://localhost:9090/api/story/${postId}`)
+        return this.http.get<Story>(`http://localhost:9090/api/story/${postId}`,
+        {
+          headers: new HttpHeaders()
+      .set('Authorization', "Bearer " + localStorage.getItem('access_token'))
+        })
       
   }
 
     getCommentsForPost(postId: number){
-      return this.http.get<Comment[]>(`http://localhost:9090/api/getComments/${postId}`)
+      return this.http.get<Comment[]>(`http://localhost:9090/api/getComments/${postId}`,
+      {
+        headers: new HttpHeaders()
+      .set('Authorization', "Bearer " + localStorage.getItem('access_token'))
+      })
       .pipe(
         map(comments => {
           comments = {...comments["comments"]};
@@ -66,7 +83,11 @@ export class PostsDbService {
 
       getStoriesForUser(username: string){
         console.log('hellllllo')
-          return this.http.get<Story[]>(`http://localhost:9090/api/getStoriesForUser/${username}`)
+          return this.http.get<Story[]>(`http://localhost:9090/api/getStoriesForUser/${username}`
+          ,{
+            headers: new HttpHeaders()
+      .set('Authorization', "Bearer " + localStorage.getItem('access_token'))
+          })
         .pipe(
           map(stories => {
               console.log(stories);
@@ -89,7 +110,12 @@ export class PostsDbService {
 
     getStoriesByUser(username: string){
       console.log('hellllllo')
-        return this.http.get<Story[]>(`http://localhost:9090/api/getStoriesByUsername/${username}`)
+        return this.http.get<Story[]>(`http://localhost:9090/api/getStoriesByUsername/${username}`,
+        {
+          headers: new HttpHeaders()
+      .set('Authorization', "Bearer " + localStorage.getItem('access_token'))
+        }
+        )
       .pipe(
         map(stories => {
             console.log(stories);
@@ -112,7 +138,9 @@ export class PostsDbService {
         return this.http.post<{}>(`http://localhost:9090/api/comment`,
         comment,
         {
-          observe: 'response'
+          observe: 'response',
+          headers: new HttpHeaders()
+      .set('Authorization', "Bearer " + localStorage.getItem('access_token'))
         }
       )
       .subscribe(
@@ -130,7 +158,9 @@ export class PostsDbService {
         return this.http.post<{}>(`http://localhost:9090/api/like`,
         likeData,
         {
-          observe: 'response'
+          observe: 'response',
+          headers: new HttpHeaders()
+      .set('Authorization', "Bearer " + localStorage.getItem('access_token'))
         }
       )
       .subscribe(
@@ -148,7 +178,9 @@ export class PostsDbService {
       return this.http.post<{}>(`http://localhost:9090/api/dislike`,
       dislikeData,
       {
-        observe: 'response'
+        observe: 'response',
+        headers: new HttpHeaders()
+      .set('Authorization', "Bearer " + localStorage.getItem('access_token'))
       }
     )
     .subscribe(
@@ -162,12 +194,20 @@ export class PostsDbService {
   }
 
   isPostLiked(username: string, postId: number){
-    return this.http.get<{isLiked: boolean}>(`http://localhost:9090/api/isPostLiked/${username}/${postId}`)
+    return this.http.get<{isLiked: boolean}>(`http://localhost:9090/api/isPostLiked/${username}/${postId}`,
+    {
+      headers: new HttpHeaders()
+      .set('Authorization', "Bearer " + localStorage.getItem('access_token'))
+    })
         
   }
 
   isPostDisliked(username: string, postId: number){
-    return this.http.get<{isLiked: boolean}>(`http://localhost:9090/api/isPostDisliked/${username}/${postId}`)
+    return this.http.get<{isLiked: boolean}>(`http://localhost:9090/api/isPostDisliked/${username}/${postId}`,
+    {
+      headers: new HttpHeaders()
+      .set('Authorization', "Bearer " + localStorage.getItem('access_token'))
+    })
         
   }
 
@@ -175,7 +215,9 @@ export class PostsDbService {
     return this.http.post<{}>(`http://localhost:9090/api/savePost`,
     postForSaving,
     {
-      observe: 'response'
+      observe: 'response',
+      headers: new HttpHeaders()
+      .set('Authorization', "Bearer " + localStorage.getItem('access_token'))
     }
   )
   .subscribe(
@@ -189,7 +231,11 @@ export class PostsDbService {
   }
 
   getCategoriesOfSavedPosts(username: string){
-    return this.http.get<string[]>(`http://localhost:9090/api/categoriesOfSavedPosts/${username}`)
+    return this.http.get<string[]>(`http://localhost:9090/api/categoriesOfSavedPosts/${username}`,
+    {
+      headers: new HttpHeaders()
+      .set('Authorization', "Bearer " + localStorage.getItem('access_token'))
+    })
     .pipe(
       map(cats => {
           cats = [...cats["categories"]];
@@ -200,7 +246,11 @@ export class PostsDbService {
 
   getSavedPosts(username: string, categoryName: string){
     console.log('hellllllo')
-      return this.http.get<Post[]>(`http://localhost:9090/api/savedPosts/${username}/${categoryName}`)
+      return this.http.get<Post[]>(`http://localhost:9090/api/savedPosts/${username}/${categoryName}`,
+      {
+        headers: new HttpHeaders()
+      .set('Authorization', "Bearer " + localStorage.getItem('access_token'))
+      })
     .pipe(
       map(posts => {
           posts = {...posts["posts"]};
@@ -216,4 +266,101 @@ export class PostsDbService {
     )
     
 }
+
+reportPost(id: number, type: string){
+  const reportRequest = {id: id, type: type};
+  return this.http.post<{}>(`http://localhost:9090/api/report`,
+  reportRequest,
+  {
+    observe: 'response',
+    headers: new HttpHeaders()
+      .set('Authorization', "Bearer " + localStorage.getItem('access_token'))
+  }
+)
+.subscribe(
+  responseData => {
+    console.log(responseData);
+  },
+  error => {
+    this.error.next(error.message);
+  }
+);
+}
+
+  isAdmin(){
+    return this.http.get<boolean>(`http://localhost:8081/auth/isAdmin`,
+    {
+      headers: new HttpHeaders()
+    .set('Authorization', "Bearer " + localStorage.getItem('access_token'))
+    })
+    
+  }
+
+
+  
+  getReports(){
+    return this.http.get<Report[]>(`http://localhost:9090/api/report`,
+    {
+      headers: new HttpHeaders()
+    .set('Authorization', "Bearer " + localStorage.getItem('access_token'))
+    })
+    .pipe(
+      map(reports => {
+          console.log(reports);
+          reports = {...reports["reports"]};
+          const reportsArray: Report[] = [];
+          for(const key in reports){
+              if (reports.hasOwnProperty(key)) {
+                reportsArray.push({ ...reports[key]});
+              }
+          }
+          console.log('helena')
+          console.log(reportsArray)
+        return reportsArray;
+      })
+    )
+  }
+
+
+  removePublication(id: number){
+    return this.http.delete<{}>(`http://localhost:9090/api/publication/${id}`,
+    {
+      observe: 'response',
+      headers: new HttpHeaders()
+        .set('Authorization', "Bearer " + localStorage.getItem('access_token'))
+    }
+  )
+  .subscribe(
+    responseData => {
+      console.log(responseData);
+    },
+    error => {
+      this.error.next(error.message);
+    }
+  );
+  }
+
+
+  deleteReport(id: number){
+    return this.http.delete<{}>(`http://localhost:9090/api/report/${id}`,
+    {
+      observe: 'response',
+      headers: new HttpHeaders()
+        .set('Authorization', "Bearer " + localStorage.getItem('access_token'))
+    }
+  )
+  .subscribe(
+    responseData => {
+      console.log(responseData);
+    },
+    error => {
+      this.error.next(error.message);
+    }
+  );
+  }
+
+  getUsername(token: string){
+  return this.http.get(`http://localhost:8081/auth/getUsernameByToken/${token}`, {responseType: 'text'})
+  
+  }
 }

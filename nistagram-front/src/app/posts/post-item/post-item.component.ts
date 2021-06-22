@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Post } from '../post.model';
 import { PostsDbService } from '../posts-db.service';
 import { AddToFavouritesDialogComponent } from './add-to-favourites-dialog/add-to-favourites-dialog.component';
+import { ReportDialogComponent } from './report-dialog/report-dialog.component';
 
 export interface FavouriteDialogData {
   chosenAlbum: string;
@@ -30,8 +31,21 @@ export class PostItemComponent implements OnInit {
   imageObject: Array<object> = [];
   isPostLiked: boolean;
   isPostDisliked: boolean;
-
+  reportPost = false;
+  loggedUser = false;
+  isAdmin = false;
+  action;
   ngOnInit(): void {
+    if(localStorage.getItem("access_token")!=null){
+      this.loggedUser = true;
+    }
+    this.postsDbService.isAdmin()
+    .subscribe( 
+      responseData =>{
+        this.isAdmin = responseData;
+        console.log(responseData);
+    })
+
     console.log(this.post); 
     this.post.imageUrls.forEach(element => {
       this.imageObject.push({image:element, thumbImage: element})
@@ -111,5 +125,34 @@ export class PostItemComponent implements OnInit {
 
   viewPost(){
     this.router.navigate(['post',this.post.id]);
+  }
+
+  openReportDialog(): void {
+    const dialogRef = this.dialog.open(ReportDialogComponent, {
+      width: '300px',
+      data: {reportPost: this.reportPost}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      this.reportPost = result;
+      console.log(this.reportPost);
+      this.postsDbService.reportPost(this.post.id, "POST");
+    });
+  }
+
+  report(){
+    console.log(this.action)
+    if(this.action === "1"){
+      this.postsDbService.deleteReport(this.post.id);
+    }
+    if(this.action === "2"){
+      this.postsDbService.removePublication(this.post.id);
+    }
+    
+  }
+
+  visitProfile(){
+    this.router.navigate(['profile',this.post.username]);
   }
 }

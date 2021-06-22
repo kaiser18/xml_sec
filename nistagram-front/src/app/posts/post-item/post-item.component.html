@@ -15,7 +15,7 @@
 <mat-card style=" margin-top: 2%;background-color: white; border: 1px solid #e2e2e2;" >
     
     <img  style="float: left; margin-right: 2%;" mat-card-avatar src="https://images.unsplash.com/photo-1556103255-4443dbae8e5a?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cGhvdG9ncmFwaGVyfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80">
-    <mat-card-title style="font-size: medium;">{{post.username}}</mat-card-title>
+    <mat-card-title style="font-size: medium;" (click)="visitProfile()" style="cursor: pointer;">{{post.username}}</mat-card-title>
     <mat-card-subtitle style="font-size: small;">{{post.locationName}}</mat-card-subtitle>
     <!--<img *ngIf="!(post[i].imageUrls > 1)" mat-card-image [src]="post[i].imageUrls[0]">-->
     <ng-image-slider [images]="imageObject"  [imageSize]="{width: '100%', height: '100%'}" #nav ></ng-image-slider>
@@ -32,6 +32,7 @@
         <mat-menu #menu="matMenu">
             <button mat-menu-item *ngFor="let tag of post.tags">@{{tag}}</button>
         </mat-menu>
+        <button mat-button style="float: right;"><mat-icon (click)="openReportDialog()">report</mat-icon></button>
         <button  mat-icon-button style="float: right;">
             <mat-icon *ngIf="!favouritePost()" class="example-tab-icon" (click)="openDialog()" >bookmark_border</mat-icon>
             <mat-icon *ngIf="favouritePost()" class="example-tab-icon" (click)="removeFromFavourite()" >bookmark</mat-icon>
@@ -47,8 +48,8 @@
         <br>
         <span style="margin-left: 1%;" *ngFor="let hashtag of post.hashtags">#{{hashtag}}</span>&nbsp;
     </mat-card-actions>       
-    <a (click)="viewPost()">View comments</a>
-    <mat-card-footer style="margin: 0px;">
+    <a (click)="viewPost()" *ngIf="!isAdmin">View comments</a>
+    <mat-card-footer style="margin: 0px;" *ngIf="!isAdmin">
         <mat-form-field class="example-full-width">
             <mat-label>Leave a comment</mat-label>
             <textarea matInput placeholder="Ex. It makes me feel..." [(ngModel)]="comment"></textarea>
@@ -58,4 +59,18 @@
             Post
         </button>
     </mat-card-footer>
+    <mat-card-action *ngIf="isAdmin">
+        <label>What do you want to do with this report?</label>
+        <br>
+        <mat-radio-group aria-label="What do you want to do with this report?"[(ngModel)]="action" >
+            <mat-radio-button value="1">Delete report</mat-radio-button>
+            <mat-radio-button value="2">Delete post</mat-radio-button>
+            <mat-radio-button value="3">Block user</mat-radio-button>
+            <br>
+            <button mat-flat-button color="primary" (click)="report()">Confirm
+            </button>
+        </mat-radio-group>
+        <br>
+        
+    </mat-card-action>
 </mat-card>

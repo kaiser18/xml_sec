@@ -17,6 +17,7 @@ export class LoginComponent implements OnInit {
   password: string;
   verificationCode: string;
   credentials: Authentication;
+  token: string;
 
   constructor(private authService: AuthService, private router: Router) { }
 
@@ -31,11 +32,13 @@ export class LoginComponent implements OnInit {
   signIn(){
     this.email = this.loginForm.value.email;
     this.password = this.loginForm.value.password;
-    this.verificationCode = this.loginForm.value.verificationCode;
+    this.verificationCode = "456123";
 
     this.credentials = new Authentication(this.email, this.password, this.verificationCode);
     this.authService.login(this.credentials).subscribe(
       result => {
+          this.token = result['accessToken'];
+          localStorage.setItem('access_token', this.token);
           this.router.navigate(['/']);
       },
       error => {

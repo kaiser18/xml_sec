@@ -57,8 +57,20 @@ public class User implements UserDetails {
     @JsonIgnore
     @Column(name = "secret", unique=true)
     private String secret;
+    
+    @JsonIgnore
+    @Column(name = "isBlocked")
+    private boolean isBlocked;
 
-    public String getSecret() {
+    public boolean isBlocked() {
+		return isBlocked;
+	}
+
+	public void setBlocked(boolean isBlocked) {
+		this.isBlocked = isBlocked;
+	}
+
+	public String getSecret() {
 		return secret;
 	}
 

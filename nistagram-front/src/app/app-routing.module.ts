@@ -20,6 +20,9 @@ import { AuthGuard } from './authguard/auth.guard';
 import { Role } from './model/role';
 import { VerifyProfileComponent } from './verify-profile/verify-profile.component';
 import { VerificationRequestsComponent } from './verification-requests/verification-requests.component';
+import { PushNotificationsComponent } from './accounts/push-notifications/push-notifications.component';
+import { PrivacyComponent } from './accounts/privacy/privacy.component';
+import { ReportsComponent } from './reports/reports.component';
 
 const routes: Routes = [
     {
@@ -27,6 +30,14 @@ const routes: Routes = [
       component: EditComponent,
    //   canActivate: [AuthGuard],
    //   data: {roles: [Role.User]}
+    },
+    {
+      path: "accounts/push_notifications",
+      component: PushNotificationsComponent,
+    },
+    {
+      path: "accounts/privacy",
+      component: PrivacyComponent,
     },
     {
       path: "registration",
@@ -67,18 +78,18 @@ const routes: Routes = [
       component: VerifyAccountComponent
     },
     {
-      path:'', 
+      path:'',
       component: PostsComponent
     },
     {
-      path:'profile',
+      path:'profile/:username',
       component: ProfileComponent
     },
     {
       path:'new-post',
       component: NewPostComponent,
-      canActivate: [AuthGuard],
-      data: {roles: [Role.User]}
+      //canActivate: [AuthGuard],
+      //data: {roles: [Role.User]}
     },
     {
       path:'post/:id',
@@ -103,6 +114,10 @@ const routes: Routes = [
     {
       path: 'admin/verificationRequests',
       component: VerificationRequestsComponent
+    },
+    {
+      path: 'reports',
+      component: ReportsComponent
     }
 ];
 

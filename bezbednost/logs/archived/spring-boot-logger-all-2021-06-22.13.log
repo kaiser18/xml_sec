@@ -1,0 +1,12 @@
+2021-06-22 11:19:50,370 | WARN | org.hibernate.engine.jdbc.spi.SqlExceptionHelper$StandardWarningHandler | SQL Warning Code: 0, SQLState: 00000
+2021-06-22 11:19:50,372 | WARN | org.hibernate.engine.jdbc.spi.SqlExceptionHelper$StandardWarningHandler | table "roles_privileges" does not exist, skipping
+2021-06-22 11:19:50,376 | WARN | org.hibernate.engine.jdbc.spi.SqlExceptionHelper$StandardWarningHandler | SQL Warning Code: 0, SQLState: 00000
+2021-06-22 11:19:50,376 | WARN | org.hibernate.engine.jdbc.spi.SqlExceptionHelper$StandardWarningHandler | table "users" does not exist, skipping
+2021-06-22 11:19:50,380 | WARN | org.hibernate.engine.jdbc.spi.SqlExceptionHelper$StandardWarningHandler | SQL Warning Code: 0, SQLState: 00000
+2021-06-22 11:19:50,382 | WARN | org.hibernate.engine.jdbc.spi.SqlExceptionHelper$StandardWarningHandler | table "users_roles" does not exist, skipping
+2021-06-22 11:19:50,388 | WARN | org.hibernate.engine.jdbc.spi.SqlExceptionHelper$StandardWarningHandler | SQL Warning Code: 0, SQLState: 00000
+2021-06-22 11:19:50,388 | WARN | org.hibernate.engine.jdbc.spi.SqlExceptionHelper$StandardWarningHandler | sequence "hibernate_sequence" does not exist, skipping
+2021-06-22 11:19:50,392 | WARN | org.hibernate.engine.jdbc.spi.SqlExceptionHelper$StandardWarningHandler | SQL Warning Code: 0, SQLState: 00000
+2021-06-22 11:19:50,393 | WARN | org.hibernate.engine.jdbc.spi.SqlExceptionHelper$StandardWarningHandler | sequence "my_seqv3" does not exist, skipping
+2021-06-22 11:19:51,116 | INFO | org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator | HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-06-22 11:19:51,142 | INFO | org.springframework.orm.jpa.AbstractEntityManagerFactoryBean | Initialized JPA EntityManagerFactory for persistence unit 'default'
