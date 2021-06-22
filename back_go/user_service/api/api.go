@@ -50,22 +50,22 @@ type WholeUser struct {
 }
 
 type UserProfileSettings struct {
- 	User_id uint
+	User_id uint
 	//Username string
-	Private_profile bool
+	Private_profile                    bool
 	Accept_unfollowed_account_messages bool
-	Tagging bool
-	Muted_blocked_accounts string
+	Tagging                            bool
+	Muted_blocked_accounts             string
 }
 
 type UserNotificationSettings struct {
-	User_id uint
-	Likes string
-	Comments string
+	User_id                  uint
+	Likes                    string
+	Comments                 string
 	Accepted_follow_requests string
-	Posts string
-	Stories string
-	Messages string
+	Posts                    string
+	Stories                  string
+	Messages                 string
 }
 
 // Create readBody function
@@ -130,6 +130,15 @@ func getUser(w http.ResponseWriter, r *http.Request) {
 		"proto":    r.Proto,
 		"service":  "user_service",
 	}).Info("request details")
+}
+
+func getUsers(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	username := vars["username"]
+	id := vars["id"]
+
+	users := users.GetUsers(username, id)
+	apiResponse(users, w)
 }
 
 func edit_user_profile_settings(w http.ResponseWriter, r *http.Request) {
@@ -198,6 +207,7 @@ func StartApi() {
 	router.Use(helpers.PanicHandler)
 	router.HandleFunc("/edit", edit_user).Methods("POST")
 	router.HandleFunc("/user/{id}", getUser).Methods("GET")
+	router.HandleFunc("/users/{username}/{id}", getUsers).Methods("GET")
 	router.HandleFunc("/accounts/edit/profile_settings", edit_user_profile_settings).Methods("POST")
 	router.HandleFunc("/accounts/user_settings/{id}", getUserProfileSettings).Methods("GET")
 	router.HandleFunc("/accounts/edit/notification_settings", edit_notification_settings).Methods("POST")

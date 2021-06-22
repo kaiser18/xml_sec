@@ -16,7 +16,7 @@ export const environment = {
 //  createUser: 'register',
 //  authenticate: 'login',
 
-  baseUrl: 'http://localhost:8081',
+  baseUrl: 'https://localhost:8081',
   certificate: 'api/certificate',
   createRootCertificate: 'generateRoot',
   createOtherCertificate: 'generateOther',
@@ -30,8 +30,12 @@ export const environment = {
   createUser: 'signup',
   forgotPassword: 'resetPassword',
   resetPassword: 'changePassword',
-  verify: 'verify'
-
+  verify: 'verify',
+  
+  baseUrlAdmin: 'http://localhost:9008',
+  verifyProfile: 'verificationRequest',
+  verificationRequests: 'verificationRequests',
+  updateStatus: 'updateVerificationRequest'
 };
 
 /*
