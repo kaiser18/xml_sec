@@ -43,7 +43,7 @@ export class PushNotificationsComponent implements OnInit {
   }
 
   public editUser() {
-    this.user_id = 2;
+    this.user_id = 321;
     this.likes = this.CACheck_3Options(this.editForm.value.likes);
     this.comments = this.CACheck_3Options(this.editForm.value.comments);
     this.accepted_follow_requests = this.CACheck_Accepted_follow_requests();
@@ -87,7 +87,7 @@ export class PushNotificationsComponent implements OnInit {
   }
 
   getUserData(){
-    return  this.service.getUserNotificationSettings(this.user_id = 2).subscribe(data =>{
+    return  this.service.getUserNotificationSettings(this.user_id = 321).subscribe(data =>{
       this.userNotificationSettings = data;
 
       this.likes = this.userNotificationSettings.data.Likes;

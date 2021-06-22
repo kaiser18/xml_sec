@@ -9,7 +9,7 @@ import { Story } from "./story.model";
 
 @Injectable({ providedIn: 'root' })
 export class PostsDbService {
-  error = new Subject<string>(); 
+  error = new Subject<string>();
 
     posts: Post[];
 
@@ -38,7 +38,7 @@ export class PostsDbService {
               this.postService.setNewsfeed(posts);
             })
           )
-          
+
       }
 
       getPostById(postId: number){
@@ -48,7 +48,7 @@ export class PostsDbService {
             headers: new HttpHeaders()
       .set('Authorization', "Bearer " + localStorage.getItem('access_token'))
           })
-        
+
     }
 
     getStoryById(postId: number){
@@ -58,7 +58,7 @@ export class PostsDbService {
           headers: new HttpHeaders()
       .set('Authorization', "Bearer " + localStorage.getItem('access_token'))
         })
-      
+
   }
 
     getCommentsForPost(postId: number){
@@ -105,7 +105,7 @@ export class PostsDbService {
             this.postService.setStories(stories);
           })
         )
-        
+
     }
 
     getStoriesByUser(username: string){
@@ -131,7 +131,7 @@ export class PostsDbService {
           return storiesArray;
         })
       )
-      
+
   }
 
       leaveComment(comment){
@@ -199,7 +199,7 @@ export class PostsDbService {
       headers: new HttpHeaders()
       .set('Authorization', "Bearer " + localStorage.getItem('access_token'))
     })
-        
+
   }
 
   isPostDisliked(username: string, postId: number){
@@ -208,7 +208,7 @@ export class PostsDbService {
       headers: new HttpHeaders()
       .set('Authorization', "Bearer " + localStorage.getItem('access_token'))
     })
-        
+
   }
 
   savePost(postForSaving){
@@ -264,7 +264,7 @@ export class PostsDbService {
         return postsArray;
       })
     )
-    
+
 }
 
 reportPost(id: number, type: string){
@@ -293,11 +293,11 @@ reportPost(id: number, type: string){
       headers: new HttpHeaders()
     .set('Authorization', "Bearer " + localStorage.getItem('access_token'))
     })
-    
+
   }
 
 
-  
+
   getReports(){
     return this.http.get<Report[]>(`http://localhost:9090/api/report`,
     {
@@ -359,8 +359,42 @@ reportPost(id: number, type: string){
   );
   }
 
+  blockAccount(username: string){
+    const block = "\"" + username + "\"";
+    return this.http.post<{}>(`http://localhost:9090/api/account`,
+    block,
+    {
+      observe: 'response',
+      headers: new HttpHeaders()
+        .set('Authorization', "Bearer " + localStorage.getItem('access_token'))
+        .set('Content-Type', 'text/plain; charset=utf-8')
+    }
+  )
+  .subscribe(
+    responseData => {
+      console.log(responseData);
+    },
+    error => {
+      this.error.next(error.message);
+    }
+  );
+  }
+
   getUsername(token: string){
   return this.http.get(`http://localhost:8081/auth/getUsernameByToken/${token}`, {responseType: 'text'})
-  
+
   }
+
+  /*getUserId(token: string){
+  return this.http.get<any>(`http://localhost:8081/auth/getIdByToken/${token}`)
+  .subscribe(
+    responseData => {
+      console.log(responseData);
+    },
+    error => {
+      this.error.next(error.message);
+    }
+);
+}*/
+
 }

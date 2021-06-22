@@ -49,7 +49,7 @@ public class AuthenticationController {
 
 	@Autowired
 	private LoggingController logger;
-	
+
     @Autowired
     private TokenUtils tokenUtils;
 
@@ -61,19 +61,19 @@ public class AuthenticationController {
 
     @Autowired
     private UserService userService;
-    
+
     @Autowired
     private RoleRepository roleRepository;
-    
+
     @Autowired
 	private PasswordEncoder passwordEncoder;
-    
+
     @Autowired
     private EmailService emailService;
 
     @Autowired
     private PasswordTokenRepository passTokenRepository;
-    
+
     @PostMapping("/login")
     public ResponseEntity<UserTokenState> createAuthenticationToken(
             @RequestBody JwtAuthenticationRequest authenticationRequest, HttpServletResponse response) {
@@ -85,11 +85,11 @@ public class AuthenticationController {
         User user = (User) authentication.getPrincipal();
         String jwt = tokenUtils.generateToken(user.getEmail());
         int expiresIn = tokenUtils.getExpiredIn();
-        
+
         if (user.isBlocked()) {
             throw new BadCredentialsException("Blocked");
         }
-        
+
         /*System.out.println(authenticationRequest.getVerificationCode());
         Totp totp = new Totp(user.getSecret());
         if (!isValidLong(authenticationRequest.getVerificationCode()) || !totp.verify(authenticationRequest.getVerificationCode())) {
@@ -103,7 +103,7 @@ public class AuthenticationController {
     public ResponseEntity<?> addUser(@Valid @RequestBody UserRequest userRequest) {
     	System.out.println("lskjdflsjfsjsfdl");
         try {
-            
+
             User existUser = this.userService.findUserByEmail(userRequest.getEmail());
             if (existUser != null) {
             	logger.LOGGER.error("User registered with taken email.");
@@ -116,7 +116,7 @@ public class AuthenticationController {
 	        	user.setLastName(userRequest.getLastname());
 	        	user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
 	        	user.setRoles(Arrays.asList(roleRepository.findRoleByName("ROLE_USER")));
-	        	
+
 	        	this.userService.save(user);
 	        	ConfirmationToken token = userService.createConfirmationToken(user);
 	        	emailService.sendConfirmationEmail(user, token.getConfirmationToken(), userRequest.getClientURI(), userService.generateQRUrl(user));
@@ -161,7 +161,7 @@ public class AuthenticationController {
         SecurityContextHolder.clearContext();
     }
 
-    @GetMapping("/getRole") 
+    @GetMapping("/getRole")
     public ResponseEntity<String> getRole() {
         if (SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_DERM"))) {
@@ -190,12 +190,12 @@ public class AuthenticationController {
         public String oldPassword;
         public String newPassword;
     }
-    
+
     @PostMapping("/resetPassword")
     public ResponseEntity<?> resetPassword(HttpServletRequest request, @Valid
     		  @RequestBody ForgotPassDTO forgotPassDto) throws Exception {
     	User user = userService.findUserByEmail(forgotPassDto.getEmail());
-    	
+
     	if(user == null) {
     		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     	}
@@ -204,9 +204,9 @@ public class AuthenticationController {
     	userService.createPasswordResetTokenForUser(user, token);
     	emailService.sendPasswordResetEmail(user, token, forgotPassDto.getClientURI());
     	return new ResponseEntity<>(HttpStatus.OK);
-    	
+
     }
-    
+
     @PostMapping("/changePassword")
     public ResponseEntity<?> showChangePasswordPage(@Valid @RequestBody ResetPasswordDTO passwordDto) {
     	System.out.println("usoooo");
@@ -223,7 +223,7 @@ public class AuthenticationController {
         	User user = userService.getUserByPasswordResetToken(passwordDto.getToken());
             if(user != null) {
                 userService.changeUserPassword(user, passwordDto.getNewPassword());
-                PasswordResetToken token = passTokenRepository.findByToken(passwordDto.getToken()); 
+                PasswordResetToken token = passTokenRepository.findByToken(passwordDto.getToken());
                 passTokenRepository.delete(token);
                 return new ResponseEntity<>(HttpStatus.OK);
             } else {
@@ -232,7 +232,7 @@ public class AuthenticationController {
             }
         }
     }
-    
+
     @GetMapping("/getUsernameByToken/{token}")
     public String getUsernameByToken(@PathVariable String token) {
     	String email = this.tokenUtils.getEmailFromToken(token);
@@ -242,27 +242,37 @@ public class AuthenticationController {
         }
         return user.getUsername();
     }
-    
+
+	// @GetMapping("/getIdByToken/{token}")
+    // public void getIdByToken(@PathVariable String token) {
+    // 	String email = this.tokenUtils.getEmailFromToken(token);
+    //     User user = (User) this.userDetailsService.loadUserByUsername(email);
+    //     if(user == null){
+    //     	return "";
+    //     }
+    //     return user.getId();
+    // }
+
     @PreAuthorize("hasAuthority('ADMIN_PRIVILEGE')")
     @GetMapping("/isAdmin")
     public boolean isAdmin() {
     	return true;
     }
-    
+
     @PreAuthorize("hasAuthority('ADMIN_PRIVILEGE') || hasAuthority('USER_PRIVILEGE')")
     @GetMapping("/isUser")
     public boolean isUser() {
     	return true;
     }
-    
+
     @PreAuthorize("hasAuthority('ADMIN_PRIVILEGE')")
     @GetMapping("/blockUser/{id}")
     public void blockUser(@PathVariable Long id) {
     	User user = this.userService.findById(id);
     	this.userService.blockUser(user);
     }
-    
-    
+
+
     public String validatePasswordResetToken(String token) {
         final PasswordResetToken passToken = passTokenRepository.findByToken(token);
 
@@ -279,7 +289,7 @@ public class AuthenticationController {
         final Calendar cal = Calendar.getInstance();
         return passToken.getExpiryDate().before(cal.getTime());
     }
-    
+
     private boolean isValidLong(String code) {
         try {
             Long.parseLong(code);
@@ -288,7 +298,7 @@ public class AuthenticationController {
         }
         return true;
     }
-    
 
-    
+
+
 }

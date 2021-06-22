@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { UserModel } from '../model/userModel';
 import { New } from '../model/new';
+import { VerifyProfileRequest } from '../model/verifyProfileRequest';
 import { UserPrivacySettings, UserNotificationSettings, MutedBlockedAccounts } from '../model/userProfileSettings';
 
 @Injectable({
