@@ -359,6 +359,27 @@ reportPost(id: number, type: string){
   );
   }
 
+  blockAccount(username: string){
+    const block = "\"" + username + "\"";
+    return this.http.post<{}>(`http://localhost:9090/api/account`,
+    block,
+    {
+      observe: 'response',
+      headers: new HttpHeaders()
+        .set('Authorization', "Bearer " + localStorage.getItem('access_token'))
+        .set('Content-Type', 'text/plain; charset=utf-8')
+    }
+  )
+  .subscribe(
+    responseData => {
+      console.log(responseData);
+    },
+    error => {
+      this.error.next(error.message);
+    }
+  );
+  }
+
   getUsername(token: string){
   return this.http.get(`http://localhost:8081/auth/getUsernameByToken/${token}`, {responseType: 'text'})
   

@@ -149,6 +149,9 @@ export class PostItemComponent implements OnInit {
     if(this.action === "2"){
       this.postsDbService.removePublication(this.post.id);
     }
+    if(this.action === "3"){
+      this.postsDbService.blockAccount(this.post.username);
+    }
     
   }
 
