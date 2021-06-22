@@ -20,6 +20,7 @@ import { AuthGuard } from './authguard/auth.guard';
 import { Role } from './model/role';
 import { PushNotificationsComponent } from './accounts/push-notifications/push-notifications.component';
 import { PrivacyComponent } from './accounts/privacy/privacy.component';
+import { ReportsComponent } from './reports/reports.component';
 
 const routes: Routes = [
     {
@@ -79,7 +80,7 @@ const routes: Routes = [
       component: PostsComponent
     },
     {
-      path:'profile',
+      path:'profile/:username',
       component: ProfileComponent
     },
     {
@@ -103,6 +104,10 @@ const routes: Routes = [
     {
       path:'search/:option/:searchWord',
       component: SearchComponent
+    },
+    {
+      path:'reports',
+      component: ReportsComponent
     },
 ];
 

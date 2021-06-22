@@ -4,6 +4,7 @@ import { Subject, throwError } from "rxjs";
 import { catchError, map, tap } from "rxjs/operators";
 import { Post } from "./post.model";
 import { PostsService } from "./posts.service";
+import { Report } from "./report.model";
 import { Story } from "./story.model";
 
 @Injectable({ providedIn: 'root' })
@@ -285,4 +286,87 @@ reportPost(id: number, type: string){
 );
 }
 
+  isAdmin(){
+    return this.http.get<boolean>(`http://localhost:8081/auth/isAdmin`,
+    {
+      headers: new HttpHeaders()
+    .set('Authorization', "Bearer " + localStorage.getItem('access_token'))
+    })
+    
+  }
+
+
+  
+  getReports(){
+    return this.http.get<Report[]>(`http://localhost:9090/api/report`,
+    {
+      headers: new HttpHeaders()
+    .set('Authorization', "Bearer " + localStorage.getItem('access_token'))
+    })
+    .pipe(
+      map(reports => {
+          console.log(reports);
+          reports = {...reports["reports"]};
+          const reportsArray: Report[] = [];
+          for(const key in reports){
+              if (reports.hasOwnProperty(key)) {
+                reportsArray.push({ ...reports[key]});
+              }
+          }
+          console.log('helena')
+          console.log(reportsArray)
+        return reportsArray;
+      })
+    )
+  }
+
+
+  removePublication(id: number){
+    return this.http.delete<{}>(`http://localhost:9090/api/publication/${id}`,
+    {
+      observe: 'response',
+      headers: new HttpHeaders()
+        .set('Authorization', "Bearer " + localStorage.getItem('access_token'))
+    }
+  )
+  .subscribe(
+    responseData => {
+      console.log(responseData);
+    },
+    error => {
+      this.error.next(error.message);
+    }
+  );
+  }
+
+
+  deleteReport(id: number){
+    return this.http.delete<{}>(`http://localhost:9090/api/report/${id}`,
+    {
+      observe: 'response',
+      headers: new HttpHeaders()
+        .set('Authorization', "Bearer " + localStorage.getItem('access_token'))
+    }
+  )
+  .subscribe(
+    responseData => {
+      console.log(responseData);
+    },
+    error => {
+      this.error.next(error.message);
+    }
+  );
+  }
+
+  getUsername(token: string){
+  return this.http.get<any>(`http://localhost:8081/auth/getUsernameByToken/${token}`)
+  .subscribe(
+    responseData => {
+      console.log(responseData);
+    },
+    error => {
+      this.error.next(error.message);
+    }
+  );
+  }
 }

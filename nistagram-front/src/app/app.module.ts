@@ -54,6 +54,7 @@ import { PushNotificationsComponent } from './accounts/push-notifications/push-n
 import { PrivacyComponent } from './accounts/privacy/privacy.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ReportDialogComponent } from './posts/post-item/report-dialog/report-dialog.component';
+import { ReportsComponent } from './reports/reports.component';
 
 @NgModule({
   declarations: [
@@ -85,7 +86,8 @@ import { ReportDialogComponent } from './posts/post-item/report-dialog/report-di
     VerifyAccountComponent,
     PushNotificationsComponent,
     PrivacyComponent,
-    ReportDialogComponent
+    ReportDialogComponent,
+    ReportsComponent
   ],
   imports: [
     BrowserModule,
