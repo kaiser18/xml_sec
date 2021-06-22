@@ -95,7 +95,7 @@ export class ProfileComponent implements OnInit {
 })
 export class NgbdModalConfirmAutofocus implements OnInit {
 
-  constructor(public modal: NgbActiveModal, private service : UserService) {}
+  constructor(public modal: NgbActiveModal, private service : UserService, private postsDbService: PostsDbService) {}
 
   optionModel: MutedBlockedAccounts;
   userModel: UserModel;
@@ -115,9 +115,14 @@ export class NgbdModalConfirmAutofocus implements OnInit {
   }
 
   muteANDblock(html_option: string){
-    return  this.service.getMutedBlockedAccounts(this.user_id = 3).subscribe(data =>{
+      this.postsDbService.getUserId(localStorage.getItem("access_token")).subscribe(
+          responseData => { this.user_id = responseData;
+      //});
+
+    return  this.service.getMutedBlockedAccounts(this.user_id).subscribe(data =>{
       this.optionModel = data;
 
+      console.log('USER_ID---->', this.user_id);
       console.log('MUTED---->', this.optionModel.muted);
       console.log('BLOCKED---->', this.optionModel.blocked);
 
@@ -180,8 +185,9 @@ export class NgbdModalConfirmAutofocus implements OnInit {
                           flag = 1;
                           //break;
                       }
+                      console.log(flag, this.url_option, this.option_block, " <= OPTIONS...");
                       console.log(this.blocked_usernames, " => MAPPPP...");
-                      console.log(flag, " => FLAG...");
+                      //console.log(flag, " => FLAG...");
                       if ((html_option != "init_only") && (!--iterations)) {
                           this.muteBlockUser(this.url_option, this.user_id, this.username_id);
                           //console.log(val, " => This is the last iteration in block...");
@@ -203,7 +209,8 @@ export class NgbdModalConfirmAutofocus implements OnInit {
       }
       //-----------
 
-    })
+    });
+    });
   }
 
   public muteBlockUser(url_option: string, user_id: number, mute_block: string) {
