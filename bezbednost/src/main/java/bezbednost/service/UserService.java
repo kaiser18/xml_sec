@@ -18,6 +18,7 @@ public interface UserService {
     ConfirmationToken createConfirmationToken(User user);
     void createPasswordResetTokenForUser(User user, String token);
 	void changeUserPassword(User user, String newPassword);
+	void blockUser(User user);
 	User getUserByPasswordResetToken(String token);
 	String generateQRUrl(User user);
 }

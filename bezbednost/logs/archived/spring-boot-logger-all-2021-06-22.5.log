@@ -1,0 +1,8 @@
+2021-06-22 11:16:21,324 | INFO | org.springframework.security.web.DefaultSecurityFilterChain | Will secure Ant [pattern='/auth/verify', POST] with []
+2021-06-22 11:16:21,333 | INFO | org.springframework.security.web.DefaultSecurityFilterChain | Will secure Ant [pattern='/', GET] with []
+2021-06-22 11:16:21,334 | INFO | org.springframework.security.web.DefaultSecurityFilterChain | Will secure Ant [pattern='/webjars/**', GET] with []
+2021-06-22 11:16:21,335 | INFO | org.springframework.security.web.DefaultSecurityFilterChain | Will secure Ant [pattern='/favicon.ico', GET] with []
+2021-06-22 11:16:21,336 | INFO | org.springframework.security.web.DefaultSecurityFilterChain | Will secure Ant [pattern='/**/*.png', GET] with []
+2021-06-22 11:16:21,366 | INFO | org.springframework.security.web.DefaultSecurityFilterChain | Will secure Ant [pattern='/**/*.css', GET] with []
+2021-06-22 11:16:21,367 | INFO | org.springframework.security.web.DefaultSecurityFilterChain | Will secure Ant [pattern='/**/*.js', GET] with []
+2021-06-22 11:16:21,367 | INFO | org.springframework.security.web.DefaultSecurityFilterChain | Will secure Ant [pattern='/**/*.woff2', GET] with []

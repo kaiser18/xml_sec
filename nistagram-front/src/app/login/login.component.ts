@@ -39,7 +39,6 @@ export class LoginComponent implements OnInit {
       result => {
           this.token = result['accessToken'];
           localStorage.setItem('access_token', this.token);
-          location.reload();
           this.router.navigate(['/']);
       },
       error => {

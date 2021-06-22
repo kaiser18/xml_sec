@@ -32,6 +32,7 @@ export class ProfileComponent implements OnInit {
   subscriptionStory: Subscription;
   loadedStories: Story[] = [];
   loadedHighlights: Story[] = [];
+  username: string;
 
   constructor(private _modalService: NgbModal, public dialog: MatDialog, private profileService: ProfileService, private postDbService: PostsDbService, private postService: PostsService) {}
 
@@ -48,6 +49,7 @@ export class ProfileComponent implements OnInit {
     });
   }
   ngOnInit(): void {
+
     this.profileService.getPostsByUsername('username')
     .subscribe(
       (posts: Post[]) => {
