@@ -19,7 +19,7 @@
         </mat-grid-tile>
         <mat-grid-tile>
             <figure class="mat-figure nesto">
-                <h2>hanisicc</h2> &nbsp;
+                <h2>{{username}}</h2> &nbsp;
                 <button mat-flat-button color="primary">Follow</button>
                 <br><button class="btn btn-outline-primary" (click)="open('autofocus')">3Dots</button>
                 <br>
@@ -52,5 +52,19 @@
         </mat-grid-list>
     </mat-tab>
     <mat-tab label="Saved"><app-saved></app-saved></mat-tab>
+    <mat-tab label="Liked" *ngIf="myProfile">
+        <mat-grid-list cols="3" rowHeight="1:1" gutterSize="5px">
+            <mat-grid-tile style="cursor: pointer;" class="profile-image"*ngFor="let post of likedPosts" [routerLink] = "['/post', post.id]">
+                <img [src]="post.imageUrls[0]">
+            </mat-grid-tile>
+          </mat-grid-list>
+    </mat-tab>
+    <mat-tab label="Disliked" *ngIf="myProfile">
+        <mat-grid-list cols="3" rowHeight="1:1" gutterSize="5px">
+            <mat-grid-tile style="cursor: pointer;" class="profile-image"*ngFor="let post of dislikedPosts" [routerLink] = "['/post', post.id]">
+                <img [src]="post.imageUrls[0]">
+            </mat-grid-tile>
+      </mat-grid-list>
+    </mat-tab>
 </mat-tab-group>
 </div>

@@ -151,4 +151,8 @@ export class PostItemComponent implements OnInit {
     }
     
   }
+
+  visitProfile(){
+    this.router.navigate(['profile',this.post.username]);
+  }
 }
