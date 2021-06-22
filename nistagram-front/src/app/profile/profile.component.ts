@@ -86,7 +86,7 @@ export class ProfileComponent implements OnInit {
         this.dislikedPosts = posts;
       }
     )
-    
+
     this.profileService.getPostsByUsername(this.username)
     .subscribe(
       (posts: Post[]) => {
@@ -133,7 +133,7 @@ export class ProfileComponent implements OnInit {
 })
 export class NgbdModalConfirmAutofocus implements OnInit {
 
-  constructor(public modal: NgbActiveModal, private service : UserService, private postsDbService: PostsDbService) {}
+  constructor(public modal: NgbActiveModal, private service : UserService/*, private postsDbService: PostsDbService*/) {}
 
   optionModel: MutedBlockedAccounts;
   userModel: UserModel;
@@ -153,11 +153,11 @@ export class NgbdModalConfirmAutofocus implements OnInit {
   }
 
   muteANDblock(html_option: string){
-      this.postsDbService.getUserId(localStorage.getItem("access_token")).subscribe(
-          responseData => { this.user_id = responseData;
+      // this.postsDbService.getUserId(localStorage.getItem("access_token")).subscribe(
+      //     responseData => { this.user_id = responseData;
       //});
 
-    return  this.service.getMutedBlockedAccounts(this.user_id).subscribe(data =>{
+    return  this.service.getMutedBlockedAccounts(this.user_id = 321).subscribe(data =>{
       this.optionModel = data;
 
       console.log('USER_ID---->', this.user_id);
@@ -248,7 +248,7 @@ export class NgbdModalConfirmAutofocus implements OnInit {
       //-----------
 
     });
-    });
+    //});
   }
 
   public muteBlockUser(url_option: string, user_id: number, mute_block: string) {
