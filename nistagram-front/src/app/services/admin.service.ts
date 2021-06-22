@@ -20,4 +20,8 @@ export class AdminService {
   updateVerificationRequestStatus(data: UpdateVerificationRequestStatus) {
     return this.http.post<UpdateVerificationRequestStatus>(`${environment.baseUrlAdmin}/${environment.verificationRequests}${environment.updateStatus}`, data);
   }
+
+  verifyProfile(data: VerifyProfileRequest) {
+    return this.http.post(`${environment.baseUrlAdmin}/${environment.verifyProfile}`, data, {responseType: 'text'});
+  }
 }

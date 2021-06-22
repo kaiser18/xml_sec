@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { VerifyProfileRequest } from '../model/verifyProfileRequest';
+import { AdminService } from '../services/admin.service';
 import { AuthService } from '../services/auth.service';
 import { UserService } from '../services/user.service';
 
@@ -21,7 +22,7 @@ export class VerifyProfileComponent implements OnInit {
 
   request: VerifyProfileRequest;
 
-  constructor(private service: UserService, private authService: AuthService) { }
+  constructor(private service: AdminService, private authService: AuthService) { }
 
   ngOnInit(): void {
     this.verifyForm = new FormGroup({
