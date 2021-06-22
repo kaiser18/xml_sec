@@ -26,12 +26,11 @@ export const environment = {
   forgotPassword: 'resetPassword',
   resetPassword: 'changePassword',
   verify: 'verify',
-  verifyProfile: 'verifyProfile',
-
- //TODO: baseUrlAdmin
-  admin: 'admin',
+  
+  baseUrlAdmin: 'http://localhost:9008',
+  verifyProfile: 'verificationRequest',
   verificationRequests: 'verificationRequests',
-  updateStatus: 'updateStatus'
+  updateStatus: 'updateVerificationRequest'
 };
 
 /*

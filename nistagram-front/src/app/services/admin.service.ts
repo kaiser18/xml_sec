@@ -14,11 +14,10 @@ export class AdminService {
   constructor(private http: HttpClient) { }
 
   getAllVerificationRequests() : Observable<AllVerificationRequests[]> {
-    //TODO: Change to baseUrlAdmin
-    return this.http.get<AllVerificationRequests[]>(`${environment.baseUrlUser}/${environment.admin}/${environment.verificationRequests}`);
+    return this.http.get<AllVerificationRequests[]>(`${environment.baseUrlAdmin}/${environment.verificationRequests}`);
   }
 
   updateVerificationRequestStatus(data: UpdateVerificationRequestStatus) {
-    return this.http.post<UpdateVerificationRequestStatus>(`${environment.baseUrlUser}/${environment.admin}/${environment.verificationRequests}${environment.updateStatus}`, data);
+    return this.http.post<UpdateVerificationRequestStatus>(`${environment.baseUrlAdmin}/${environment.verificationRequests}${environment.updateStatus}`, data);
   }
 }
