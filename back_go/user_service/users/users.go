@@ -135,7 +135,7 @@ func MigrateInfo() {
 
 func CheckForNewUsers() {
 	users := []interfaces.User{}
-	database.DB.Find(&users)
+	database.DBP.Find(&users)
 
 	for i := 0; i < len(users); i++ {
 		user_info := &interfaces.UserInfo{User_id: users[i].ID}
@@ -144,10 +144,19 @@ func CheckForNewUsers() {
 		}
 		user_profile_settings := &interfaces.UserProfileSettings{User_id: users[i].ID}
 		if database.DB.Where("user_id = ? ", users[i].ID).First(&user_profile_settings).RecordNotFound() {
+			user_profile_settings.Private_profile = false
+			user_profile_settings.Accept_unfollowed_account_messages = false
+			user_profile_settings.Tagging = true
 			database.DB.Create(&user_profile_settings)
 		}
 		user_notification_settings := &interfaces.UserNotificationSettings{User_id: users[i].ID}
 		if database.DB.Where("user_id = ? ", users[i].ID).First(&user_notification_settings).RecordNotFound() {
+			user_notification_settings.Likes = "from_everyone"
+			user_notification_settings.Comments = "from_everyone"
+			user_notification_settings.Accepted_follow_requests = "from_everyone"
+			user_notification_settings.Posts = "from_people_i_follow"
+			user_notification_settings.Stories = "off"
+			user_notification_settings.Messages = "from_everyone"
 			database.DB.Create(&user_notification_settings)
 		}
 	}
@@ -173,13 +182,13 @@ func EditUser(name string, surname string, username string, email string,
 	}
 
 	user := &interfaces.User{First_name: name, Last_name: surname, Username: username, Email: email}
-	if !(database.DB.Where("id = ? ", user_id).First(&user).RecordNotFound()) {
+	if !(database.DBP.Where("id = ? ", user_id).First(&user).RecordNotFound()) {
 		user.First_name = name
 		user.Last_name = surname
 		user.Username = username
 		user.Email = email
 
-		database.DB.Save(&user)
+		database.DBP.Save(&user)
 	} else {
 		//database.DB.Create(&user_info)
 		return map[string]interface{}{"message": "cant edit non-existent user"}
@@ -198,7 +207,7 @@ func GetUser(id string, jwt string) map[string]interface{} {
 	// Find and return user
 	//if isValid {
 	user := &interfaces.User{}
-	if database.DB.Where("id = ? ", id).First(&user).RecordNotFound() {
+	if database.DBP.Where("id = ? ", id).First(&user).RecordNotFound() {
 		return map[string]interface{}{"message": "User not found"}
 	}
 
@@ -217,7 +226,7 @@ func GetUser(id string, jwt string) map[string]interface{} {
 func GetUsers(username string, id string) map[string]interface{} {
 	CheckForNewUsers()
 	var users []interfaces.User
-	database.DB.Where("username like '%" + username + "%' AND is_Blocked = false").Find(&users)
+	database.DBP.Where("username like '%" + username + "%' AND is_Blocked = false").Find(&users)
 	blocked := GetBlockedProfiles(id)
 	ret := []*interfaces.ResponseWholeUser{}
 	for _, user := range users {
@@ -263,7 +272,7 @@ func EditUserProfile(user_id uint, is_private bool, accept_messages bool, taggin
 	}
 
 	user := &interfaces.User{}
-	if database.DB.Where("id = ? ", user_id).First(&user).RecordNotFound() {
+	if database.DBP.Where("id = ? ", user_id).First(&user).RecordNotFound() {
 		return map[string]interface{}{"message": "User not found"}
 	}
 
@@ -317,7 +326,7 @@ func UserMuteBlockOption(option string, user_id uint, muted_blocked_username str
 	user_profile_settings := &interfaces.UserProfileSettings{}
 	user_main := &interfaces.User{}
 
-	if database.DB.Where("username = ? ", muted_blocked_username).First(&user_main).RecordNotFound() {
+	if database.DBP.Where("username = ? ", muted_blocked_username).First(&user_main).RecordNotFound() {
 		return map[string]interface{}{"message": "User not found"}
 	}
 	muted_acc := strconv.Itoa(int(user_main.ID))
@@ -406,7 +415,7 @@ func EditUserNotification(user_id uint, likes string, comments string, accepted_
 	}
 
 	user := &interfaces.User{}
-	if database.DB.Where("id = ? ", user_id).First(&user).RecordNotFound() {
+	if database.DBP.Where("id = ? ", user_id).First(&user).RecordNotFound() {
 		return map[string]interface{}{"message": "User not found"}
 	}
 

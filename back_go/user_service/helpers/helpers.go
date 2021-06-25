@@ -12,7 +12,6 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	_ "github.com/lib/pq"
 	log "github.com/sirupsen/logrus"
-	//"golang.org/x/crypto/bcrypt"
 	//"path/filepath"
 )
 
