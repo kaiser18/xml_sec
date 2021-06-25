@@ -385,16 +385,9 @@ reportPost(id: number, type: string){
 
   }
 
-  /*getUserId(token: string){
-  return this.http.get<any>(`http://localhost:8081/auth/getIdByToken/${token}`)
-  .subscribe(
-    responseData => {
-      console.log(responseData);
-    },
-    error => {
-      this.error.next(error.message);
-    }
-);
-}*/
+  getUserId(token: string){
+  return this.http.get(`http://localhost:8081/auth/getUserIdByToken/${token}`, {responseType: 'text'})
+
+  }
 
 }

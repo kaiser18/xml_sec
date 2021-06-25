@@ -133,7 +133,7 @@ export class ProfileComponent implements OnInit {
 })
 export class NgbdModalConfirmAutofocus implements OnInit {
 
-  constructor(public modal: NgbActiveModal, private service : UserService/*, private postsDbService: PostsDbService*/) {}
+  constructor(public modal: NgbActiveModal, private service : UserService, /*private activeRoute: ActivatedRoute,*/ private postsDbService: PostsDbService) {}
 
   optionModel: MutedBlockedAccounts;
   userModel: UserModel;
@@ -144,112 +144,101 @@ export class NgbdModalConfirmAutofocus implements OnInit {
   url_option: string;
   username_id: string;
   muted_usernames = new Map<number, string>();
-  blocked_usernames = new Map<number, string>();
+  blocked_usernames = new Map<number, string>(); 
 
   ngOnInit(): void {
 
+      this.username_id = "nikola";
       this.muteANDblock('init_only');
 
   }
 
-  muteANDblock(html_option: string){
-      // this.postsDbService.getUserId(localStorage.getItem("access_token")).subscribe(
-      //     responseData => { this.user_id = responseData;
-      //});
+  muteANDblock(html_option: string) {
+    this.postsDbService.getUserId(localStorage.getItem("access_token")).subscribe(
+        responseData => {
+            this.user_id = Number(responseData);
 
-    return  this.service.getMutedBlockedAccounts(this.user_id = 321).subscribe(data =>{
-      this.optionModel = data;
+            return this.service.getMutedBlockedAccounts(this.user_id).subscribe(data => {
+                this.optionModel = data;
 
-      console.log('USER_ID---->', this.user_id);
-      console.log('MUTED---->', this.optionModel.muted);
-      console.log('BLOCKED---->', this.optionModel.blocked);
+                console.log('USERNAME_ID---->', this.username_id);
+                console.log('MUTED---->', this.optionModel.muted);
+                console.log('BLOCKED---->', this.optionModel.blocked);
 
-      this.username_id = "donjuan";
-      //this.option_mute = "Mute this user";
-      //this.option_block = "Block this user";
-      //-----------
-      if (html_option == "mute" || html_option == "init_only") {
-          if (this.optionModel.muted != null) {
-              var flag = 0;
-              var iterations = this.optionModel.muted.length;
-              for (var val of this.optionModel.muted) {
-                  this.service.getUser(val).subscribe(data => {
-                      this.userModel = data;
-                      this.muted_usernames.set(val, this.userModel.data.Username);
-                      //console.log('UsersMAP---->', this.muted_usernames.get(val));
-                      if ((this.muted_usernames.get(val) != this.username_id) && flag == 0) {
-                          this.url_option = "mute";
-                          this.option_mute = "Mute this user";
-                      } else {
-                          this.url_option = "unmute";
-                          this.option_mute = "Unmute this user";
-                          flag = 1;
-                          //break;
-                      }
-                      if ((html_option != "init_only") && (!--iterations)){
-                          this.muteBlockUser(this.url_option, this.user_id, this.username_id);
-                          console.log(val, " => This is the last iteration in mute...");
-                          if (this.url_option == "unmute") {
-                              this.muted_usernames.delete(val);
-                          }
-                      }
-                  })
-              }
-          } else {
-              this.url_option = "mute";
-              this.option_mute = "Mute this user";
-              if (html_option != "init_only") {
-                  this.muteBlockUser(this.url_option, this.user_id, this.username_id);
-              }
-          }
-      }
-      //*******
-      if (html_option == "block" || html_option == "init_only") {
-          if (this.optionModel.blocked != null) {
-              var flag = 0;
-              var iterations = this.optionModel.blocked.length;
-              for (var val of this.optionModel.blocked) {
-                  //this.blocked_usernames.set(val, "this.userModel.data.Username");
-                  this.service.getUser(val).subscribe(data => {
-                      this.userModel = data;
-                      this.blocked_usernames.set(val, this.userModel.data.Username);
-                      //console.log('UsersMAP---->', this.muted_usernames.get(val));
-                      if ((this.blocked_usernames.get(val) != this.username_id) && flag == 0) {
-                          this.url_option = "block";
-                          this.option_block = "Block this user";
-                      } else {
-                          this.url_option = "unblock";
-                          this.option_block = "Unblock this user";
-                          flag = 1;
-                          //break;
-                      }
-                      console.log(flag, this.url_option, this.option_block, " <= OPTIONS...");
-                      console.log(this.blocked_usernames, " => MAPPPP...");
-                      //console.log(flag, " => FLAG...");
-                      if ((html_option != "init_only") && (!--iterations)) {
-                          this.muteBlockUser(this.url_option, this.user_id, this.username_id);
-                          //console.log(val, " => This is the last iteration in block...");
-                          if (this.url_option == "unblock") {
-                              console.log(this.blocked_usernames, " => This is the last iteration in block...");
-                              this.blocked_usernames.delete(val);
-                              console.log(this.blocked_usernames, " => This is the last iteration in block...");
-                          }
-                      }
-                  })
-              }
-          } else {
-              this.url_option = "block";
-              this.option_block = "Block this user";
-              if (html_option != "init_only") {
-                  this.muteBlockUser(this.url_option, this.user_id, this.username_id);
-              }
-          }
-      }
-      //-----------
-
-    });
-    //});
-  }
+                if (html_option == "mute" || html_option == "init_only") {
+                    if (this.optionModel.muted != null) {
+                        var flag = 0;
+                        var iterations = this.optionModel.muted.length;
+                        for (var val of this.optionModel.muted) {
+                            this.service.getUser(val).subscribe(data => {
+                                this.userModel = data;
+                                this.muted_usernames.set(val, this.userModel.data.Username);
+                                if ((this.muted_usernames.get(val) != this.username_id) && flag == 0) {
+                                    this.url_option = "mute";
+                                    this.option_mute = "Mute this user";
+                                } else {
+                                    this.url_option = "unmute";
+                                    this.option_mute = "Unmute this user";
+                                    flag = 1;
+                                    //break;
+                                }
+                                if ((html_option != "init_only") && (!--iterations)) {
+                                    this.muteBlockUser(this.url_option, this.user_id, this.username_id);
+                                    if (this.url_option == "unmute") {
+                                        this.muted_usernames.delete(val);
+                                    }
+                                }
+                            });
+                        }
+                    } else {
+                        this.url_option = "mute";
+                        this.option_mute = "Mute this user";
+                        if (html_option != "init_only") {
+                            this.muteBlockUser(this.url_option, this.user_id, this.username_id);
+                        }
+                    }
+                }
+                //*******
+                if (html_option == "block" || html_option == "init_only") {
+                    if (this.optionModel.blocked != null) {
+                        var flag = 0;
+                        var iterations = this.optionModel.blocked.length;
+                        for (var val of this.optionModel.blocked) {
+                            //this.blocked_usernames.set(val, "this.userModel.data.Username");
+                            this.service.getUser(val).subscribe(data => {
+                                this.userModel = data;
+                                this.blocked_usernames.set(val, this.userModel.data.Username);
+                                //console.log('UsersMAP---->', this.muted_usernames.get(val));
+                                if ((this.blocked_usernames.get(val) != this.username_id) && flag == 0) {
+                                    this.url_option = "block";
+                                    this.option_block = "Block this user";
+                                } else {
+                                    this.url_option = "unblock";
+                                    this.option_block = "Unblock this user";
+                                    flag = 1;
+                                    //break;
+                                }
+                                if ((html_option != "init_only") && (!--iterations)) {
+                                    this.muteBlockUser(this.url_option, this.user_id, this.username_id);
+                                    //console.log(val, " => This is the last iteration in block...");
+                                    if (this.url_option == "unblock") {
+                                        this.blocked_usernames.delete(val);
+                                    }
+                                }
+                            });
+                        }
+                    } else {
+                        this.url_option = "block";
+                        this.option_block = "Block this user";
+                        if (html_option != "init_only") {
+                            this.muteBlockUser(this.url_option, this.user_id, this.username_id);
+                        }
+                    }
+                }
+                //-----------
+            });
+        });
+}
 
   public muteBlockUser(url_option: string, user_id: number, mute_block: string) {
 

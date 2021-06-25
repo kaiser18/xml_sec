@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { UserNotificationSettings } from '../../model/userProfileSettings';
 import { UserService } from '../../services/user.service';
+import { PostsDbService } from '../../posts/posts-db.service';
 
 @Component({
   selector: 'app-push-notifications',
@@ -25,7 +26,7 @@ export class PushNotificationsComponent implements OnInit {
     messages: string;
 
 
-  constructor(private service : UserService) { }
+  constructor(private service : UserService, private postsDbService: PostsDbService) { }
 
   ngOnInit(): void {
 
@@ -43,26 +44,30 @@ export class PushNotificationsComponent implements OnInit {
   }
 
   public editUser() {
-    this.user_id = 321;
-    this.likes = this.CACheck_3Options(this.editForm.value.likes);
-    this.comments = this.CACheck_3Options(this.editForm.value.comments);
-    this.accepted_follow_requests = this.CACheck_Accepted_follow_requests();
-    this.posts = this.CACheck_3Options(this.editForm.value.posts);
-    this.stories = this.CACheck_3Options(this.editForm.value.stories);
-    this.messages = this.CACheck_3Options(this.editForm.value.messages);
+      this.postsDbService.getUserId(localStorage.getItem("access_token")).subscribe(
+          responseData => {
 
-    this.userNotificationSettings = new UserNotificationSettings(this.user_id, this.likes, this.comments, this.accepted_follow_requests,
-        this.posts, this.stories, this.messages)
+        this.user_id = Number(responseData);
+        this.likes = this.CACheck_3Options(this.editForm.value.likes);
+        this.comments = this.CACheck_3Options(this.editForm.value.comments);
+        this.accepted_follow_requests = this.CACheck_Accepted_follow_requests();
+        this.posts = this.CACheck_3Options(this.editForm.value.posts);
+        this.stories = this.CACheck_3Options(this.editForm.value.stories);
+        this.messages = this.CACheck_3Options(this.editForm.value.messages);
 
-      this.service.editUserNotificationSettings(this.userNotificationSettings).subscribe(
-        res => {
-          //this.editForm.reset();
-          alert("success");
-        },
-        error => {
-          alert("error");
-        }
-      )
+        this.userNotificationSettings = new UserNotificationSettings(this.user_id, this.likes, this.comments, this.accepted_follow_requests,
+            this.posts, this.stories, this.messages)
+
+          this.service.editUserNotificationSettings(this.userNotificationSettings).subscribe(
+            res => {
+              //this.editForm.reset();
+              alert("success");
+            },
+            error => {
+              alert("error");
+            }
+          );
+     });
   }
 
   private CACheck_3Options(form_part) : string {
@@ -87,28 +92,33 @@ export class PushNotificationsComponent implements OnInit {
   }
 
   getUserData(){
-    return  this.service.getUserNotificationSettings(this.user_id = 321).subscribe(data =>{
-      this.userNotificationSettings = data;
+      this.postsDbService.getUserId(localStorage.getItem("access_token")).subscribe(
+          responseData => {
+              this.user_id = Number(responseData);
 
-      this.likes = this.userNotificationSettings.data.Likes;
-      this.comments = this.userNotificationSettings.data.Comments;
-      this.accepted_follow_requests = this.userNotificationSettings.data.Accepted_follow_requests;
-      this.posts = this.userNotificationSettings.data.Posts;
-      this.stories = this.userNotificationSettings.data.Stories;
-      this.messages = this.userNotificationSettings.data.Messages;
+        return  this.service.getUserNotificationSettings(this.user_id).subscribe(data =>{
+          this.userNotificationSettings = data;
 
-      console.log('DATA---->', this.userNotificationSettings.data);
+          this.likes = this.userNotificationSettings.data.Likes;
+          this.comments = this.userNotificationSettings.data.Comments;
+          this.accepted_follow_requests = this.userNotificationSettings.data.Accepted_follow_requests;
+          this.posts = this.userNotificationSettings.data.Posts;
+          this.stories = this.userNotificationSettings.data.Stories;
+          this.messages = this.userNotificationSettings.data.Messages;
 
-            this.editForm = new FormGroup({
-                'likes': new FormControl(this.likes),
-                'comments': new FormControl(this.comments),
-                'accepted_follow_requests': new FormControl(this.accepted_follow_requests),
-                'posts': new FormControl(this.posts),
-                'stories': new FormControl(this.stories),
-                'messages': new FormControl(this.messages)
-            })
+          console.log('DATA---->', this.userNotificationSettings.data);
 
-    })
+                this.editForm = new FormGroup({
+                    'likes': new FormControl(this.likes),
+                    'comments': new FormControl(this.comments),
+                    'accepted_follow_requests': new FormControl(this.accepted_follow_requests),
+                    'posts': new FormControl(this.posts),
+                    'stories': new FormControl(this.stories),
+                    'messages': new FormControl(this.messages)
+                })
+
+          });
+    });
   }
 
 }

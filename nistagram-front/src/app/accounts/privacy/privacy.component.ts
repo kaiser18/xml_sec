@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { UserPrivacySettings } from '../../model/userProfileSettings';
 import { UserService } from '../../services/user.service';
-//import { PostsDbService } from '../../posts/posts-db.service';
+import { PostsDbService } from '../../posts/posts-db.service';
 
 
 @Component({
@@ -24,7 +24,7 @@ export class PrivacyComponent implements OnInit {
     tagging: boolean;
 
 
-  constructor(private service : UserService/*, private postsDbService: PostsDbService*/) { }
+  constructor(private service : UserService, private postsDbService: PostsDbService) { }
 
   ngOnInit(): void {
 
@@ -39,26 +39,26 @@ export class PrivacyComponent implements OnInit {
   }
 
   public editUser() {
-      // this.postsDbService.getUserId(localStorage.getItem("access_token")).subscribe(
-      //     responseData => { this.user_id = responseData;
+      this.postsDbService.getUserId(localStorage.getItem("access_token")).subscribe(
+          responseData => {
 
-    this.user_id = 321;
-    this.private_acc = this.CACheck_Private();
-    this.accept_msgs = this.CACheck_Messages();
-    this.tagging = this.CACheck_Tagging();
+        this.user_id = Number(responseData);
+        this.private_acc = this.CACheck_Private();
+        this.accept_msgs = this.CACheck_Messages();
+        this.tagging = this.CACheck_Tagging();
 
-    this.userPrivacySettings = new UserPrivacySettings(this.user_id, this.private_acc, this.accept_msgs, this.tagging)
+        this.userPrivacySettings = new UserPrivacySettings(this.user_id, this.private_acc, this.accept_msgs, this.tagging)
 
-      this.service.editUserProfileSettings(this.userPrivacySettings).subscribe(
-        res => {
-          //this.editForm.reset();
-          alert("success");
-        },
-        error => {
-          alert("error");
-        }
-      )
-      //});
+          this.service.editUserProfileSettings(this.userPrivacySettings).subscribe(
+            res => {
+              //this.editForm.reset();
+              alert("success");
+            },
+            error => {
+              alert("error");
+            }
+          );
+    });
   }
 
   private CACheck_Private() : boolean {
@@ -89,27 +89,27 @@ export class PrivacyComponent implements OnInit {
   }
 
   getUserData(){
+      this.postsDbService.getUserId(localStorage.getItem("access_token")).subscribe(
+          responseData => {
+              this.user_id = Number(responseData);
 
-      // this.postsDbService.getUserId(localStorage.getItem("access_token")).subscribe(
-      //     responseData => { this.user_id = responseData;
+        return  this.service.getUserProfileSettings(this.user_id).subscribe(data =>{
+          this.userPrivacySettings = data;
 
-    return  this.service.getUserProfileSettings(this.user_id = 321).subscribe(data =>{
-      this.userPrivacySettings = data;
+          this.private_acc = this.userPrivacySettings.data.Private_profile;
+          this.accept_msgs = this.userPrivacySettings.data.Accept_unfollowed_account_messages;
+          this.tagging = this.userPrivacySettings.data.Tagging;
 
-      this.private_acc = this.userPrivacySettings.data.Private_profile;
-      this.accept_msgs = this.userPrivacySettings.data.Accept_unfollowed_account_messages;
-      this.tagging = this.userPrivacySettings.data.Tagging;
+          console.log('DATA---->', this.userPrivacySettings.data);
 
-      console.log('DATA---->', this.userPrivacySettings.data);
+                this.editForm = new FormGroup({
+                    'private_acc': new FormControl(this.CACheck_GetPrivate(this.private_acc)),
+                    'accept_msgs': new FormControl(this.CACheck_GetMessagesAndTagging(this.accept_msgs)),
+                    'tagging': new FormControl(this.CACheck_GetMessagesAndTagging(this.tagging))
+                })
 
-            this.editForm = new FormGroup({
-                'private_acc': new FormControl(this.CACheck_GetPrivate(this.private_acc)),
-                'accept_msgs': new FormControl(this.CACheck_GetMessagesAndTagging(this.accept_msgs)),
-                'tagging': new FormControl(this.CACheck_GetMessagesAndTagging(this.tagging))
-            })
-
-    })
-    //});
+          });
+    });
   }
 
   private CACheck_GetPrivate(value) : string {

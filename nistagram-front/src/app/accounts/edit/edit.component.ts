@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { UserModel } from '../../model/userModel';
 import { UserService } from '../../services/user.service';
+import { PostsDbService } from '../../posts/posts-db.service';
 
 
 @Component({
@@ -29,7 +30,7 @@ export class EditComponent implements OnInit {
     biography: string;
 
 
-  constructor(private service : UserService) { }
+  constructor(private service : UserService, private postsDbService: PostsDbService) { }
 
   ngOnInit(): void {
 
@@ -46,11 +47,14 @@ export class EditComponent implements OnInit {
           'website': new FormControl(),
           'biography': new FormControl()
         });
-        
+
   }
 
   public editUser() {
-    this.user_id = 321;
+      this.postsDbService.getUserId(localStorage.getItem("access_token")).subscribe(
+          responseData => {
+
+    this.user_id = Number(responseData);
     this.name = this.editForm.value.name;
     this.surname = this.editForm.value.surname;
     this.username = this.editForm.value.username;
@@ -72,7 +76,8 @@ export class EditComponent implements OnInit {
         error => {
           alert("error");
         }
-      )
+      );
+    });  
   }
 
   private CACheck() : string {
@@ -88,34 +93,39 @@ export class EditComponent implements OnInit {
   }
 
   getUserData(){
-    return  this.service.getUser(this.user_id = 321).subscribe(data =>{
-      this.userModel = data;
+      this.postsDbService.getUserId(localStorage.getItem("access_token")).subscribe(
+          responseData => {
+              this.user_id = Number(responseData);
 
-      this.name = this.userModel.data.Name;
-      this.surname = this.userModel.data.Surname;
-      this.username = this.userModel.data.Username;
-      this.email = this.userModel.data.Email;
-      this.gender = this.userModel.data.Gender;
-      this.date_of_birth = this.userModel.data.Date_of_birth;
-      this.phone = this.userModel.data.Phone;
-      this.website = this.userModel.data.Website;
-      this.biography = this.userModel.data.Biography;
+        return  this.service.getUser(this.user_id).subscribe(data =>{
+          this.userModel = data;
 
-      console.log('DATA---->', this.userModel.data);
+          this.name = this.userModel.data.Name;
+          this.surname = this.userModel.data.Surname;
+          this.username = this.userModel.data.Username;
+          this.email = this.userModel.data.Email;
+          this.gender = this.userModel.data.Gender;
+          this.date_of_birth = this.userModel.data.Date_of_birth;
+          this.phone = this.userModel.data.Phone;
+          this.website = this.userModel.data.Website;
+          this.biography = this.userModel.data.Biography;
 
-            this.editForm = new FormGroup({
-              'name': new FormControl(this.name),
-              'surname': new FormControl(this.surname),
-              'username': new FormControl(this.username),
-              'email': new FormControl(this.email),
-              'gender': new FormControl(this.gender),
-              'date_of_birth': new FormControl(this.date_of_birth),
-              'phone': new FormControl(this.phone),
-              'website': new FormControl(this.website),
-              'biography': new FormControl(this.biography)
-            })
+          console.log('DATA---->', this.userModel.data);
 
-    })
+                this.editForm = new FormGroup({
+                  'name': new FormControl(this.name),
+                  'surname': new FormControl(this.surname),
+                  'username': new FormControl(this.username),
+                  'email': new FormControl(this.email),
+                  'gender': new FormControl(this.gender),
+                  'date_of_birth': new FormControl(this.date_of_birth),
+                  'phone': new FormControl(this.phone),
+                  'website': new FormControl(this.website),
+                  'biography': new FormControl(this.biography)
+                })
+
+        });
+    });
   }
 
 

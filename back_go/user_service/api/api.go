@@ -36,8 +36,8 @@ type UserInfo struct {
 }
 
 type WholeUser struct {
-	FirstName     string
-	LastName      string
+	Name     	  string
+	Surname       string
 	Username      string
 	Email         string
 	Password      string
@@ -97,7 +97,7 @@ func edit_user(w http.ResponseWriter, r *http.Request) {
 	err := json.Unmarshal(body, &formattedBody)
 	helpers.HandleErr(err)
 
-	edit := users.EditUser(formattedBody.FirstName, formattedBody.LastName, formattedBody.Username, formattedBody.Email,
+	edit := users.EditUser(formattedBody.Name, formattedBody.Surname, formattedBody.Username, formattedBody.Email,
 		formattedBody.User_id, formattedBody.Gender, formattedBody.Date_of_birth, formattedBody.Phone, formattedBody.Website, formattedBody.Biography)
 	// Refactor register to use apiResponse function
 	apiResponse(edit, w)

@@ -24,6 +24,7 @@ services:
           - backend
         depends_on:
           - db
+          - bezbednost
     bezbednost:
         build: ./bezbednost
         restart: always
@@ -145,7 +146,7 @@ services:
         ports:
           - "8000:8000"
           - "8090:8090"
-          - "8080:8080"
+          - "8080"
         networks:
           - backend
         depends_on:

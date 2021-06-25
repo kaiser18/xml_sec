@@ -243,15 +243,15 @@ public class AuthenticationController {
         return user.getUsername();
     }
 
-	// @GetMapping("/getIdByToken/{token}")
-    // public void getIdByToken(@PathVariable String token) {
-    // 	String email = this.tokenUtils.getEmailFromToken(token);
-    //     User user = (User) this.userDetailsService.loadUserByUsername(email);
-    //     if(user == null){
-    //     	return "";
-    //     }
-    //     return user.getId();
-    // }
+	@GetMapping("/getUserIdByToken/{token}")
+    public Long getUserIdByToken(@PathVariable String token) {
+    	String email = this.tokenUtils.getEmailFromToken(token);
+        User user = (User) this.userDetailsService.loadUserByUsername(email);
+        if(user == null){
+        	return null;
+        }
+        return user.getId();
+    }
 
     @PreAuthorize("hasAuthority('ADMIN_PRIVILEGE')")
     @GetMapping("/isAdmin")
