@@ -68,6 +68,7 @@ export class ProfileComponent implements OnInit {
             this.myUsername = responseData;
             if(this.myUsername === this.username){
               this.myProfile = true;
+              document.getElementById("3dots").style.display = "none";
             }
           }
         );
@@ -144,7 +145,7 @@ export class NgbdModalConfirmAutofocus implements OnInit {
   url_option: string;
   username_id: string;
   muted_usernames = new Map<number, string>();
-  blocked_usernames = new Map<number, string>(); 
+  blocked_usernames = new Map<number, string>();
 
   ngOnInit(): void {
 
