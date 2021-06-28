@@ -122,6 +122,20 @@ services:
           - backend
         depends_on:
           - db
+    media:
+        image: search:compose_build
+        build:
+          context: ./back_go/media
+          dockerfile: Dockerfile
+        restart: always
+        environment:
+          - PORT=9099
+        expose:
+          - 9099
+        ports:
+          - "9099:9099"
+        networks:
+          - backend
     post:
         build:
           context: ./back_go/post
