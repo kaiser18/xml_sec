@@ -61,6 +61,8 @@ export class ProfileComponent implements OnInit {
       (params: Params) => {
         this.username = params['username'];
         console.log(this.username);
+        let temp = new HelperClass();
+        temp.setUsername(this.username);
         this.postDbService.getUsername(localStorage.getItem("access_token"))
         .subscribe(
           responseData => {
@@ -149,7 +151,10 @@ export class NgbdModalConfirmAutofocus implements OnInit {
 
   ngOnInit(): void {
 
-      this.username_id = "nikola";
+      //this.username_id = "furious_vin";
+      let temp = new HelperClass();
+      this.username_id = temp.getUsername();
+      //console.log('USERNAME_ID---->', this.username_id);
       this.muteANDblock('init_only');
 
   }
@@ -262,3 +267,18 @@ const MODALS: {[name: string]: Type<any>} = {
   //focusFirst: NgbdModalConfirm,
   autofocus: NgbdModalConfirmAutofocus
 };
+
+export class HelperClass {
+
+    constructor(){}
+
+    public static username: string;
+
+    getUsername() {
+        return HelperClass.username;
+    }
+
+    setUsername(un: string) {
+        HelperClass.username = un;
+    }
+}
