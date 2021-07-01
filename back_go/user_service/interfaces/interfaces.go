@@ -51,6 +51,9 @@ type UserProfileSettings struct {
 	Tagging                            bool
 	Muted_accounts                     string
 	Blocked_accounts                   string
+	Followers                          string
+	Following                          string
+	CloseFriends                       string
 }
 
 type UserNotificationSettings struct {
