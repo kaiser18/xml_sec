@@ -50,6 +50,19 @@ export class NewPostService {
   );
   }
 
+  newUpload(formData){
+    
+    return this.http.post<{id: number}>(`http://localhost:9099/upload`,
+    formData,
+    {
+      observe: 'response',
+      headers: new HttpHeaders()
+      .set('Authorization', "Bearer " + localStorage.getItem('access_token'))
+    }
+  )
+  
+  }
+
   getLocations(){
     return this.http.get<Location[]>(`http://localhost:9090/api/locations`)
     .pipe(

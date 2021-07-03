@@ -18,7 +18,7 @@
     <mat-card-title style="font-size: medium;" (click)="visitProfile()" style="cursor: pointer;">{{post.username}}</mat-card-title>
     <mat-card-subtitle style="font-size: small;">{{post.locationName}}</mat-card-subtitle>
     <!--<img *ngIf="!(post[i].imageUrls > 1)" mat-card-image [src]="post[i].imageUrls[0]">-->
-    <ng-image-slider [images]="imageObject"  [imageSize]="{width: '100%', height: '100%'}" #nav ></ng-image-slider>
+   <ng-image-slider [images]="imageObject"  [imageSize]="{width: '100%', height: '100%'}" #nav ></ng-image-slider>
     <mat-card-actions>
         <button mat-icon-button>
             <mat-icon class="example-tab-icon" *ngIf="isPostLiked">thumb_up</mat-icon>
