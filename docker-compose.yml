@@ -123,10 +123,12 @@ services:
         depends_on:
           - db
     media:
-        image: search:compose_build
+        image: media:compose_build
         build:
           context: ./back_go/media
           dockerfile: Dockerfile
+        volumes:
+          - "/Users/helen/Desktop/proj/xml_sec/nistagram-front/src/assets:/go/app/uploads"
         restart: always
         environment:
           - PORT=9099

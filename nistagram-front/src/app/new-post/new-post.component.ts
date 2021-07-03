@@ -5,6 +5,9 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NewPostService } from './new-post.service';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { FileUploadService } from './file-upload/file-upload.service';
+import { HttpEventType, HttpResponse } from '@angular/common/http';
 
 export interface Hashtag {
   name: string;
@@ -27,8 +30,14 @@ export interface Image {
 })
 export class NewPostComponent implements OnInit {
 
-  constructor(private newPostService: NewPostService, public dialog: MatDialog, private router: Router) { }
+  constructor(private newPostService: NewPostService, public dialog: MatDialog, private router: Router, private fileUploadService: FileUploadService) { }
   postForm: FormGroup;
+
+  selectedFiles: FileList;
+  progressInfos = [];
+  message = '';
+
+  fileInfos: Observable<any>;
 
   visible = true;
   selectable = true;
@@ -115,6 +124,7 @@ export class NewPostComponent implements OnInit {
   }
   
   ngOnInit(){
+    this.fileInfos = this.fileUploadService.getFiles(); 
     this.newPostService.getLocations()
       .subscribe(
         (locations: Location[]) => {
@@ -140,7 +150,8 @@ export class NewPostComponent implements OnInit {
 
   }
 
-  onSubmit() {
+  async onSubmit() {
+
     console.log(this.postForm);
     this.hashtags.forEach(element => {
       this.hashtagNames.push(element.name);
@@ -150,10 +161,11 @@ export class NewPostComponent implements OnInit {
       this.tagNames.push(element.name);
     });
 
+    /*
     this.images.forEach(element => {
       this.imageNames.push(element.name);
     });
-
+*/
     if(this.postForm.value['type'] === 'post'){
       console.log(this.postForm.value['description'])
       console.log(this.tagNames)
@@ -184,11 +196,41 @@ export class NewPostComponent implements OnInit {
       height: '300px',
       data: {isHighlights: this.isHighlights, isCloseFriends: this.isCloseFriends}
     });
-
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
       console.log(result);
     });
   }
   */
+
+  selectFiles(event) {
+    this.progressInfos = [];
+    this.selectedFiles = event.target.files;
+  }
+  // OnClick of button Upload
+  uploadFiles() {
+    this.message = '';
+  
+    for (let i = 0; i < this.selectedFiles.length; i++) {
+      console.log(this.selectedFiles[i]);
+      this.upload(i, this.selectedFiles[i]);
+    }
+  }
+
+  upload(idx, file) {
+    this.progressInfos[idx] = { value: 0, fileName: file.name };
+    this.fileUploadService.upload(file).subscribe(
+      event => {
+        if (event.type === HttpEventType.UploadProgress) {
+          this.progressInfos[idx].value = Math.round(100 * event.loaded / event.total);
+        } else if (event instanceof HttpResponse) {
+          this.fileInfos = this.fileUploadService.getFiles()
+          this.imageNames.push(event.body[0])
+        } 
+      },
+      err => {
+        this.progressInfos[idx].value = 0;
+        this.message = 'Could not upload the file:' + file.name;
+      });
+  }
 }

@@ -24,7 +24,6 @@ import {MatMenuModule} from '@angular/material/menu';
 import { NewPostComponent } from './new-post/new-post.component';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatChipsModule} from '@angular/material/chips';
-import { FileUploadComponent } from './new-post/file-upload/file-upload.component';
 import { FileUploadService } from './new-post/file-upload/file-upload.service';
 import { AddToFavouritesDialogComponent } from './posts/post-item/add-to-favourites-dialog/add-to-favourites-dialog.component';
 import {MatSelectModule} from '@angular/material/select';
@@ -68,7 +67,6 @@ import { ReportsComponent } from './reports/reports.component';
     ProfileComponent,
     ProfileImageDetailComponent,
     NewPostComponent,
-    FileUploadComponent,
     AddToFavouritesDialogComponent,
     SavedComponent,
     SearchDialogComponent,

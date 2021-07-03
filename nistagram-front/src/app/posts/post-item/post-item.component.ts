@@ -47,8 +47,12 @@ export class PostItemComponent implements OnInit {
     })
 
     console.log(this.post); 
-    this.post.imageUrls.forEach(element => {
-      this.imageObject.push({image:element, thumbImage: element})
+    this.post.imageUrls.forEach(element => { 
+      console.log(element);
+      var nesto = element.substring(7, element.length);
+      console.log(nesto);
+      var start = "assets"
+      this.imageObject.push({image: start.concat(nesto), thumbImage: start.concat(nesto)})
     });
 
     this.postsDbService.isPostLiked('usernamee',this.post.id)
