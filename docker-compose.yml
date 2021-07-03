@@ -94,6 +94,34 @@ services:
           - backend
         depends_on:
           - db
+    campaign:
+        image: campaign:compose_build
+        build:
+          context: ./back_go/campaign
+          dockerfile: Dockerfile
+        restart: always
+        environment:
+          - JAEGER_SERVICE_NAME=posts
+          - JAEGER_AGENT_HOST=tracing
+          - JAEGER_AGENT_PORT=6831
+          - JAEGER_SAMPLER_MANAGER_HOST_PORT=jaeger:5778
+          - JAEGER_SAMPLER_TYPE=const
+          - JAEGER_SAMPLER_PARAM=1
+          - DBHOST=db
+          - USER=postgres
+          - PASSWORD=postgres
+          - DBNAME=campaign
+          - DBPORT=5432
+        expose:
+          - 9010
+          - 9011
+        ports:
+          - "9010:9010"
+          - "9011:9011"
+        networks:
+          - backend
+        depends_on:
+          - db
     search-service:
         image: search:compose_build
         build:
@@ -123,7 +151,7 @@ services:
         depends_on:
           - db
     media:
-        image: search:compose_build
+        image: media:compose_build
         build:
           context: ./back_go/media
           dockerfile: Dockerfile
