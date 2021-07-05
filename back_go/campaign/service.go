@@ -149,6 +149,22 @@ func (s *server) GetAdvertisementsForUserRequest(ctx context.Context, in *campai
 	}, nil
 }
 
+func (s *server) GetInfluencerAdvertisementsRequest(ctx context.Context, in *campaign.ActionRequest) (*campaign.Advertisements, error) {
+	ads, err := s.store.GetInfluencerAdvertisements(ctx, in.Username, int(in.PostType))
+	if err != nil {
+		return &campaign.Advertisements{}, err
+	}
+	return s.makeAdvertisementsProto(ctx, ads), nil
+}
+
+func (s *server) GetCampaignsRequest(ctx context.Context, in *campaign.ActionRequest) (*campaign.Campaigns, error) {
+	camps, err := s.store.GetCampaigns(ctx, in.Username)
+	if err != nil {
+		return &campaign.Campaigns{}, err
+	}
+	return s.makeCampaignsProto(ctx, *camps), nil
+}
+
 func makeCampaignProto(cmp *store.Campaign) *campaign.Campaign {
 	return &campaign.Campaign{
 		Id:          int32(cmp.ID),
@@ -159,6 +175,31 @@ func makeCampaignProto(cmp *store.Campaign) *campaign.Campaign {
 		ShowNumber:  int32(cmp.ShowNumber),
 		Influensers: makeStringFromUsernames(cmp.Influensers),
 		EditFor:     int32(cmp.EditFor),
+	}
+}
+
+func (s *server) makeCampaignsProto(ctx context.Context, cs []store.Campaign) *campaign.Campaigns {
+	list := []*campaign.Campaign{}
+	for _, c := range cs {
+		list = append(list, s.makeCampaignProto(ctx, &c))
+	}
+	return &campaign.Campaigns{
+		Campaigns: list,
+	}
+}
+
+func (s *server) makeCampaignProto(ctx context.Context, c *store.Campaign) *campaign.Campaign {
+	return &campaign.Campaign{
+		Id:            int32(c.ID),
+		Username:      c.Username,
+		CreatedAt:     c.CreatedAt.String(),
+		Start:         c.Start.String(),
+		End:           c.End.String(),
+		ShowNumber:    int32(c.ShowNumber),
+		TargetAgeFrom: int32(c.TargetAgeFrom),
+		TargetAgeTo:   int32(c.TargetAgeTo),
+		Influensers:   influensersToString(c.Influensers),
+		EditFor:       int32(c.EditFor),
 	}
 }
 
@@ -207,7 +248,7 @@ func (s *server) makeAdvertisementResponseProto(ctx context.Context, adv *store.
 			Hashtags:        story.Hashtags,
 			Tags:            story.Tags,
 			ImageUrls:       story.ImageUrls,
-			//Link:            adv.Link,
+			Link:            adv.Link,
 		}
 		if isInfluenser {
 			campStory.Username = influenser
@@ -237,8 +278,10 @@ func makeCampaignFromProto(campaign *campaign.Campaign) *store.Campaign {
 		End:        endTime,
 		ShowNumber: int(campaign.ShowNumber),
 		//TargetAudience: influensersToUsernames(campaign.TargetAudience),
-		Influensers: influensersToUsernames(campaign.Influensers),
-		EditFor:     int(campaign.EditFor),
+		TargetAgeFrom: int(campaign.TargetAgeFrom),
+		TargetAgeTo:   int(campaign.TargetAgeTo),
+		Influensers:   influensersToUsernames(campaign.Influensers),
+		EditFor:       int(campaign.EditFor),
 	}
 }
 
@@ -256,6 +299,14 @@ func influensersToUsernames(influensers []string) []store.Username {
 	var usernames []store.Username
 	for _, influenser := range influensers {
 		usernames = append(usernames, store.Username{Name: influenser})
+	}
+	return usernames
+}
+
+func influensersToString(influensers []store.Username) []string {
+	var usernames []string
+	for _, influenser := range influensers {
+		usernames = append(usernames, influenser.Name)
 	}
 	return usernames
 }
