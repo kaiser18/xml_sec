@@ -23,6 +23,7 @@ import { VerificationRequestsComponent } from './verification-requests/verificat
 import { PushNotificationsComponent } from './accounts/push-notifications/push-notifications.component';
 import { PrivacyComponent } from './accounts/privacy/privacy.component';
 import { ReportsComponent } from './reports/reports.component';
+import { NewCampaignComponent } from './new-campaign/new-campaign.component';
 
 const routes: Routes = [
     {
@@ -118,6 +119,10 @@ const routes: Routes = [
     {
       path: 'reports',
       component: ReportsComponent
+    },
+    {
+      path: 'new-campaign',
+      component: NewCampaignComponent
     }
 ];
 

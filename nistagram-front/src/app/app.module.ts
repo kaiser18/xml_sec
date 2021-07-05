@@ -56,6 +56,8 @@ import { PrivacyComponent } from './accounts/privacy/privacy.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ReportDialogComponent } from './posts/post-item/report-dialog/report-dialog.component';
 import { ReportsComponent } from './reports/reports.component';
+import { NewCampaignComponent } from './new-campaign/new-campaign.component';
+import { AddPostToCampaignDialogComponent } from './posts/post-page/add-post-to-campaign-dialog/add-post-to-campaign-dialog.component';
 
 @NgModule({
   declarations: [
@@ -89,7 +91,9 @@ import { ReportsComponent } from './reports/reports.component';
     PushNotificationsComponent,
     PrivacyComponent,
     ReportDialogComponent,
-    ReportsComponent
+    ReportsComponent,
+    NewCampaignComponent,
+    AddPostToCampaignDialogComponent
   ],
   imports: [
     BrowserModule,
