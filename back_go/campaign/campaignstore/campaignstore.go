@@ -52,6 +52,7 @@ func (ts *CampaignStore) CreateCampaign(ctx context.Context, campaign *Campaign)
 func (ts *CampaignStore) GetCampaign(ctx context.Context, id int) (*Campaign, error) {
 	span := tracer.StartSpanFromContext(ctx, "CampaignStore")
 	defer span.Finish()
+	ts.UpdateCampaigns(ctx)
 
 	var campaign Campaign
 	result := ts.db.Preload("Influensers").Preload("TargetAudience").Find(&campaign, id)
@@ -60,6 +61,50 @@ func (ts *CampaignStore) GetCampaign(ctx context.Context, id int) (*Campaign, er
 		return &campaign, nil
 	}
 	return nil, errors.New("Campaign not found")
+}
+
+func (ts *CampaignStore) GetCampaigns(ctx context.Context, username string) (*[]Campaign, error) {
+	span := tracer.StartSpanFromContext(ctx, "GetCampaigns")
+	defer span.Finish()
+	ts.UpdateCampaigns(ctx)
+
+	var campaigns []Campaign
+	result := ts.db.Preload("Influensers").Preload("TargetAudience").Where("username = ?", username).Find(&campaigns)
+
+	if result.RowsAffected > 0 {
+		return &campaigns, nil
+	}
+	return nil, errors.New("campaigns not found")
+}
+
+func (ts *CampaignStore) GetEditedCampaigns(ctx context.Context) []Campaign {
+	span := tracer.StartSpanFromContext(ctx, "GetEditedCampaigns")
+	defer span.Finish()
+
+	var campaigns []Campaign
+	ts.db.Where("(edit_for IS NOT null OR edit_for = 0) AND (created_at + INTERVAL '1 day') <= now()").Order("created_at").Find(&campaigns)
+	return campaigns
+}
+
+func (ts *CampaignStore) UpdateCampaigns(ctx context.Context) {
+	span := tracer.StartSpanFromContext(ctx, "UpdateCampaigns")
+	defer span.Finish()
+
+	campaigns := ts.GetEditedCampaigns(ctx)
+	i := -1
+	id := -1
+	for _, campaign := range campaigns {
+		id = campaign.ID
+		if i == campaign.EditFor {
+			ts.db.Exec("UPDATE campaign_target_audience SET campaign_id = ? WHERE campaign_id = ?", campaign.EditFor, campaign.ID)
+			ts.db.Exec("UPDATE campaign_influenser SET campaign_id = ? WHERE campaign_id = ?", campaign.EditFor, campaign.ID)
+			campaign.ID = campaign.EditFor
+			campaign.EditFor = 0
+			ts.db.Save(campaign)
+		}
+		ts.db.Delete(&Campaign{}, id)
+		i = campaign.EditFor
+	}
 }
 
 func (ts *CampaignStore) CreateAdvertisement(ctx context.Context, advertisement *Advertisement) (int, error) {
@@ -97,15 +142,26 @@ func (ts *CampaignStore) GetAdvertisementsByCampaign(ctx context.Context, id int
 	return nil, errors.New("advertisements not found")
 }
 
+func (ts *CampaignStore) GetInfluencerAdvertisements(ctx context.Context, username string, postType int) ([]Advertisement, error) {
+	span := tracer.StartSpanFromContext(ctx, "GetInfluencerAdvertisements")
+	defer span.Finish()
+
+	var advertisements []Advertisement
+	result := ts.db.Where("Advertisements.campaign_id in (select distinct campaign_id from campaign_influenser ci, usernames u where ci.username_id = u.id and u.name = ?) and Advertisements.Publication_Type = ?", username, postType).Find(&advertisements)
+
+	if result.RowsAffected > 0 {
+		return advertisements, nil
+	}
+	return nil, errors.New("advertisements not found")
+}
+
 func (ts *CampaignStore) IsInfluenserCampaign(ctx context.Context, campaignId int) bool {
 	span := tracer.StartSpanFromContext(ctx, "IsInfluenserCampaign")
 	defer span.Finish()
+	ts.UpdateCampaigns(ctx)
 
 	campaign, _ := ts.GetCampaign(ctx, campaignId)
-	if len(campaign.Influensers) > 0 {
-		return true
-	}
-	return false
+	return len(campaign.Influensers) > 0
 }
 
 func (ts *CampaignStore) IsInfluenserCampaignApproved(ctx context.Context, campaignId int, influenser string) bool {
@@ -114,10 +170,7 @@ func (ts *CampaignStore) IsInfluenserCampaignApproved(ctx context.Context, campa
 
 	var cia CampaignInfluenserApproved
 	result := ts.db.Where("campaign_id = ? and username = ?", campaignId, influenser).Find(&cia)
-	if result.RowsAffected > 0 {
-		return true
-	}
-	return false
+	return (result.RowsAffected > 0)
 }
 
 func (ts *CampaignStore) GetInfluensersUsernamesByCampaign(ctx context.Context, campaignId int) []string {
@@ -136,6 +189,7 @@ func (ts *CampaignStore) GetInfluensersUsernamesByCampaign(ctx context.Context, 
 func (ts *CampaignStore) GetAdvertisementsByUser(ctx context.Context, username string, postType int) ([]Advertisement, error) {
 	span := tracer.StartSpanFromContext(ctx, "GetAdvertisementsByUser")
 	defer span.Finish()
+	ts.UpdateCampaigns(ctx)
 
 	var advertisements []Advertisement
 	result := ts.db.Where("Advertisements.campaign_id in (select c.id from campaigns c, campaign_target_audience cta, usernames u where c.id = cta.campaign_id and u.id = cta.username_id and u.name = ? and c.start <= NOW() and c.end >= NOW()) and Advertisements.Publication_Type = ?", username, postType).Find(&advertisements)
@@ -150,6 +204,7 @@ func (ts *CampaignStore) GetAdvertisementsByUser(ctx context.Context, username s
 func (ts *CampaignStore) GetInfluensersAdvertisementsByUser(ctx context.Context, username string, postType int) ([]Advertisement, error) {
 	span := tracer.StartSpanFromContext(ctx, "GetInfluensersAdvertisementsByUser")
 	defer span.Finish()
+	ts.UpdateCampaigns(ctx)
 
 	var advertisements []Advertisement
 	result := ts.db.Where("Advertisements.campaign_id in (select c.id from campaigns c, campaign_target_audience cta, usernames u where c.id = cta.campaign_id and u.id = cta.username_id and u.name = ? and c.start <= NOW() and c.end >= NOW()) and Advertisements.Publication_Type = ?", username, postType).Find(&advertisements)
@@ -163,11 +218,9 @@ func (ts *CampaignStore) GetInfluensersAdvertisementsByUser(ctx context.Context,
 
 func (ts *CampaignStore) GetAvailableAds(ctx context.Context, ads []Advertisement, username string) *[]Advertisement {
 	ret := []Advertisement{}
-	ids := []int{}
 	for _, ad := range ads {
 		if ts.IsAdAvailable(ctx, ad, username) {
 			ret = append(ret, ad)
-			ids = append(ids, ad.CampaignID)
 		}
 	}
 	return &ret
@@ -175,11 +228,9 @@ func (ts *CampaignStore) GetAvailableAds(ctx context.Context, ads []Advertisemen
 
 func (ts *CampaignStore) GetAvailableInfluensersAds(ctx context.Context, ads []Advertisement, username string) *[]Advertisement {
 	ret := []Advertisement{}
-	ids := []int{}
 	for _, ad := range ads {
 		if ts.IsInfluenserAdAvailable(ctx, ad, username) {
 			ret = append(ret, ad)
-			ids = append(ids, ad.CampaignID)
 		}
 	}
 	return &ret

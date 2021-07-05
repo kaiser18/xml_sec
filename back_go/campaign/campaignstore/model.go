@@ -10,6 +10,8 @@ type Campaign struct {
 	End            time.Time  `gorm:"type:time" json:"end"`
 	ShowNumber     int        `json:"showNumber"`
 	CampaignType   int        `json:"campaignType"`
+	TargetAgeFrom  int        `json:"targetAgeFrom"`
+	TargetAgeTo    int        `json:"targetAgeTo"`
 	TargetAudience []Username `gorm:"many2many:campaign_target_audience;" json:"targetAudience"`
 	Influensers    []Username `gorm:"many2many:campaign_influenser;" json:"influensers"`
 	EditFor        int        `json:"editFor"`
