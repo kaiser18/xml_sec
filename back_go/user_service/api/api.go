@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"strconv"
 
 	//"log"
 	"net/http"
@@ -70,6 +71,26 @@ type UserNotificationSettings struct {
 	Posts                    string
 	Stories                  string
 	Messages                 string
+}
+
+type FollowRequest struct {
+	User_id             uint
+	Requester_id        uint
+	FollowRequestStatus FollowRequestStatus
+}
+
+type FollowRequestStatus string
+
+const (
+	PENDING  FollowRequestStatus = "PENDING"
+	ACCEPTED FollowRequestStatus = "ACCEPTED"
+	DENIED   FollowRequestStatus = "DENIED"
+)
+
+type FollowRequestUpdateStatus struct {
+	User_id      uint
+	Requester_id uint
+	Status       bool
 }
 
 // Create readBody function
@@ -303,6 +324,37 @@ func RemoveFromCloseFriends(w http.ResponseWriter, r *http.Request) {
 	apiResponse(user, w)
 }
 
+func CreateFollowRequest(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	requester := vars["username"]
+	body := readBody(r)
+	var formattedBody FollowRequest
+
+	err := json.Unmarshal(body, &formattedBody)
+	helpers.HandleErr(err)
+
+	request := users.CreateFollowRequest(formattedBody.User_id, requester)
+}
+
+func GetFollowRequests(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	user_id, _ := strconv.Atoi(id)
+
+	requests := users.GetFollowRequestsForUser(uint(user_id))
+}
+
+func UpdateStatusOfRequest(w http.ResponseWriter, r *http.Request) {
+	body := readBody(r)
+	var formattedBody FollowRequestUpdateStatus
+
+	err := json.Unmarshal(body, &formattedBody)
+	helpers.HandleErr(err)
+
+	request := users.UpdateStatusOfFollowRequest(formattedBody.User_id, formattedBody.Requester_id, formattedBody.Status)
+}
+
 func StartApi() {
 	router := mux.NewRouter()
 	// Add panic handler middleware
@@ -324,6 +376,9 @@ func StartApi() {
 	router.HandleFunc("user/unfollow", Unfollow).Methods("POST")
 	router.HandleFunc("user/addToCloseFriends", AddToCloseFriends).Methods("POST")
 	router.HandleFunc("user/removeFromCloseFriends", RemoveFromCloseFriends).Methods("POST")
+	router.HandleFunc("user/follow/{username}", CreateFollowRequest).Methods("POST")
+	router.HandleFunc("user/requests/{id}", GetFollowRequests).Methods("GET")
+	router.HandleFunc("user/requests/update", UpdateStatusOfRequest).Methods("POST")
 
 	log.Info("App is working on port :23002")
 	fmt.Println("App is working on port :23002")
