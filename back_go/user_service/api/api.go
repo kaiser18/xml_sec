@@ -239,7 +239,7 @@ func Unfollow(w http.ResponseWriter, r *http.Request) {
 	err := json.Unmarshal(body, &formattedBody)
 	helpers.HandleErr(err)
 
-	user := users.UserMuteBlockOption(formattedBody.User_id, formattedBody.ProfileToUnfollow)
+	user := users.Unfollow(formattedBody.User_id, formattedBody.ProfileToUnfollow)
 	apiResponse(user, w)
 }
 
@@ -251,7 +251,7 @@ func AddToCloseFriends(w http.ResponseWriter, r *http.Request) {
 	err := json.Unmarshal(body, &formattedBody)
 	helpers.HandleErr(err)
 
-	user := users.UserMuteBlockOption(formattedBody.User_id, formattedBody.ProfileToAddToCF)
+	user := users.AddToCloseFriends(formattedBody.User_id, formattedBody.ProfileToAddToCF)
 	apiResponse(user, w)
 }
 
@@ -263,7 +263,7 @@ func RemoveFromCloseFriends(w http.ResponseWriter, r *http.Request) {
 	err := json.Unmarshal(body, &formattedBody)
 	helpers.HandleErr(err)
 
-	user := users.UserMuteBlockOption(formattedBody.User_id, formattedBody.ProfileToRemoveCF)
+	user := users.RemoveFromCloseFriends(formattedBody.User_id, formattedBody.ProfileToRemoveCF)
 	apiResponse(user, w)
 }
 

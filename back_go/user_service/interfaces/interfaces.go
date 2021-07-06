@@ -67,6 +67,21 @@ type UserNotificationSettings struct {
 	Messages                 string
 }
 
+type FollowRequest struct {
+	ID                  uint
+	User_id             uint
+	Requester_id        uint
+	FollowRequestStatus FollowRequestStatus
+}
+
+type FollowRequestStatus string
+
+const (
+	PENDING  FollowRequestStatus = "PENDING"
+	ACCEPTED FollowRequestStatus = "ACCEPTED"
+	DENIED   FollowRequestStatus = "DENIED"
+)
+
 // Create Validation interface
 type Validation struct {
 	Value string

@@ -653,4 +653,31 @@ func RemoveFromCloseFriends(user_id uint, username string) map[string]interface{
 	user_profile_settings.CloseFriends = new_closeFriends
 
 	database.DB.Save(&user_profile_settings)
+
+	var response = userProfileSettingsResponse(user_profile_settings)
+	return response
+}
+
+func CreateFollowRequest(user_id uint, username string) map[string]interface{} {
+	CheckForNewUsers()
+	user_profile_settings := &interfaces.UserProfileSettings{}
+
+	if database.DB.Where("user_id = ? ", user_id).First(&user_profile_settings).RecordNotFound() {
+		return map[string]interface{}{"message": "User not found"}
+	}
+
+	if !user_profile_settings.Private_profile {
+		Follow(user_id, username)
+	}
+
+	follow_request := &interfaces.FollowRequest{}
+
+}
+
+func GetFollowRequestsForUser() map[string]interface{} {
+
+}
+
+func UpdateStatusOfFollowRequest() map[string]interface{} {
+
 }
