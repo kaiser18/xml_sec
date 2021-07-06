@@ -57,6 +57,9 @@ type UserProfileSettings struct {
 	Accept_unfollowed_account_messages bool
 	Tagging                            bool
 	Muted_blocked_accounts             string
+	ProfileToUnfollow                  string
+	ProfileToAddToCF                   string
+	ProfileToRemoveCF                  string
 }
 
 type UserNotificationSettings struct {
@@ -237,6 +240,69 @@ func userMuteBlockOption(w http.ResponseWriter, r *http.Request) {
 	apiResponse(user, w)
 }
 
+func GetFollowers(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	userId := vars["id"]
+	//auth := r.Header.Get("Authorization")
+
+	user := users.GetFollowers(userId)
+	apiResponse(user, w)
+}
+
+func GetFollowing(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	userId := vars["id"]
+	//auth := r.Header.Get("Authorization")
+
+	user := users.GetFollowing(userId)
+	apiResponse(user, w)
+}
+
+func GetCloseFriends(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	userId := vars["id"]
+	//auth := r.Header.Get("Authorization")
+
+	user := users.GetCloseFriends(userId)
+	apiResponse(user, w)
+}
+
+func Unfollow(w http.ResponseWriter, r *http.Request) {
+	//auth := r.Header.Get("Authorization")
+	body := readBody(r)
+	var formattedBody UserProfileSettings
+
+	err := json.Unmarshal(body, &formattedBody)
+	helpers.HandleErr(err)
+
+	user := users.UserMuteBlockOption(formattedBody.User_id, formattedBody.ProfileToUnfollow)
+	apiResponse(user, w)
+}
+
+func AddToCloseFriends(w http.ResponseWriter, r *http.Request) {
+	//auth := r.Header.Get("Authorization")
+	body := readBody(r)
+	var formattedBody UserProfileSettings
+
+	err := json.Unmarshal(body, &formattedBody)
+	helpers.HandleErr(err)
+
+	user := users.UserMuteBlockOption(formattedBody.User_id, formattedBody.ProfileToAddToCF)
+	apiResponse(user, w)
+}
+
+func RemoveFromCloseFriends(w http.ResponseWriter, r *http.Request) {
+	//auth := r.Header.Get("Authorization")
+	body := readBody(r)
+	var formattedBody UserProfileSettings
+
+	err := json.Unmarshal(body, &formattedBody)
+	helpers.HandleErr(err)
+
+	user := users.UserMuteBlockOption(formattedBody.User_id, formattedBody.ProfileToRemoveCF)
+	apiResponse(user, w)
+}
+
 func StartApi() {
 	router := mux.NewRouter()
 	// Add panic handler middleware
@@ -252,6 +318,13 @@ func StartApi() {
 	router.HandleFunc("/accounts/edit/notification_settings", edit_notification_settings).Methods("POST")
 	router.HandleFunc("/accounts/notification_settings/{id}", getUserNotificationSettings).Methods("GET")
 	router.HandleFunc("/user/report/{option}", userMuteBlockOption).Methods("POST")
+	router.HandleFunc("/user/followers/{id}", GetFollowers).Methods("GET")
+	router.HandleFunc("/user/following/{id}", GetFollowing).Methods("GET")
+	router.HandleFunc("/user/closeFriends/{id}", GetCloseFriends).Methods("GET")
+	router.HandleFunc("user/unfollow", Unfollow).Methods("POST")
+	router.HandleFunc("user/addToCloseFriends", AddToCloseFriends).Methods("POST")
+	router.HandleFunc("user/removeFromCloseFriends", RemoveFromCloseFriends).Methods("POST")
+
 	log.Info("App is working on port :23002")
 	fmt.Println("App is working on port :23002")
 	log.Fatal(http.ListenAndServe(":23002", router))

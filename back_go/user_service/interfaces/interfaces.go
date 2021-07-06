@@ -52,6 +52,9 @@ type UserProfileSettings struct {
 	Muted_accounts                     string
 	Blocked_accounts                   string
 	UserProfilePic                     string
+	Followers                          string
+	Following                          string
+	CloseFriends                       string
 }
 
 type UserNotificationSettings struct {

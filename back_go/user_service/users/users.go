@@ -95,11 +95,17 @@ func userProfileSettingsResponse(user *interfaces.UserProfileSettings) map[strin
 		Tagging:                            user.Tagging,
 		Muted_accounts:                     user.Muted_accounts,
 		Blocked_accounts:                   user.Blocked_accounts,
+		Followers:                          user.Followers,
+		Following:                          user.Following,
+		CloseFriends:                       user.CloseFriends,
 	}
 	var response = map[string]interface{}{"message": "all is fine"}
 	response["data"] = responseUser
 	response["muted"] = BlockedMutedParser(user.Muted_accounts)
 	response["blocked"] = BlockedMutedParser(user.Blocked_accounts)
+	response["followers"] = BlockedMutedParser(user.Followers)
+	response["following"] = BlockedMutedParser(user.Following)
+	response["closeFriends"] = BlockedMutedParser(user.CloseFriends)
 	return response
 }
 
@@ -479,4 +485,217 @@ func GetUserNotificationSettings(user_id string) map[string]interface{} {
 
 	var response = userNotificationResponse(user_notification_settings)
 	return response
+}
+
+func GetFollowers(user_id string) []int {
+	CheckForNewUsers()
+	user_profile_settings := &interfaces.UserProfileSettings{}
+
+	if database.DB.Where("user_id = ?", user_id).First(&user_profile_settings).RecordNotFound() {
+		return []int{}
+	}
+
+	var response = BlockedMutedParser(user_profile_settings.Followers)
+	return response
+}
+
+func GetFollowing(user_id string) []int {
+	CheckForNewUsers()
+	user_profile_settings := &interfaces.UserProfileSettings{}
+
+	if database.DB.Where("user_id = ?", user_id).First(&user_profile_settings).RecordNotFound() {
+		return []int{}
+	}
+
+	var response = BlockedMutedParser(user_profile_settings.Following)
+	return response
+}
+
+func GetCloseFriends(user_id string) []int {
+	CheckForNewUsers()
+
+	user_profile_settings := &interfaces.UserProfileSettings{}
+
+	if database.DB.Where("user_id = ?", user_id).First(&user_profile_settings).RecordNotFound() {
+		return []int{}
+	}
+
+	var response = BlockedMutedParser(user_profile_settings.CloseFriends)
+	return response
+}
+
+func Follow(user_id uint, username string) map[string]interface{} {
+	CheckForNewUsers()
+	user_profile_settings := &interfaces.UserProfileSettings{}
+	user_profile_settings2 := &interfaces.UserProfileSettings{}
+	user_main := &interfaces.User{}
+
+	if database.DBP.Where("username = ? ", username).First(&user_main).RecordNotFound() {
+		return map[string]interface{}{"message": "User not found"}
+	}
+
+	userToFollow := strconv.Itoa(int(user_main.ID))
+
+	if database.DB.Where("user_id = ? ", user_id).First(&user_profile_settings).RecordNotFound() {
+		return map[string]interface{}{"message": "User not found"}
+	}
+
+	temp_following := user_profile_settings.Following
+
+	var new_following string
+
+	if temp_following == "" {
+		new_following = userToFollow
+	} else {
+		new_following = temp_following + ";" + userToFollow
+	}
+	user_profile_settings.Following = new_following
+
+	database.DB.Save(&user_profile_settings)
+
+	if database.DB.Where("user_id = ? ", user_main.ID).First(&user_profile_settings2).RecordNotFound() {
+		return map[string]interface{}{"message": "User not found"}
+	}
+
+	temp_followers := user_profile_settings2.Followers
+
+	userFollower := strconv.Itoa(int(user_id))
+	var new_followers string
+
+	if temp_followers == "" {
+		new_followers = userFollower
+	} else {
+		new_followers = temp_followers + ";" + userFollower
+	}
+	user_profile_settings2.Following = new_followers
+
+	database.DB.Save(user_profile_settings2)
+
+	var response = userProfileSettingsResponse(user_profile_settings)
+	return response
+}
+
+func Unfollow(user_id uint, username string) map[string]interface{} {
+	CheckForNewUsers()
+	user_profile_settings := &interfaces.UserProfileSettings{}
+	user_profile_settings2 := &interfaces.UserProfileSettings{}
+	user_main := &interfaces.User{}
+
+	if database.DBP.Where("username = ? ", username).First(&user_main).RecordNotFound() {
+		return map[string]interface{}{"message": "User not found"}
+	}
+
+	userToUnfollow := strconv.Itoa(int(user_main.ID))
+
+	if database.DB.Where("user_id = ? ", user_id).First(&user_profile_settings).RecordNotFound() {
+		return map[string]interface{}{"message": "User not found"}
+	}
+
+	temp_following := user_profile_settings.Following
+	ids_following := strings.Split(temp_following, ";")
+
+	var new_following string
+
+	for _, id := range ids_following {
+		if id != userToUnfollow {
+			new_following += id + ";"
+		}
+	}
+	if strings.HasSuffix(new_following, ";") {
+		new_following = new_following[:len(new_following)-len(";")]
+	}
+	user_profile_settings.Following = new_following
+
+	database.DB.Save(&user_profile_settings)
+
+	if database.DB.Where("user_id = ? ", user_main.ID).First(&user_profile_settings2).RecordNotFound() {
+		return map[string]interface{}{"message": "User not found"}
+	}
+
+	temp_followers := user_profile_settings2.Followers
+	ids_followers := strings.Split(temp_followers, ";")
+
+	userFollower := strconv.Itoa(int(user_id))
+	var new_followers string
+
+	for _, id := range ids_followers {
+		if id != userFollower {
+			new_followers += id + ";"
+		}
+	}
+	if strings.HasSuffix(new_followers, ";") {
+		new_followers = new_followers[:len(new_followers)-len(";")]
+	}
+
+	user_profile_settings2.Followers = new_followers
+
+	database.DB.Save(&user_profile_settings2)
+
+	var response = userProfileSettingsResponse(user_profile_settings)
+	return response
+}
+
+func AddToCloseFriends(user_id uint, username string) map[string]interface{} {
+	CheckForNewUsers()
+	user_profile_settings := &interfaces.UserProfileSettings{}
+	user_main := &interfaces.User{}
+
+	if database.DBP.Where("username = ? ", username).First(&user_main).RecordNotFound() {
+		return map[string]interface{}{"message": "User not found"}
+	}
+
+	userToAdd := strconv.Itoa(int(user_main.ID))
+
+	if database.DB.Where("user_id = ? ", user_id).First(&user_profile_settings).RecordNotFound() {
+		return map[string]interface{}{"message": "User not found"}
+	}
+
+	temp_closeFriends := user_profile_settings.CloseFriends
+
+	var new_closeFriends string
+
+	if temp_closeFriends == "" {
+		new_closeFriends = userToAdd
+	} else {
+		new_closeFriends = temp_closeFriends + ";" + userToAdd
+	}
+	user_profile_settings.CloseFriends = new_closeFriends
+
+	database.DB.Save(&user_profile_settings)
+
+	var response = userProfileSettingsResponse(user_profile_settings)
+	return response
+}
+
+func RemoveFromCloseFriends(user_id uint, username string) map[string]interface{} {
+	CheckForNewUsers()
+	user_profile_settings := &interfaces.UserProfileSettings{}
+	user_main := &interfaces.User{}
+
+	if database.DBP.Where("username = ? ", username).First(&user_main).RecordNotFound() {
+		return map[string]interface{}{"message": "User not found"}
+	}
+
+	userToRemove := strconv.Itoa(int(user_main.ID))
+
+	if database.DB.Where("user_id = ? ", user_id).First(&user_profile_settings).RecordNotFound() {
+		return map[string]interface{}{"message": "User not found"}
+	}
+
+	temp_closeFriends := user_profile_settings.CloseFriends
+	ids_closeFriends := strings.Split(temp_closeFriends, ";")
+
+	var new_closeFriends string
+
+	for _, id := range ids_closeFriends {
+		if id != userToRemove {
+			new_closeFriends += id + ";"
+		}
+	}
+	if strings.HasSuffix(new_closeFriends, ";") {
+		new_closeFriends = new_closeFriends[:len(new_closeFriends)-len(";")]
+	}
+	user_profile_settings.CloseFriends = new_closeFriends
+
+	database.DB.Save(&user_profile_settings)
 }
