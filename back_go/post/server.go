@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"strings"
@@ -95,6 +96,16 @@ func (s *server) PostRequest(ctx context.Context, in *helloworld.CreatePostReque
 		return &helloworld.Identifier{}, status.Error(401, "401 Unauthorized")
 	}
 	in.Post.Username = username
+	for _, tag := range in.Post.Tags {
+		resp, err := http.Get("http://user_service:23002/canITag/" + tag)
+		if err != nil {
+			fmt.Println(err)
+		}
+		if resp.StatusCode != 200 {
+			return &helloworld.Identifier{}, errors.New("ne mozete tagovati " + tag)
+		}
+		defer resp.Body.Close()
+	}
 	id, err := s.store.CreatePost(ctx, in)
 	s.searchClient.PostInfoRequest(ctx, &search.CreatePostInfoRequest{
 		PostInfo: &search.PostInfo{
@@ -219,6 +230,16 @@ func (s *server) StoryRequest(ctx context.Context, in *helloworld.CreateStoryReq
 		return &helloworld.Identifier{}, status.Error(401, "401 Unauthorized")
 	}
 	in.Story.Username = username
+	for _, tag := range in.Story.Tags {
+		resp, err := http.Get("http://user_service:23002/canITag/" + tag)
+		if err != nil {
+			fmt.Println(err)
+		}
+		if resp.StatusCode != 200 {
+			return &helloworld.Identifier{}, errors.New("ne mozete tagovati " + tag)
+		}
+		defer resp.Body.Close()
+	}
 	id, err := s.store.CreateStory(ctx, in)
 	s.searchClient.StoryInfoRequest(ctx, &search.CreateStoryInfoRequest{
 		StoryInfo: &search.StoryInfo{

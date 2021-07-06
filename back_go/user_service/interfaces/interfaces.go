@@ -51,6 +51,7 @@ type UserProfileSettings struct {
 	Tagging                            bool
 	Muted_accounts                     string
 	Blocked_accounts                   string
+	UserProfilePic                     string
 	Followers                          string
 	Following                          string
 	CloseFriends                       string
@@ -81,6 +82,12 @@ const (
 	ACCEPTED FollowRequestStatus = "ACCEPTED"
 	DENIED   FollowRequestStatus = "DENIED"
 )
+
+type UserDto struct {
+	ID             uint
+	Username       string
+	UserProfilePic string
+}
 
 // Create Validation interface
 type Validation struct {
