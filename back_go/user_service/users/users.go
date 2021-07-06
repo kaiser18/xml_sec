@@ -223,6 +223,15 @@ func GetUser(id string, jwt string) map[string]interface{} {
 	//}
 }
 
+func GetIdFromUsername(username string) uint {
+	CheckForNewUsers()
+	user := &interfaces.User{}
+	if database.DBP.Where("username = ? ", username).First(&user).RecordNotFound() {
+		return 0
+	}
+	return user.ID
+}
+
 func GetUsers(username string, id string) map[string]interface{} {
 	CheckForNewUsers()
 	var users []interfaces.User
@@ -291,6 +300,42 @@ func GetUserProfileSettings(user_id string) map[string]interface{} {
 
 	var response = userProfileSettingsResponse(user_profile_settings)
 	return response
+}
+
+func IsUserTaggable(user_id uint) bool {
+	CheckForNewUsers()
+	user_profile_settings := &interfaces.UserProfileSettings{}
+	if database.DB.Where("user_id = ? ", user_id).First(&user_profile_settings).RecordNotFound() {
+		return false
+	}
+	return user_profile_settings.Tagging
+}
+
+func FilterUsers(criteria string) []interfaces.UserDto {
+	CheckForNewUsers()
+
+	users := []interfaces.User{}
+	database.DBP.Where("lower(username) like lower(?)", "%"+criteria+"%").Find(&users)
+
+	ret := []interfaces.UserDto{}
+	for _, user := range users {
+		profilePic := GetUserProfilePic(user.ID)
+		ret = append(ret, interfaces.UserDto{
+			ID:             user.ID,
+			Username:       user.Username,
+			UserProfilePic: profilePic,
+		})
+	}
+	return ret
+}
+
+func GetUserProfilePic(user_id uint) string {
+	CheckForNewUsers()
+	user_profile_settings := &interfaces.UserProfileSettings{}
+	if database.DB.Where("user_id = ? ", user_id).First(&user_profile_settings).RecordNotFound() {
+		return ""
+	}
+	return user_profile_settings.UserProfilePic
 }
 
 func GetBlockedProfiles(user_id string) []int {

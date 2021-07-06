@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 
 	//"log"
@@ -36,7 +37,7 @@ type UserInfo struct {
 }
 
 type WholeUser struct {
-	Name     	  string
+	Name          string
 	Surname       string
 	Username      string
 	Email         string
@@ -132,6 +133,41 @@ func getUser(w http.ResponseWriter, r *http.Request) {
 	}).Info("request details")
 }
 
+func canITag(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	username := vars["username"]
+
+	id := users.GetIdFromUsername(username)
+	res := users.IsUserTaggable(id)
+	if res {
+		w.WriteHeader(200)
+		w.Header().Set("Status", "200")
+	} else {
+		w.WriteHeader(400)
+		w.Header().Set("Status", "400")
+	}
+}
+
+func GetUserProfilePic(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	username := vars["username"]
+
+	id := users.GetIdFromUsername(username)
+	pic := users.GetUserProfilePic(id)
+	io.WriteString(w, pic)
+}
+
+func FilterUsers(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	criteria := vars["criteria"]
+
+	users := users.FilterUsers(criteria)
+
+	w.Header().Set("Content-Type", "application/json")
+	ret, _ := json.Marshal(users)
+	io.WriteString(w, string(ret))
+}
+
 func getUsers(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	username := vars["username"]
@@ -207,7 +243,10 @@ func StartApi() {
 	router.Use(helpers.PanicHandler)
 	router.HandleFunc("/edit", edit_user).Methods("POST")
 	router.HandleFunc("/user/{id}", getUser).Methods("GET")
+	router.HandleFunc("/canITag/{username}", canITag).Methods("GET")
+	router.HandleFunc("/userProfilePic/{username}", GetUserProfilePic).Methods("GET")
 	router.HandleFunc("/users/{username}/{id}", getUsers).Methods("GET")
+	router.HandleFunc("/users/{criteria}", FilterUsers).Methods("GET")
 	router.HandleFunc("/accounts/edit/profile_settings", edit_user_profile_settings).Methods("POST")
 	router.HandleFunc("/accounts/user_settings/{id}", getUserProfileSettings).Methods("GET")
 	router.HandleFunc("/accounts/edit/notification_settings", edit_notification_settings).Methods("POST")
