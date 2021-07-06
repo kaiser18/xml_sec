@@ -51,6 +51,7 @@ type UserProfileSettings struct {
 	Tagging                            bool
 	Muted_accounts                     string
 	Blocked_accounts                   string
+	UserProfilePic                     string
 	Followers                          string
 	Following                          string
 	CloseFriends                       string
@@ -65,6 +66,12 @@ type UserNotificationSettings struct {
 	Posts                    string
 	Stories                  string
 	Messages                 string
+}
+
+type UserDto struct {
+	ID             uint
+	Username       string
+	UserProfilePic string
 }
 
 // Create Validation interface
