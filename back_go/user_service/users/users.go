@@ -124,6 +124,18 @@ func userNotificationResponse(user *interfaces.UserNotificationSettings) map[str
 	return response
 }
 
+func followRequestResponse(request *interfaces.FollowRequest) map[string]interface{} {
+	responseRequest := &interfaces.FollowRequest{
+		ID:                  request.ID,
+		User_id:             request.User_id,
+		Requester_id:        request.Requester_id,
+		FollowRequestStatus: request.FollowRequestStatus,
+	}
+	var response = map[string]interface{}{"message": "all is fine"}
+	response["data"] = responseRequest
+	return response
+}
+
 func MigrateInfo() {
 
 	userX := &interfaces.UserInfo{}
@@ -757,5 +769,57 @@ func RemoveFromCloseFriends(user_id uint, username string) map[string]interface{
 	user_profile_settings.CloseFriends = new_closeFriends
 
 	database.DB.Save(&user_profile_settings)
+
 	return map[string]interface{}{"message": "Ok"}
+}
+
+func CreateFollowRequest(user_id uint, username string) map[string]interface{} {
+	CheckForNewUsers()
+	user_profile_settings := &interfaces.UserProfileSettings{}
+
+	if database.DB.Where("user_id = ? ", user_id).First(&user_profile_settings).RecordNotFound() {
+		return map[string]interface{}{"message": "User not found"}
+	}
+
+	if !user_profile_settings.Private_profile {
+		Follow(user_id, username)
+	}
+
+	follow_request := &interfaces.FollowRequest{
+		User_id:             user_id,
+		Requester_id:        GetIdFromUsername(username),
+		FollowRequestStatus: interfaces.PENDING,
+	}
+
+	database.DB.Save(&follow_request)
+
+	var response = followRequestResponse(follow_request)
+	return response
+}
+
+func GetFollowRequestsForUser(user_id uint) []interfaces.FollowRequest {
+	requests := []interfaces.FollowRequest{}
+
+	database.DB.Where("user_id = ? AND follow_request_status = ?", user_id, interfaces.PENDING).Find(&requests)
+
+	return requests
+}
+
+func UpdateStatusOfFollowRequest(user_id uint, requester_id uint, status bool) interfaces.FollowRequest {
+	request := interfaces.FollowRequest{}
+
+	if database.DB.Where("user_id = ? AND requester_id = ? AND follow_request_status + ?", user_id, requester_id, interfaces.PENDING).First(&request).RecordNotFound() {
+		return interfaces.FollowRequest{}
+	}
+
+	if status {
+		request.FollowRequestStatus = interfaces.ACCEPTED
+		Follow(user_id, GetUsernameFromId(requester_id))
+	} else {
+		request.FollowRequestStatus = interfaces.DENIED
+	}
+
+	database.DB.Save(&request)
+
+	return request
 }
