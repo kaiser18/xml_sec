@@ -58,6 +58,8 @@ import { ReportDialogComponent } from './posts/post-item/report-dialog/report-di
 import { ReportsComponent } from './reports/reports.component';
 import { NewCampaignComponent } from './new-campaign/new-campaign.component';
 import { AddPostToCampaignDialogComponent } from './posts/post-page/add-post-to-campaign-dialog/add-post-to-campaign-dialog.component';
+import { AdItemComponent } from './posts/ad-item/ad-item.component';
+import { EditCampaignComponent } from './edit-campaign/edit-campaign.component';
 
 @NgModule({
   declarations: [
@@ -93,7 +95,9 @@ import { AddPostToCampaignDialogComponent } from './posts/post-page/add-post-to-
     ReportDialogComponent,
     ReportsComponent,
     NewCampaignComponent,
-    AddPostToCampaignDialogComponent
+    AddPostToCampaignDialogComponent,
+    AdItemComponent,
+    EditCampaignComponent
   ],
   imports: [
     BrowserModule,

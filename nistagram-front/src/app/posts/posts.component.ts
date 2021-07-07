@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { Advertisement } from '../model/advertisement';
+import { CampaignService } from '../services/campaign.service';
 import { Post } from './post.model';
 import { PostsDbService } from './posts-db.service';
 import { PostsService } from './posts.service';
@@ -34,10 +36,25 @@ export class PostsComponent implements OnInit {
   subscriptionStory: Subscription;
   private errorSub: Subscription;
   imageObject: Array<object> = [];
-  
-  constructor(private http: HttpClient, private postsService: PostsService, private postsDbService: PostsDbService) { }
+  myUsername;
+  loadedAds: Advertisement[];
+  constructor(private http: HttpClient, private postsService: PostsService, private postsDbService: PostsDbService, private campaignService: CampaignService) { }
 
   ngOnInit(): void {
+    this.postsDbService.getUsername(localStorage.getItem("access_token"))
+        .subscribe(
+          responseData => {
+            this.myUsername = responseData;
+            console.log(this.myUsername)
+            this.campaignService.getAds(this.myUsername)
+            .subscribe(
+            
+              (loadedAds: Advertisement[]) => {
+                this.loadedAds = loadedAds;
+                }
+            );
+          }
+        );
     this.postsDbService.getNewsfeed('username').subscribe();
     this.postsDbService.getStoriesForUser('username').subscribe();
     this.isFetching = true;
@@ -49,6 +66,8 @@ export class PostsComponent implements OnInit {
         console.log(this.loadedPosts);
         }
     );
+
+    
     //this.loadedPosts = this.postsService.getNewsfeed();
 
     this.subscriptionStory = this.postsService.storiesChanged

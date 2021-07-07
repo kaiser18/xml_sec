@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { PostsDbService } from '../posts/posts-db.service';
 import { ProfileService } from '../profile/saved/profile.service';
 import { SearchDialogComponent } from './search-dialog/search-dialog.component';
@@ -17,19 +18,24 @@ export class SearchDialogData {
   encapsulation: ViewEncapsulation.None
 })
 export class NavigationComponent implements OnInit {
+
   loggedInUser = false;
   searchOptions = ['hashtag','location','profile','tag'];
   chosenSearchOption: string = 'hashtag';
   searchWord: string;
   isAdmin = false;
   username: string;
-  constructor(public dialog: MatDialog, private router: Router, private postsDbService: PostsDbService, private profileService: ProfileService) { }
+  paramsSubscription: Subscription;
+
+  constructor(public dialog: MatDialog,private route: ActivatedRoute, private router: Router, private postsDbService: PostsDbService, private profileService: ProfileService) { }
 
   ngOnInit(): void {
-    if(localStorage.getItem("access_token")!=null){
-      this.loggedInUser = true;
-    }
-    console.log("ldkkfkls");
+    this.router.events.subscribe(val => {
+      if(localStorage.getItem("access_token")!=null){
+        this.loggedInUser = true;
+      }
+    });
+
     this.postsDbService.getUsername(localStorage.getItem("access_token"))
     .subscribe(
       responseData => {

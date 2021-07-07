@@ -1,18 +1,17 @@
 <h4>Add to a campaign</h4>
 <mat-form-field appearance="fill">
-  <mat-label>Choose an campaign</mat-label>
+  <mat-label>Choose a campaign</mat-label>
   <mat-select [(value)]="data.chosenCampaign" >
     <mat-option *ngFor="let campaign of data.campaigns" [value]="campaign">
-      {{campaign.id}}
+      {{campaign.id}}&nbsp;{{campaign.createdAt}}
     </mat-option>
   </mat-select>
 </mat-form-field>
-<h5 style="text-align: center;">OR</h5>
 <mat-form-field style="width: 100%; margin: 0 auto;">
   <mat-label>Add a link to this post:</mat-label>
-  <!--<input matInput [(ngModel)]="link">-->
+  <input matInput [(ngModel)]="data.link">
 </mat-form-field>
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">No Thanks</button>
-  <button mat-button [mat-dialog-close]="data.chosenAlbum" cdkFocusInitial>Ok</button>
+  <button mat-button [mat-dialog-close]="[data.chosenCampaign, data.link]" cdkFocusInitial>Ok</button>
 </div>
