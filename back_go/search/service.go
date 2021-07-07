@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -353,9 +354,21 @@ func GetFollowList(username string) []string {
 	if username == "" {
 		return GetPublicList()
 	}
-	ret := []string{}
-	ret = append(ret, "username")
-	ret = append(ret, "test")
+	var ret []string
+	resp, err := http.Get("http://user_service:23002/followers/" + username)
+	if err != nil {
+		fmt.Println(err)
+		return []string{}
+	}
+	defer resp.Body.Close()
+	b, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	err = json.Unmarshal(b, &ret)
+	if err != nil {
+		log.Fatal(err)
+	}
 	return ret
 }
 
@@ -363,15 +376,28 @@ func GetFollowListAndPublic(username string) []string {
 	if username == "" {
 		return GetPublicList()
 	}
-	ret := []string{}
-	ret = append(ret, "username")
-	ret = append(ret, "username1")
-	return ret
+	followers := GetFollowList(username)
+	public := GetPublicList()
+	res := append(followers, public...)
+	return unique(res)
 }
 
 func GetPublicList() []string {
-	ret := []string{}
-	ret = append(ret, "test")
+	var ret []string
+	resp, err := http.Get("http://user_service:23002/public")
+	if err != nil {
+		fmt.Println(err)
+		return []string{}
+	}
+	defer resp.Body.Close()
+	b, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	err = json.Unmarshal(b, &ret)
+	if err != nil {
+		log.Fatal(err)
+	}
 	return ret
 }
 
@@ -507,4 +533,16 @@ func GetUserProfilePic(username string) string {
 		return ""
 	}
 	return string(b)
+}
+
+func unique(stringSlice []string) []string {
+	keys := make(map[string]bool)
+	list := []string{}
+	for _, entry := range stringSlice {
+		if _, value := keys[entry]; !value {
+			keys[entry] = true
+			list = append(list, entry)
+		}
+	}
+	return list
 }

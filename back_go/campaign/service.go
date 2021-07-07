@@ -3,9 +3,11 @@ package main
 import (
 	"campaign/campaignstore"
 	store "campaign/campaignstore"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"strconv"
 	"strings"
 
 	"google.golang.org/grpc/metadata"
@@ -89,7 +91,7 @@ func (s *server) CampaignRequest(ctx context.Context, in *campaign.CreateCampaig
 		}
 	}
 	cmp := makeCampaignFromProto(in.Campaign)
-	cmp.TargetAudience = GetTargetAudience(int(in.Campaign.TargetAgeFrom), int(in.Campaign.TargetAgeTo))
+	cmp.TargetAudience = influensersToUsernames(GetTargetAudience(int(in.Campaign.TargetAgeFrom), int(in.Campaign.TargetAgeTo)))
 	id, err := s.store.CreateCampaign(ctx, cmp)
 	if err != nil {
 		return &campaign.Identifier{}, err
@@ -339,23 +341,59 @@ func GetFollowList(username string) []string {
 	if username == "" {
 		return GetPublicList()
 	}
-	ret := []string{}
-	ret = append(ret, "username")
-	ret = append(ret, "test")
-	ret = append(ret, "username2")
+	var ret []string
+	resp, err := http.Get("http://user_service:23002/followers/" + username)
+	if err != nil {
+		fmt.Println(err)
+		return []string{}
+	}
+	defer resp.Body.Close()
+	b, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	err = json.Unmarshal(b, &ret)
+	if err != nil {
+		log.Fatal(err)
+	}
 	return ret
 }
 
 func GetPublicList() []string {
-	ret := []string{}
-	ret = append(ret, "test")
+	var ret []string
+	resp, err := http.Get("http://user_service:23002/public")
+	if err != nil {
+		fmt.Println(err)
+		return []string{}
+	}
+	defer resp.Body.Close()
+	b, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	err = json.Unmarshal(b, &ret)
+	if err != nil {
+		log.Fatal(err)
+	}
 	return ret
 }
 
-func GetTargetAudience(ageFrom int, ageTo int) []campaignstore.Username {
-	ret := []campaignstore.Username{}
-	ret = append(ret, campaignstore.Username{Name: "username11"})
-	ret = append(ret, campaignstore.Username{Name: "username12"})
+func GetTargetAudience(ageFrom int, ageTo int) []string {
+	var ret []string
+	resp, err := http.Get("http://user_service:23002/targetAudience/" + strconv.Itoa(ageFrom) + "/" + strconv.Itoa(ageTo))
+	if err != nil {
+		fmt.Println(err)
+		return []string{}
+	}
+	defer resp.Body.Close()
+	b, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	err = json.Unmarshal(b, &ret)
+	if err != nil {
+		log.Fatal(err)
+	}
 	return ret
 }
 
