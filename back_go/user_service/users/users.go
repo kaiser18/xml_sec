@@ -55,7 +55,7 @@ func prepareFullResponse(user *interfaces.User, userInfo *interfaces.UserInfo, w
 		Username:      user.Username,
 		Email:         user.Email,
 		Gender:        userInfo.Gender,
-		Date_of_birth: userInfo.Date_of_birth,
+		Date_of_birth: userInfo.Date_of_birth.String(),
 		Phone:         userInfo.Phone,
 		Website:       userInfo.Website,
 		Biography:     userInfo.Biography,
@@ -79,7 +79,7 @@ func convertToResponseWholeUser(user *interfaces.User, userInfo *interfaces.User
 		Username:      user.Username,
 		Email:         user.Email,
 		Gender:        userInfo.Gender,
-		Date_of_birth: userInfo.Date_of_birth,
+		Date_of_birth: userInfo.Date_of_birth.String(),
 		Phone:         userInfo.Phone,
 		Website:       userInfo.Website,
 		Biography:     userInfo.Biography,
@@ -184,11 +184,11 @@ func EditUser(name string, surname string, username string, email string,
 	user_id uint, gender string, date_of_birth string, phone string, website string, biography string) map[string]interface{} {
 
 	CheckForNewUsers()
-
-	user_info := &interfaces.UserInfo{User_id: user_id, Gender: gender, Date_of_birth: date_of_birth, Phone: phone, Website: website, Biography: biography}
+	dof, _ := time.Parse("2021-07-05 14:53:40.493946+00", date_of_birth)
+	user_info := &interfaces.UserInfo{User_id: user_id, Gender: gender, Date_of_birth: dof, Phone: phone, Website: website, Biography: biography}
 	if !(database.DB.Where("user_id = ? ", user_id).First(&user_info).RecordNotFound()) {
 		user_info.Gender = gender
-		user_info.Date_of_birth = date_of_birth
+		user_info.Date_of_birth = dof
 		user_info.Phone = phone
 		user_info.Website = website
 		user_info.Biography = biography
@@ -250,6 +250,15 @@ func GetIdFromUsername(username string) uint {
 	return user.ID
 }
 
+func GetUsernameFromId(id uint) string {
+	CheckForNewUsers()
+	user := &interfaces.User{}
+	if database.DBP.Where("id = ? ", id).First(&user).RecordNotFound() {
+		return ""
+	}
+	return user.Username
+}
+
 func GetUsers(username string, id string) map[string]interface{} {
 	CheckForNewUsers()
 	var users []interfaces.User
@@ -269,6 +278,18 @@ func GetUsers(username string, id string) map[string]interface{} {
 	var response = map[string]interface{}{"message": "all is fine"}
 	response["data"] = ret
 	return response
+}
+
+func GetTargetAudience(ageFrom int, ageTo int) []int {
+	users := []interfaces.UserInfo{}
+	database.DB.Where("(date_part('year', now()) - date_part('year', date_of_birth)) > ? and (date_part('year', now()) - date_part('year', date_of_birth)) < ?", ageFrom, ageTo).Find(&users)
+
+	ret := []int{}
+	for _, user := range users {
+		ret = append(ret, int(user.User_id))
+	}
+
+	return ret
 }
 
 func contains(s []int, str int) bool {
@@ -305,6 +326,44 @@ func EditUserProfile(user_id uint, is_private bool, accept_messages bool, taggin
 
 	var response = prepareResponse(user, false)
 	return response
+}
+
+func GetMutedAccounts(user_id string) []int {
+
+	CheckForNewUsers()
+	user_profile_settings := &interfaces.UserProfileSettings{}
+
+	if database.DB.Where("user_id = ? ", user_id).First(&user_profile_settings).RecordNotFound() {
+		return []int{}
+	}
+
+	return BlockedMutedParser(user_profile_settings.Muted_accounts)
+}
+
+func GetBlockedAccounts(user_id string) []int {
+
+	CheckForNewUsers()
+	user_profile_settings := &interfaces.UserProfileSettings{}
+
+	if database.DB.Where("user_id = ? ", user_id).First(&user_profile_settings).RecordNotFound() {
+		return []int{}
+	}
+
+	return BlockedMutedParser(user_profile_settings.Blocked_accounts)
+}
+
+func GetPublicAccounts() []int {
+	CheckForNewUsers()
+
+	users := []interfaces.UserProfileSettings{}
+	database.DB.Where("private_profile = false").Find(&users)
+
+	ret := []int{}
+	for _, user := range users {
+		ret = append(ret, int(user.User_id))
+	}
+
+	return ret
 }
 
 func GetUserProfileSettings(user_id string) map[string]interface{} {
@@ -711,8 +770,7 @@ func RemoveFromCloseFriends(user_id uint, username string) map[string]interface{
 
 	database.DB.Save(&user_profile_settings)
 
-	var response = userProfileSettingsResponse(user_profile_settings)
-	return response
+	return map[string]interface{}{"message": "Ok"}
 }
 
 func CreateFollowRequest(user_id uint, username string) map[string]interface{} {
@@ -764,13 +822,4 @@ func UpdateStatusOfFollowRequest(user_id uint, requester_id uint, status bool) i
 	database.DB.Save(&request)
 
 	return request
-}
-
-func GetUsernameFromId(user_id uint) string {
-	CheckForNewUsers()
-	user := &interfaces.User{}
-	if database.DBP.Where("user_id = ? ", user_id).First(&user).RecordNotFound() {
-		return ""
-	}
-	return user.Username
 }

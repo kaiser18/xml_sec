@@ -1,6 +1,10 @@
 package interfaces
 
-import "github.com/jinzhu/gorm"
+import (
+	"time"
+
+	"github.com/jinzhu/gorm"
+)
 
 type User struct {
 	//gorm.Model
@@ -37,7 +41,7 @@ type UserInfo struct {
 	gorm.Model
 	User_id       uint
 	Gender        string
-	Date_of_birth string
+	Date_of_birth time.Time
 	Phone         string
 	Website       string
 	Biography     string

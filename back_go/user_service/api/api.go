@@ -113,6 +113,11 @@ func apiResponse(call map[string]interface{}, w http.ResponseWriter) {
 	}
 }
 
+func apiResponseInt(call []int, w http.ResponseWriter) {
+	resp := call
+	json.NewEncoder(w).Encode(resp)
+}
+
 func edit_user(w http.ResponseWriter, r *http.Request) {
 	// Refactor login to use readBody
 	body := readBody(r)
@@ -267,7 +272,7 @@ func GetFollowers(w http.ResponseWriter, r *http.Request) {
 	//auth := r.Header.Get("Authorization")
 
 	user := users.GetFollowers(userId)
-	apiResponse(user, w)
+	apiResponseInt(user, w)
 }
 
 func GetFollowing(w http.ResponseWriter, r *http.Request) {
@@ -276,7 +281,85 @@ func GetFollowing(w http.ResponseWriter, r *http.Request) {
 	//auth := r.Header.Get("Authorization")
 
 	user := users.GetFollowing(userId)
-	apiResponse(user, w)
+	apiResponseInt(user, w)
+}
+
+func FindPublicAccounts(w http.ResponseWriter, r *http.Request) {
+	res := users.GetPublicAccounts()
+
+	usernames := []string{}
+	for _, id := range res {
+		usernames = append(usernames, users.GetUsernameFromId(uint(id)))
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	ret, _ := json.Marshal(usernames)
+	io.WriteString(w, string(ret))
+}
+
+func FindTargetAudience(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	ageFromS := vars["ageFrom"]
+	ageToS := vars["ageTo"]
+	ageFrom, _ := strconv.Atoi(ageFromS)
+	ageTo, _ := strconv.Atoi(ageToS)
+
+	res := users.GetTargetAudience(ageFrom, ageTo)
+
+	usernames := []string{}
+	for _, id := range res {
+		usernames = append(usernames, users.GetUsernameFromId(uint(id)))
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	ret, _ := json.Marshal(usernames)
+	io.WriteString(w, string(ret))
+}
+
+func FindFollowers(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	username := vars["username"]
+
+	id := users.GetIdFromUsername(username)
+
+	followers := users.GetFollowers(fmt.Sprint(id))
+	muted := users.GetMutedAccounts(fmt.Sprint(id))
+	blocked := users.GetBlockedAccounts(fmt.Sprint(id))
+
+	filteredFollowers := []int{}
+	for _, id := range followers {
+		if helpers.Contains(muted, id) || helpers.Contains(blocked, id) {
+			continue
+		}
+		filteredFollowers = append(filteredFollowers, id)
+	}
+
+	usernames := []string{}
+	for _, id := range filteredFollowers {
+		usernames = append(usernames, users.GetUsernameFromId(uint(id)))
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	ret, _ := json.Marshal(usernames)
+	io.WriteString(w, string(ret))
+}
+
+func FindFollowing(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	username := vars["username"]
+
+	id := users.GetIdFromUsername(username)
+
+	following := users.GetFollowing(fmt.Sprint(id))
+
+	usernames := []string{}
+	for _, id := range following {
+		usernames = append(usernames, users.GetUsernameFromId(uint(id)))
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	ret, _ := json.Marshal(usernames)
+	io.WriteString(w, string(ret))
 }
 
 func GetCloseFriends(w http.ResponseWriter, r *http.Request) {
@@ -285,7 +368,7 @@ func GetCloseFriends(w http.ResponseWriter, r *http.Request) {
 	//auth := r.Header.Get("Authorization")
 
 	user := users.GetCloseFriends(userId)
-	apiResponse(user, w)
+	apiResponseInt(user, w)
 }
 
 func Unfollow(w http.ResponseWriter, r *http.Request) {
@@ -334,6 +417,8 @@ func CreateFollowRequest(w http.ResponseWriter, r *http.Request) {
 	helpers.HandleErr(err)
 
 	request := users.CreateFollowRequest(formattedBody.User_id, requester)
+
+	apiResponse(request, w)
 }
 
 func GetFollowRequests(w http.ResponseWriter, r *http.Request) {
@@ -343,6 +428,10 @@ func GetFollowRequests(w http.ResponseWriter, r *http.Request) {
 	user_id, _ := strconv.Atoi(id)
 
 	requests := users.GetFollowRequestsForUser(uint(user_id))
+
+	w.Header().Set("Content-Type", "application/json")
+	ret, _ := json.Marshal(requests)
+	io.WriteString(w, string(ret))
 }
 
 func UpdateStatusOfRequest(w http.ResponseWriter, r *http.Request) {
@@ -353,6 +442,10 @@ func UpdateStatusOfRequest(w http.ResponseWriter, r *http.Request) {
 	helpers.HandleErr(err)
 
 	request := users.UpdateStatusOfFollowRequest(formattedBody.User_id, formattedBody.Requester_id, formattedBody.Status)
+
+	w.Header().Set("Content-Type", "application/json")
+	ret, _ := json.Marshal(request)
+	io.WriteString(w, string(ret))
 }
 
 func StartApi() {
@@ -372,6 +465,10 @@ func StartApi() {
 	router.HandleFunc("/user/report/{option}", userMuteBlockOption).Methods("POST")
 	router.HandleFunc("/user/followers/{id}", GetFollowers).Methods("GET")
 	router.HandleFunc("/user/following/{id}", GetFollowing).Methods("GET")
+	router.HandleFunc("/followers/{username}", FindFollowers).Methods("GET")
+	router.HandleFunc("/following/{username}", FindFollowing).Methods("GET")
+	router.HandleFunc("/targetAudience/{ageFrom}/{ageTo}", FindTargetAudience).Methods("GET")
+	router.HandleFunc("/public", FindPublicAccounts).Methods("GET")
 	router.HandleFunc("/user/closeFriends/{id}", GetCloseFriends).Methods("GET")
 	router.HandleFunc("user/unfollow", Unfollow).Methods("POST")
 	router.HandleFunc("user/addToCloseFriends", AddToCloseFriends).Methods("POST")
