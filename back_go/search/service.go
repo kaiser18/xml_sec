@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -343,37 +344,7 @@ func (s *server) GetCommentsRequest(ctx context.Context, in *search.GetComments)
 
 func (s *server) SearchProfilesRequest(ctx context.Context, in *search.ActionRequest) (*search.Users, error) {
 	//TODO: lista usera
-
 	ret := []*search.User{}
-	if strings.Contains("nikolablesic", in.Filter) {
-		ret = append(ret, &search.User{
-			Name:           "Nikola Blesic",
-			Username:       "nikolablesic",
-			UserProfilePic: "https://www.gettyimages.com/gi-resources/images/500px/983794168.jpg",
-		})
-	}
-	if strings.Contains("helenanisic", in.Filter) {
-		ret = append(ret, &search.User{
-			Name:           "Helena Anisic",
-			Username:       "helenanisic",
-			UserProfilePic: "https://drscdn.500px.org/photo/53713630/m%3D900/v2?sig=0bb4d582aa994ae89d7762015f5c94f6088dcacdacc1bda07dff39be2e982809",
-		})
-	}
-	if strings.Contains("mihailoivic", in.Filter) {
-		ret = append(ret, &search.User{
-			Name:           "Mihailo Ivic",
-			Username:       "mihailoivic",
-			UserProfilePic: "https://iso.500px.com/wp-content/uploads/2015/01/weather_cover-1500x1000.jpg",
-		})
-	}
-	if strings.Contains("jovantimarac", in.Filter) {
-		ret = append(ret, &search.User{
-			Name:           "Jovan Timarac",
-			Username:       "jovantimarac",
-			UserProfilePic: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqAU2U9F2b3_pn-jOQyP4gfs-NsAR36r1qOe05GyTqkJRjC4fBh4equLdIeJBeIeRBLtk&usqp=CAU",
-		})
-	}
-
 	return &search.Users{
 		Users: ret,
 	}, nil
@@ -383,9 +354,21 @@ func GetFollowList(username string) []string {
 	if username == "" {
 		return GetPublicList()
 	}
-	ret := []string{}
-	ret = append(ret, "username")
-	ret = append(ret, "test")
+	var ret []string
+	resp, err := http.Get("http://user_service:23002/followers/" + username)
+	if err != nil {
+		fmt.Println(err)
+		return []string{}
+	}
+	defer resp.Body.Close()
+	b, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	err = json.Unmarshal(b, &ret)
+	if err != nil {
+		log.Fatal(err)
+	}
 	return ret
 }
 
@@ -393,15 +376,28 @@ func GetFollowListAndPublic(username string) []string {
 	if username == "" {
 		return GetPublicList()
 	}
-	ret := []string{}
-	ret = append(ret, "username")
-	ret = append(ret, "username1")
-	return ret
+	followers := GetFollowList(username)
+	public := GetPublicList()
+	res := append(followers, public...)
+	return unique(res)
 }
 
 func GetPublicList() []string {
-	ret := []string{}
-	ret = append(ret, "test")
+	var ret []string
+	resp, err := http.Get("http://user_service:23002/public")
+	if err != nil {
+		fmt.Println(err)
+		return []string{}
+	}
+	defer resp.Body.Close()
+	b, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	err = json.Unmarshal(b, &ret)
+	if err != nil {
+		log.Fatal(err)
+	}
 	return ret
 }
 
@@ -429,11 +425,12 @@ func convertStories(stories []*helloworld.Story) []*search.Story {
 }
 
 func convertStory(story *helloworld.Story) *search.Story {
+	picture := GetUserProfilePic(story.Username)
 	return &search.Story{
 		Id:               story.Id,
 		Name:             "ime",
 		Username:         story.Username,
-		UserProfilePic:   "slika",
+		UserProfilePic:   picture,
 		LocationName:     story.LocationName,
 		Description:      story.Description,
 		CreatedAt:        story.CreatedAt,
@@ -460,11 +457,12 @@ func convertPosts(posts []*helloworld.Post) []*search.Post {
 }
 
 func convertPost(post *helloworld.Post) *search.Post {
+	picture := GetUserProfilePic(post.Username)
 	return &search.Post{
 		Id:               post.Id,
 		Name:             "ime",
 		Username:         post.Username,
-		UserProfilePic:   "slika",
+		UserProfilePic:   picture,
 		LocationName:     post.LocationName,
 		Description:      post.Description,
 		CreatedAt:        post.CreatedAt,
@@ -520,4 +518,31 @@ func GetUsernameFromToken(token string) string {
 	}
 	fmt.Println(string(b))
 	return string(b)
+}
+
+func GetUserProfilePic(username string) string {
+	resp, err := http.Get("http://user_service:23002/userProfilePic/" + username)
+	if err != nil {
+		fmt.Println(err)
+		return ""
+	}
+	defer resp.Body.Close()
+	b, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println(err)
+		return ""
+	}
+	return string(b)
+}
+
+func unique(stringSlice []string) []string {
+	keys := make(map[string]bool)
+	list := []string{}
+	for _, entry := range stringSlice {
+		if _, value := keys[entry]; !value {
+			keys[entry] = true
+			list = append(list, entry)
+		}
+	}
+	return list
 }

@@ -3,7 +3,9 @@ package api
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
+	"strconv"
 
 	//"log"
 	"net/http"
@@ -36,7 +38,7 @@ type UserInfo struct {
 }
 
 type WholeUser struct {
-	Name     	  string
+	Name          string
 	Surname       string
 	Username      string
 	Email         string
@@ -56,6 +58,9 @@ type UserProfileSettings struct {
 	Accept_unfollowed_account_messages bool
 	Tagging                            bool
 	Muted_blocked_accounts             string
+	ProfileToUnfollow                  string
+	ProfileToAddToCF                   string
+	ProfileToRemoveCF                  string
 }
 
 type UserNotificationSettings struct {
@@ -86,6 +91,11 @@ func apiResponse(call map[string]interface{}, w http.ResponseWriter) {
 		resp := call
 		json.NewEncoder(w).Encode(resp)
 	}
+}
+
+func apiResponseInt(call []int, w http.ResponseWriter) {
+	resp := call
+	json.NewEncoder(w).Encode(resp)
 }
 
 func edit_user(w http.ResponseWriter, r *http.Request) {
@@ -130,6 +140,41 @@ func getUser(w http.ResponseWriter, r *http.Request) {
 		"proto":    r.Proto,
 		"service":  "user_service",
 	}).Info("request details")
+}
+
+func canITag(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	username := vars["username"]
+
+	id := users.GetIdFromUsername(username)
+	res := users.IsUserTaggable(id)
+	if res {
+		w.WriteHeader(200)
+		w.Header().Set("Status", "200")
+	} else {
+		w.WriteHeader(400)
+		w.Header().Set("Status", "400")
+	}
+}
+
+func GetUserProfilePic(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	username := vars["username"]
+
+	id := users.GetIdFromUsername(username)
+	pic := users.GetUserProfilePic(id)
+	io.WriteString(w, pic)
+}
+
+func FilterUsers(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	criteria := vars["criteria"]
+
+	users := users.FilterUsers(criteria)
+
+	w.Header().Set("Content-Type", "application/json")
+	ret, _ := json.Marshal(users)
+	io.WriteString(w, string(ret))
 }
 
 func getUsers(w http.ResponseWriter, r *http.Request) {
@@ -201,18 +246,173 @@ func userMuteBlockOption(w http.ResponseWriter, r *http.Request) {
 	apiResponse(user, w)
 }
 
+func GetFollowers(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	userId := vars["id"]
+	//auth := r.Header.Get("Authorization")
+
+	user := users.GetFollowers(userId)
+	apiResponseInt(user, w)
+}
+
+func GetFollowing(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	userId := vars["id"]
+	//auth := r.Header.Get("Authorization")
+
+	user := users.GetFollowing(userId)
+	apiResponseInt(user, w)
+}
+
+func FindPublicAccounts(w http.ResponseWriter, r *http.Request) {
+	res := users.GetPublicAccounts()
+
+	usernames := []string{}
+	for _, id := range res {
+		usernames = append(usernames, users.GetUsernameFromId(uint(id)))
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	ret, _ := json.Marshal(usernames)
+	io.WriteString(w, string(ret))
+}
+
+func FindTargetAudience(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	ageFromS := vars["ageFrom"]
+	ageToS := vars["ageTo"]
+	ageFrom, _ := strconv.Atoi(ageFromS)
+	ageTo, _ := strconv.Atoi(ageToS)
+
+	res := users.GetTargetAudience(ageFrom, ageTo)
+
+	usernames := []string{}
+	for _, id := range res {
+		usernames = append(usernames, users.GetUsernameFromId(uint(id)))
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	ret, _ := json.Marshal(usernames)
+	io.WriteString(w, string(ret))
+}
+
+func FindFollowers(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	username := vars["username"]
+
+	id := users.GetIdFromUsername(username)
+
+	followers := users.GetFollowers(fmt.Sprint(id))
+	muted := users.GetMutedAccounts(fmt.Sprint(id))
+	blocked := users.GetBlockedAccounts(fmt.Sprint(id))
+
+	filteredFollowers := []int{}
+	for _, id := range followers {
+		if helpers.Contains(muted, id) || helpers.Contains(blocked, id) {
+			continue
+		}
+		filteredFollowers = append(filteredFollowers, id)
+	}
+
+	usernames := []string{}
+	for _, id := range filteredFollowers {
+		usernames = append(usernames, users.GetUsernameFromId(uint(id)))
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	ret, _ := json.Marshal(usernames)
+	io.WriteString(w, string(ret))
+}
+
+func FindFollowing(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	username := vars["username"]
+
+	id := users.GetIdFromUsername(username)
+
+	following := users.GetFollowing(fmt.Sprint(id))
+
+	usernames := []string{}
+	for _, id := range following {
+		usernames = append(usernames, users.GetUsernameFromId(uint(id)))
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	ret, _ := json.Marshal(usernames)
+	io.WriteString(w, string(ret))
+}
+
+func GetCloseFriends(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	userId := vars["id"]
+	//auth := r.Header.Get("Authorization")
+
+	user := users.GetCloseFriends(userId)
+	apiResponseInt(user, w)
+}
+
+func Unfollow(w http.ResponseWriter, r *http.Request) {
+	//auth := r.Header.Get("Authorization")
+	body := readBody(r)
+	var formattedBody UserProfileSettings
+
+	err := json.Unmarshal(body, &formattedBody)
+	helpers.HandleErr(err)
+
+	user := users.Unfollow(formattedBody.User_id, formattedBody.ProfileToUnfollow)
+	apiResponse(user, w)
+}
+
+func AddToCloseFriends(w http.ResponseWriter, r *http.Request) {
+	//auth := r.Header.Get("Authorization")
+	body := readBody(r)
+	var formattedBody UserProfileSettings
+
+	err := json.Unmarshal(body, &formattedBody)
+	helpers.HandleErr(err)
+
+	user := users.Unfollow(formattedBody.User_id, formattedBody.ProfileToAddToCF)
+	apiResponse(user, w)
+}
+
+func RemoveFromCloseFriends(w http.ResponseWriter, r *http.Request) {
+	//auth := r.Header.Get("Authorization")
+	body := readBody(r)
+	var formattedBody UserProfileSettings
+
+	err := json.Unmarshal(body, &formattedBody)
+	helpers.HandleErr(err)
+
+	user := users.Unfollow(formattedBody.User_id, formattedBody.ProfileToRemoveCF)
+	apiResponse(user, w)
+}
+
 func StartApi() {
 	router := mux.NewRouter()
 	// Add panic handler middleware
 	router.Use(helpers.PanicHandler)
 	router.HandleFunc("/edit", edit_user).Methods("POST")
 	router.HandleFunc("/user/{id}", getUser).Methods("GET")
+	router.HandleFunc("/canITag/{username}", canITag).Methods("GET")
+	router.HandleFunc("/userProfilePic/{username}", GetUserProfilePic).Methods("GET")
 	router.HandleFunc("/users/{username}/{id}", getUsers).Methods("GET")
+	router.HandleFunc("/users/{criteria}", FilterUsers).Methods("GET")
 	router.HandleFunc("/accounts/edit/profile_settings", edit_user_profile_settings).Methods("POST")
 	router.HandleFunc("/accounts/user_settings/{id}", getUserProfileSettings).Methods("GET")
 	router.HandleFunc("/accounts/edit/notification_settings", edit_notification_settings).Methods("POST")
 	router.HandleFunc("/accounts/notification_settings/{id}", getUserNotificationSettings).Methods("GET")
 	router.HandleFunc("/user/report/{option}", userMuteBlockOption).Methods("POST")
+	router.HandleFunc("/user/followers/{id}", GetFollowers).Methods("GET")
+	router.HandleFunc("/user/following/{id}", GetFollowing).Methods("GET")
+	router.HandleFunc("/followers/{username}", FindFollowers).Methods("GET")
+	router.HandleFunc("/following/{username}", FindFollowing).Methods("GET")
+	router.HandleFunc("/targetAudience/{ageFrom}/{ageTo}", FindTargetAudience).Methods("GET")
+	router.HandleFunc("/public", FindPublicAccounts).Methods("GET")
+	router.HandleFunc("/user/closeFriends/{id}", GetCloseFriends).Methods("GET")
+	router.HandleFunc("user/unfollow", Unfollow).Methods("POST")
+	router.HandleFunc("user/addToCloseFriends", AddToCloseFriends).Methods("POST")
+	router.HandleFunc("user/removeFromCloseFriends", RemoveFromCloseFriends).Methods("POST")
+
 	log.Info("App is working on port :23002")
 	fmt.Println("App is working on port :23002")
 	log.Fatal(http.ListenAndServe(":23002", router))
