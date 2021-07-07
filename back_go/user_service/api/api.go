@@ -409,14 +409,17 @@ func RemoveFromCloseFriends(w http.ResponseWriter, r *http.Request) {
 
 func CreateFollowRequest(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	requester := vars["username"]
+	username := vars["username"]
 	body := readBody(r)
 	var formattedBody FollowRequest
+
+	user_id := users.GetIdFromUsername(username)
+	requester_username := users.GetUsernameFromId(formattedBody.Requester_id)
 
 	err := json.Unmarshal(body, &formattedBody)
 	helpers.HandleErr(err)
 
-	request := users.CreateFollowRequest(formattedBody.User_id, requester)
+	request := users.CreateFollowRequest(user_id, requester_username)
 
 	apiResponse(request, w)
 }
