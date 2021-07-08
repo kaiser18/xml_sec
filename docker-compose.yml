@@ -13,6 +13,12 @@ services:
         environment:
           - POSTGRES_PASSWORD=postgres
           - POSTGRES_USER=postgres
+    redis:
+        image: redis
+        ports:
+          - "6379:6379"
+        networks:
+          - backend
     user_service:
         build: ./back_go/user_service
         restart: always

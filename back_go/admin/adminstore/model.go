@@ -5,6 +5,7 @@ type ReportRequest struct {
 	PublicationID    int    `json:"PublicationId"`
 	ReporterUsername string `json:"username"`
 	Type             string `json:"type"`
+	Status           string `json:"status"`
 }
 
 type VerificationRequest struct {

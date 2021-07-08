@@ -14,6 +14,7 @@ type Report struct {
 	Tags             []string  `json:"tags"`
 	ImageUrls        []string  `json:"imageUrls"`
 	Type             string    `json:"type"`
+	Status           string    `json:"status"`
 }
 
 type VerifyProfileRequest struct {
