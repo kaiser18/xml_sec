@@ -84,7 +84,7 @@ public class SetupDataLoader implements
         User u = new User();
         u.setFirstName("Nikola");
         u.setLastName("Blesic");
-        u.setPassword(passwordEncoder.encode("Nikola123."));
+        u.setPassword(passwordEncoder.encode("test"));
         u.setEmail("nikola@nikola.com");
         u.setUsername("nikola");
         u.setSecret("QGJQOZDYG7FGVLHP");
@@ -92,6 +92,39 @@ public class SetupDataLoader implements
         u.setEnabled(true);
         userRepository.save(u);
 
+        User m = new User();
+        m.setFirstName("Helena");
+        m.setLastName("Anisic");
+        m.setPassword(passwordEncoder.encode("test"));
+        m.setEmail("helena@helena.com");
+        m.setUsername("helena");
+        m.setSecret("QGJQOZDYG7FGVKHP");
+        m.setRoles(Arrays.asList(userRole));
+        m.setEnabled(true);
+        userRepository.save(m);
+        
+        User k = new User();
+        k.setFirstName("Mihailo");
+        k.setLastName("Ivic");
+        k.setPassword(passwordEncoder.encode("test"));
+        k.setEmail("mihailo@mihailo.com");
+        k.setUsername("mihailo");
+        k.setSecret("QGJQOZDYG7FKVKHP");
+        k.setRoles(Arrays.asList(userRole));
+        k.setEnabled(true);
+        userRepository.save(k);
+        
+        User f = new User();
+        f.setFirstName("Jovan");
+        f.setLastName("Timarac");
+        f.setPassword(passwordEncoder.encode("test"));
+        f.setEmail("jovan@jovan.com");
+        f.setUsername("jovan");
+        f.setSecret("QGJQOZFYG7FKVKHP");
+        f.setRoles(Arrays.asList(userRole));
+        f.setEnabled(true);
+        userRepository.save(f);
+        
         alreadySetup = true;
     }
 

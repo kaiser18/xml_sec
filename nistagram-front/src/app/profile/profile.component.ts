@@ -13,6 +13,7 @@ import { UserService } from '../services/user.service';
 import { UserModel } from '../model/userModel';
 import { MutedBlockedAccounts } from '../model/userProfileSettings';
 import { ActivatedRoute, Params } from '@angular/router';
+import { ElementFinder } from 'protractor';
 
 export interface DialogData {
   animal: string;
@@ -39,8 +40,10 @@ export class ProfileComponent implements OnInit {
   myProfile = false;
   likedPosts: Post[];
   dislikedPosts: Post[];
-
-  constructor(private activeRoute: ActivatedRoute, private _modalService: NgbModal, public dialog: MatDialog, private profileService: ProfileService, private postDbService: PostsDbService, private postService: PostsService) {}
+  following: string[];
+  visible: false;
+  
+  constructor(private activeRoute: ActivatedRoute, private _modalService: NgbModal, public dialog: MatDialog, private profileService: ProfileService, private postDbService: PostsDbService, private postService: PostsService, private userService: UserService) {}
 
   openDialog(): void {
     const dialogRef = this.dialog.open(ProfileImageDetailComponent, {
@@ -54,6 +57,16 @@ export class ProfileComponent implements OnInit {
       this.animal = result;
     });
   }
+
+  amIFollowing(){
+    this.following.forEach(element => {
+      console.log(element);
+      if(this.username == element)
+        return true;
+    });
+    return false;
+  }
+  
   ngOnInit(): void {
 
     this.activeRoute.params
@@ -68,10 +81,38 @@ export class ProfileComponent implements OnInit {
           responseData => {
             console.log(responseData);
             this.myUsername = responseData;
-            if(this.myUsername === this.username){
-              this.myProfile = true;
-              document.getElementById("3dots").style.display = "none";
-            }
+            this.userService.getFollowing(this.myUsername)
+            .subscribe(
+              responseData => {
+                this.following = responseData;
+                console.log( this.amIFollowing());
+                if(this.myUsername === this.username){
+                  this.myProfile = true;
+                  document.getElementById("3dots").style.display = "none";
+                  document.getElementById("followButton").style.display = "none";
+                  document.getElementById("followingButton").style.display = "none";
+                }else{
+                  let f = false;
+                  this.following.forEach(element => {
+                    console.log(element);
+                    if(this.username == element){
+                      f = true;
+                      console.log(this.username);                       
+                    }
+                  });
+                  if(f){
+                    document.getElementById("followingButton").style.display = "block";   
+                    document.getElementById("followButton").style.display = "none"; 
+                  }else{
+                    document.getElementById("followingButton").style.display = "none";   
+                    document.getElementById("followButton").style.display = "block";  
+                    document.getElementById("3dots").style.display = "none";
+                  }
+                  
+                              
+                }
+              }
+            );
           }
         );
       }
