@@ -323,19 +323,9 @@ func FindFollowers(w http.ResponseWriter, r *http.Request) {
 	id := users.GetIdFromUsername(username)
 
 	followers := users.GetFollowers(fmt.Sprint(id))
-	muted := users.GetMutedAccounts(fmt.Sprint(id))
-	blocked := users.GetBlockedAccounts(fmt.Sprint(id))
-
-	filteredFollowers := []int{}
-	for _, id := range followers {
-		if helpers.Contains(muted, id) || helpers.Contains(blocked, id) {
-			continue
-		}
-		filteredFollowers = append(filteredFollowers, id)
-	}
 
 	usernames := []string{}
-	for _, id := range filteredFollowers {
+	for _, id := range followers {
 		usernames = append(usernames, users.GetUsernameFromId(uint(id)))
 	}
 
@@ -351,9 +341,58 @@ func FindFollowing(w http.ResponseWriter, r *http.Request) {
 	id := users.GetIdFromUsername(username)
 
 	following := users.GetFollowing(fmt.Sprint(id))
+	muted := users.GetMutedAccounts(fmt.Sprint(id))
+	blocked := users.GetBlockedAccounts(fmt.Sprint(id))
+
+	filteredFollowings := []int{}
+	for _, id := range following {
+		if helpers.Contains(muted, id) || helpers.Contains(blocked, id) {
+			continue
+		}
+		filteredFollowings = append(filteredFollowings, id)
+	}
+
+	usernames := []string{}
+	for _, id := range filteredFollowings {
+		if users.IsUserBlocked(id) {
+			continue
+		}
+		usernames = append(usernames, users.GetUsernameFromId(uint(id)))
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	ret, _ := json.Marshal(usernames)
+	io.WriteString(w, string(ret))
+}
+
+func IsUserBlocked(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	requester := vars["requester"]
+	username := vars["username"]
+
+	id := users.GetIdFromUsername(requester)
+	id2 := users.GetIdFromUsername(username)
+
+	blocked := users.GetBlockedAccounts(fmt.Sprint(id))
+
+	w.Header().Set("Content-Type", "application/json")
+	ret, _ := json.Marshal(helpers.Contains(blocked, int(id2)))
+	io.WriteString(w, string(ret))
+}
+
+func FindAllFollowings(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	username := vars["username"]
+
+	id := users.GetIdFromUsername(username)
+
+	following := users.GetFollowing(fmt.Sprint(id))
 
 	usernames := []string{}
 	for _, id := range following {
+		if users.IsUserBlocked(id) {
+			continue
+		}
 		usernames = append(usernames, users.GetUsernameFromId(uint(id)))
 	}
 
@@ -470,8 +509,10 @@ func StartApi() {
 	router.HandleFunc("/user/following/{id}", GetFollowing).Methods("GET")
 	router.HandleFunc("/followers/{username}", FindFollowers).Methods("GET")
 	router.HandleFunc("/following/{username}", FindFollowing).Methods("GET")
+	router.HandleFunc("/findAllFollowings/{username}", FindAllFollowings).Methods("GET")
 	router.HandleFunc("/targetAudience/{ageFrom}/{ageTo}", FindTargetAudience).Methods("GET")
 	router.HandleFunc("/public", FindPublicAccounts).Methods("GET")
+	router.HandleFunc("/IsUserBlocked/{requester}/{username}", IsUserBlocked).Methods("GET")
 	router.HandleFunc("/user/closeFriends/{id}", GetCloseFriends).Methods("GET")
 	router.HandleFunc("user/unfollow", Unfollow).Methods("POST")
 	router.HandleFunc("user/addToCloseFriends", AddToCloseFriends).Methods("POST")

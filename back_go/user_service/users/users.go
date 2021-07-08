@@ -217,6 +217,13 @@ func EditUser(name string, surname string, username string, email string,
 	return response
 }
 
+func IsUserBlocked(id int) bool {
+	CheckForNewUsers()
+	var user interfaces.User
+	database.DBP.Find(&user, id)
+	return user.IsBlocked
+}
+
 // Refactor GetUser function to use database package
 func GetUser(id string, jwt string) map[string]interface{} {
 
@@ -396,6 +403,9 @@ func FilterUsers(criteria string) []interfaces.UserDto {
 
 	ret := []interfaces.UserDto{}
 	for _, user := range users {
+		if IsUserBlocked(int(user.ID)) {
+			continue
+		}
 		profilePic := GetUserProfilePic(user.ID)
 		ret = append(ret, interfaces.UserDto{
 			ID:             user.ID,
