@@ -375,6 +375,24 @@ func (ts *PostStore) CreateUsernameIfNotExists(username string) (*Username, erro
 	return &usern, nil
 }
 
+func (ts *PostStore) PublicationExists(id int, pType string) bool {
+	if pType == "POST" {
+		var post Post
+		result := ts.db.Find(&post, id)
+		if result.RowsAffected > 0 {
+			return true
+		}
+	} else {
+		var story Story
+		result := ts.db.Find(&story, id)
+		if result.RowsAffected > 0 {
+			return true
+		}
+	}
+
+	return false
+}
+
 func (ts *PostStore) GetPost(ctx context.Context, id int) (*helloworld.Post, error) {
 	span := tracer.StartSpanFromContext(ctx, "GetPost")
 	defer span.Finish()

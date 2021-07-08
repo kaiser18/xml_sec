@@ -73,6 +73,26 @@ type UserNotificationSettings struct {
 	Messages                 string
 }
 
+type FollowRequest struct {
+	User_id             uint
+	Requester_id        uint
+	FollowRequestStatus FollowRequestStatus
+}
+
+type FollowRequestStatus string
+
+const (
+	PENDING  FollowRequestStatus = "PENDING"
+	ACCEPTED FollowRequestStatus = "ACCEPTED"
+	DENIED   FollowRequestStatus = "DENIED"
+)
+
+type FollowRequestUpdateStatus struct {
+	User_id      uint
+	Requester_id uint
+	Status       bool
+}
+
 // Create readBody function
 func readBody(r *http.Request) []byte {
 	body, err := ioutil.ReadAll(r.Body)
@@ -303,19 +323,9 @@ func FindFollowers(w http.ResponseWriter, r *http.Request) {
 	id := users.GetIdFromUsername(username)
 
 	followers := users.GetFollowers(fmt.Sprint(id))
-	muted := users.GetMutedAccounts(fmt.Sprint(id))
-	blocked := users.GetBlockedAccounts(fmt.Sprint(id))
-
-	filteredFollowers := []int{}
-	for _, id := range followers {
-		if helpers.Contains(muted, id) || helpers.Contains(blocked, id) {
-			continue
-		}
-		filteredFollowers = append(filteredFollowers, id)
-	}
 
 	usernames := []string{}
-	for _, id := range filteredFollowers {
+	for _, id := range followers {
 		usernames = append(usernames, users.GetUsernameFromId(uint(id)))
 	}
 
@@ -331,9 +341,58 @@ func FindFollowing(w http.ResponseWriter, r *http.Request) {
 	id := users.GetIdFromUsername(username)
 
 	following := users.GetFollowing(fmt.Sprint(id))
+	muted := users.GetMutedAccounts(fmt.Sprint(id))
+	blocked := users.GetBlockedAccounts(fmt.Sprint(id))
+
+	filteredFollowings := []int{}
+	for _, id := range following {
+		if helpers.Contains(muted, id) || helpers.Contains(blocked, id) {
+			continue
+		}
+		filteredFollowings = append(filteredFollowings, id)
+	}
+
+	usernames := []string{}
+	for _, id := range filteredFollowings {
+		if users.IsUserBlocked(id) {
+			continue
+		}
+		usernames = append(usernames, users.GetUsernameFromId(uint(id)))
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	ret, _ := json.Marshal(usernames)
+	io.WriteString(w, string(ret))
+}
+
+func IsUserBlocked(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	requester := vars["requester"]
+	username := vars["username"]
+
+	id := users.GetIdFromUsername(requester)
+	id2 := users.GetIdFromUsername(username)
+
+	blocked := users.GetBlockedAccounts(fmt.Sprint(id))
+
+	w.Header().Set("Content-Type", "application/json")
+	ret, _ := json.Marshal(helpers.Contains(blocked, int(id2)))
+	io.WriteString(w, string(ret))
+}
+
+func FindAllFollowings(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	username := vars["username"]
+
+	id := users.GetIdFromUsername(username)
+
+	following := users.GetFollowing(fmt.Sprint(id))
 
 	usernames := []string{}
 	for _, id := range following {
+		if users.IsUserBlocked(id) {
+			continue
+		}
 		usernames = append(usernames, users.GetUsernameFromId(uint(id)))
 	}
 
@@ -371,7 +430,7 @@ func AddToCloseFriends(w http.ResponseWriter, r *http.Request) {
 	err := json.Unmarshal(body, &formattedBody)
 	helpers.HandleErr(err)
 
-	user := users.Unfollow(formattedBody.User_id, formattedBody.ProfileToAddToCF)
+	user := users.AddToCloseFriends(formattedBody.User_id, formattedBody.ProfileToAddToCF)
 	apiResponse(user, w)
 }
 
@@ -383,8 +442,52 @@ func RemoveFromCloseFriends(w http.ResponseWriter, r *http.Request) {
 	err := json.Unmarshal(body, &formattedBody)
 	helpers.HandleErr(err)
 
-	user := users.Unfollow(formattedBody.User_id, formattedBody.ProfileToRemoveCF)
+	user := users.RemoveFromCloseFriends(formattedBody.User_id, formattedBody.ProfileToRemoveCF)
 	apiResponse(user, w)
+}
+
+func CreateFollowRequest(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	username := vars["username"]
+	body := readBody(r)
+	var formattedBody FollowRequest
+
+	user_id := users.GetIdFromUsername(username)
+	requester_username := users.GetUsernameFromId(formattedBody.Requester_id)
+
+	err := json.Unmarshal(body, &formattedBody)
+	helpers.HandleErr(err)
+
+	request := users.CreateFollowRequest(user_id, requester_username)
+
+	apiResponse(request, w)
+}
+
+func GetFollowRequests(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	user_id, _ := strconv.Atoi(id)
+
+	requests := users.GetFollowRequestsForUser(uint(user_id))
+
+	w.Header().Set("Content-Type", "application/json")
+	ret, _ := json.Marshal(requests)
+	io.WriteString(w, string(ret))
+}
+
+func UpdateStatusOfRequest(w http.ResponseWriter, r *http.Request) {
+	body := readBody(r)
+	var formattedBody FollowRequestUpdateStatus
+
+	err := json.Unmarshal(body, &formattedBody)
+	helpers.HandleErr(err)
+
+	request := users.UpdateStatusOfFollowRequest(formattedBody.User_id, formattedBody.Requester_id, formattedBody.Status)
+
+	w.Header().Set("Content-Type", "application/json")
+	ret, _ := json.Marshal(request)
+	io.WriteString(w, string(ret))
 }
 
 func StartApi() {
@@ -406,12 +509,17 @@ func StartApi() {
 	router.HandleFunc("/user/following/{id}", GetFollowing).Methods("GET")
 	router.HandleFunc("/followers/{username}", FindFollowers).Methods("GET")
 	router.HandleFunc("/following/{username}", FindFollowing).Methods("GET")
+	router.HandleFunc("/findAllFollowings/{username}", FindAllFollowings).Methods("GET")
 	router.HandleFunc("/targetAudience/{ageFrom}/{ageTo}", FindTargetAudience).Methods("GET")
 	router.HandleFunc("/public", FindPublicAccounts).Methods("GET")
+	router.HandleFunc("/IsUserBlocked/{requester}/{username}", IsUserBlocked).Methods("GET")
 	router.HandleFunc("/user/closeFriends/{id}", GetCloseFriends).Methods("GET")
 	router.HandleFunc("user/unfollow", Unfollow).Methods("POST")
 	router.HandleFunc("user/addToCloseFriends", AddToCloseFriends).Methods("POST")
 	router.HandleFunc("user/removeFromCloseFriends", RemoveFromCloseFriends).Methods("POST")
+	router.HandleFunc("user/follow/{username}", CreateFollowRequest).Methods("POST")
+	router.HandleFunc("user/requests/{id}", GetFollowRequests).Methods("GET")
+	router.HandleFunc("user/requests/update", UpdateStatusOfRequest).Methods("POST")
 
 	log.Info("App is working on port :23002")
 	fmt.Println("App is working on port :23002")

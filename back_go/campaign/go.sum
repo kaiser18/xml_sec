@@ -396,6 +396,10 @@ github.com/nikolablesic/proto v0.0.0-20210705162050-56da256d0aca h1:azYMtek3KEvM
 github.com/nikolablesic/proto v0.0.0-20210705162050-56da256d0aca/go.mod h1:dOvxVDmQEEVQg/iPc+CvU9PHrHa0uC34Onc2kOzgwaM=
 github.com/nikolablesic/proto v0.0.0-20210705163417-ae8d37f9750a h1:p+J5xxx1LDNK5GxLCudYZLPs28V2r5HiWLZUtx1VnkA=
 github.com/nikolablesic/proto v0.0.0-20210705163417-ae8d37f9750a/go.mod h1:dOvxVDmQEEVQg/iPc+CvU9PHrHa0uC34Onc2kOzgwaM=
+github.com/nikolablesic/proto v0.0.0-20210708110052-05e63b31f7ab h1:SHci/TwuV7pfLlPlO2f9+BfJBk8/70n0vGuHPAgGr7I=
+github.com/nikolablesic/proto v0.0.0-20210708110052-05e63b31f7ab/go.mod h1:dOvxVDmQEEVQg/iPc+CvU9PHrHa0uC34Onc2kOzgwaM=
+github.com/nikolablesic/proto v0.0.0-20210708144209-b1628da98596 h1:Kg7D5vArhw54uUykbEMljMOIjcv921yL+mzsnJu+TsU=
+github.com/nikolablesic/proto v0.0.0-20210708144209-b1628da98596/go.mod h1:dOvxVDmQEEVQg/iPc+CvU9PHrHa0uC34Onc2kOzgwaM=
 github.com/nishanths/predeclared v0.0.0-20200524104333-86fad755b4d3/go.mod h1:nt3d53pc1VYcphSCIaYAJtnPYnr3Zyn8fMq2wvPGPso=
 github.com/oklog/oklog v0.3.2/go.mod h1:FCV+B7mhrz4o+ueLpx+KqkyXRGMWOYEvfiXtdGtbWGs=
 github.com/oklog/run v1.0.0/go.mod h1:dlhp/R75TPv97u0XWUtDeV/lRKWPKSdTuV0TZvrmrQA=
@@ -864,6 +868,8 @@ google.golang.org/genproto v0.0.0-20210629200056-84d6f6074151 h1:H/uPzsolsGjhl3C
 google.golang.org/genproto v0.0.0-20210629200056-84d6f6074151/go.mod h1:yiaVoXHpRzHGyxV3o4DktVWY4mSUErTKaeEOq6C3t3U=
 google.golang.org/genproto v0.0.0-20210701191553-46259e63a0a9 h1:HBPuvo39L0DgfVn9eHR3ki/RjZoUFWa+em77e7KFDfs=
 google.golang.org/genproto v0.0.0-20210701191553-46259e63a0a9/go.mod h1:yiaVoXHpRzHGyxV3o4DktVWY4mSUErTKaeEOq6C3t3U=
+google.golang.org/genproto v0.0.0-20210708141623-e76da96a951f h1:khwpF3oSk7GIab/7DDMDyE8cPQEO6FAfOcWHIRAhO20=
+google.golang.org/genproto v0.0.0-20210708141623-e76da96a951f/go.mod h1:AxrInvYm1dci+enl5hChSFPOmmUF1+uAa/UsgNRWd7k=
 google.golang.org/grpc v1.17.0/go.mod h1:6QZJwpn2B+Zp71q/5VxRsJ6NXXVCE5NRUHRo+f3cWCs=
 google.golang.org/grpc v1.19.0/go.mod h1:mqu4LbDTu4XGKhr4mRzUsmM4RtVoemTSY81AxZiDr8c=
 google.golang.org/grpc v1.20.0/go.mod h1:chYK+tFQF0nDUGJgXMSgLCQk3phJEuONr2DCgLDdAQM=
