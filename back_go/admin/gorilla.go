@@ -40,6 +40,9 @@ func main() {
 		return
 	}
 
+	go service.orchestrator.Start()
+	go service.RedisConnection()
+
 	// Attach the Greeter service to the server
 	admin.RegisterAdminServer(s, service)
 	// Serve gRPC server

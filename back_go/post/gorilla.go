@@ -9,12 +9,13 @@ import (
 	"github.com/nikolablesic/proto/helloworld"
 	"github.com/nikolablesic/proto/search"
 
+	"post/logger"
+
 	grpc_opentracing "github.com/grpc-ecosystem/go-grpc-middleware/tracing/opentracing"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	otgo "github.com/opentracing/opentracing-go"
-	"google.golang.org/grpc"
-	"post/logger"
 	log "github.com/sirupsen/logrus"
+	"google.golang.org/grpc"
 )
 
 func main() {
@@ -39,6 +40,8 @@ func main() {
 		log.Fatal(err.Error())
 		return
 	}
+
+	go service.RedisConnection()
 
 	// Attach the Greeter service to the server
 	helloworld.RegisterGreeterServer(s, service)

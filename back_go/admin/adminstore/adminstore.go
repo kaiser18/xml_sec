@@ -43,6 +43,7 @@ func (ts *AdminStore) CreateReport(ctx context.Context, publicationId int, repor
 		PublicationID:    publicationId,
 		ReporterUsername: reporter,
 		Type:             postType,
+		Status:           "CREATED",
 	}
 
 	ts.db.Create(&reportReq)
@@ -70,6 +71,16 @@ func (ts *AdminStore) GetReports(ctx context.Context) ([]ReportRequest, error) {
 
 	var reports []ReportRequest
 	ts.db.Find(&reports)
+
+	return reports, nil
+}
+
+func (ts *AdminStore) GetReportsForUser(ctx context.Context, username string) ([]ReportRequest, error) {
+	span := tracer.StartSpanFromContext(ctx, "GetReportsForUser")
+	defer span.Finish()
+
+	var reports []ReportRequest
+	ts.db.Where("reporter_username = ?", username).Find(&reports)
 
 	return reports, nil
 }
@@ -137,6 +148,17 @@ func (ts *AdminStore) UpdateVerificationRequestStatus(ctx context.Context, id in
 	return nil
 }
 
+func (ts *AdminStore) UpdateReportRequestStatus(id int, status string) error {
+	var request ReportRequest
+	ts.db.Find(&request, id)
+
+	request.Status = status
+
+	ts.db.Save(&request)
+
+	return nil
+
+}
 func (ts *AdminStore) Close() error {
 	db, err := ts.db.DB()
 	if err != nil {
