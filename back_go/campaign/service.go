@@ -107,6 +107,11 @@ func (s *server) GetCampaignRequest(ctx context.Context, in *campaign.Identifier
 	return makeCampaignProto(cmp), nil
 }
 
+func (s *server) DeleteCampaignRequest(ctx context.Context, in *campaign.Identifier) (*campaign.Empty, error) {
+	s.store.DeleteCampaign(ctx, int(in.Id))
+	return &campaign.Empty{}, nil
+}
+
 func (s *server) AdvertisementRequest(ctx context.Context, in *campaign.CreateAdvertisementRequest) (*campaign.Identifier, error) {
 	adv := makeAdvertisementFromProto(in.Advertisement)
 	id, err := s.store.CreateAdvertisement(ctx, adv)
@@ -169,14 +174,16 @@ func (s *server) GetCampaignsRequest(ctx context.Context, in *campaign.ActionReq
 
 func makeCampaignProto(cmp *store.Campaign) *campaign.Campaign {
 	return &campaign.Campaign{
-		Id:          int32(cmp.ID),
-		Username:    cmp.Username,
-		CreatedAt:   cmp.CreatedAt.String(),
-		Start:       cmp.Start.String(),
-		End:         cmp.End.String(),
-		ShowNumber:  int32(cmp.ShowNumber),
-		Influensers: makeStringFromUsernames(cmp.Influensers),
-		EditFor:     int32(cmp.EditFor),
+		Id:            int32(cmp.ID),
+		Username:      cmp.Username,
+		CreatedAt:     cmp.CreatedAt.String(),
+		Start:         cmp.Start.String(),
+		End:           cmp.End.String(),
+		ShowNumber:    int32(cmp.ShowNumber),
+		Influensers:   makeStringFromUsernames(cmp.Influensers),
+		EditFor:       int32(cmp.EditFor),
+		TargetAgeFrom: int32(cmp.TargetAgeFrom),
+		TargetAgeTo:   int32(cmp.TargetAgeTo),
 	}
 }
 
@@ -230,10 +237,13 @@ func (s *server) makeAdvertisementResponseProto(ctx context.Context, adv *store.
 			Hashtags:        post.Hashtags,
 			Tags:            post.Tags,
 			ImageUrls:       post.ImageUrls,
-			//Link:            adv.Link,
+			Link:            adv.Link,
 		}
 		if isInfluenser {
 			campPost.Username = influenser
+			campPost.UserProfilePic = GetUserProfilePic(influenser)
+		} else {
+			campPost.UserProfilePic = GetUserProfilePic(post.Username)
 		}
 		return &campPost
 	} else {
@@ -254,6 +264,9 @@ func (s *server) makeAdvertisementResponseProto(ctx context.Context, adv *store.
 		}
 		if isInfluenser {
 			campStory.Username = influenser
+			campStory.UserProfilePic = GetUserProfilePic(influenser)
+		} else {
+			campStory.UserProfilePic = GetUserProfilePic(story.Username)
 		}
 		return &campStory
 	}
@@ -423,6 +436,21 @@ func GetUsernameFromToken(token string) string {
 		log.Fatalln(err)
 	}
 	fmt.Println(string(b))
+	return string(b)
+}
+
+func GetUserProfilePic(username string) string {
+	resp, err := http.Get("http://user_service:23002/userProfilePic/" + username)
+	if err != nil {
+		fmt.Println(err)
+		return ""
+	}
+	defer resp.Body.Close()
+	b, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println(err)
+		return ""
+	}
 	return string(b)
 }
 

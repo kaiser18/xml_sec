@@ -107,6 +107,19 @@ func (ts *CampaignStore) UpdateCampaigns(ctx context.Context) {
 	}
 }
 
+func (ts *CampaignStore) DeleteCampaign(ctx context.Context, id int) {
+	span := tracer.StartSpanFromContext(ctx, "DeleteCampaign")
+	defer span.Finish()
+
+	ts.db.Exec("DELETE FROM advertisements WHERE campaign_id = ?", id)
+	ts.db.Exec("DELETE FROM campaign_influenser WHERE campaign_id = ?", id)
+	ts.db.Exec("DELETE FROM campaign_influenser_approveds WHERE campaign_id = ?", id)
+	ts.db.Exec("DELETE FROM campaign_target_audience WHERE campaign_id = ?", id)
+	ts.db.Exec("DELETE FROM number_of_views WHERE campaign_id = ?", id)
+	ts.db.Exec("DELETE FROM campaigns WHERE id = ?", id)
+
+}
+
 func (ts *CampaignStore) CreateAdvertisement(ctx context.Context, advertisement *Advertisement) (int, error) {
 	span := tracer.StartSpanFromContext(ctx, "CreateAdvertisement")
 	defer span.Finish()
