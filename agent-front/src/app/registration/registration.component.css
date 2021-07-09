@@ -1,25 +1,46 @@
-.container {
+#username-ff {
+    margin-bottom: 15px;
+    width: 400px !important;
+}
+
+#password-ff {
+    width: 400px !important;
+    margin-bottom: 10px;
+}
+#address-ff {
+    width: 400px !important;
+    margin-bottom: 10px;
+}
+
+#registerForm {
+    min-width: 400px;
+    position: absolute;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); 
+    font-size: 20px;
+}
+
+mat-card {
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
+    width: 500px;
+    height: 350px;
 }
 
-.field {
+.container {
     display: flex;
     justify-content: center;
+    padding-top: 5vw;
 }
 
-.button {
-    display: flex;
-    justify-content: center;
+label {
+    margin-top: 10px;
+    font-size: medium;
 }
-
-.ca-cont {
-    display: flex;
-    justify-content: center;
-}
-
-.ca-margin {
-    padding-right: 5px;
+a {
+    font-size: medium;
+    padding-left: 5px;
 }

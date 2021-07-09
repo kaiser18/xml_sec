@@ -4,9 +4,12 @@
 
 export const environment = {
   production: false,
-  baseUrl: 'http://localhost:0000',
+  baseUrl: 'http://localhost:23007',
   register: 'register',
   login: 'login',
+  createProduct: 'product',
+  editProduct: 'product',
+  
 };
 
 /*

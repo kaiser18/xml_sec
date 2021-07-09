@@ -1,0 +1,24 @@
+<br><br>
+<div class="container">
+    <div>
+        <div id="allProducts" [dataSource]="allProducts" class="row" *ngFor="let product of allProducts"
+            class="container center-card">
+
+            <mat-card>
+                <mat-card-header>
+                    <mat-card-title>{ product.name }</mat-card-title>
+                  </mat-card-header>
+                  <img mat-card-image src="" alt="pic">
+                  <mat-card-content>
+                    <p> Quantity: { product.quantity } </p>
+                    <br>
+                    <p> Price: { product.price }</p>
+                  </mat-card-content>
+                  <mat-card-actions>
+                    <button mat-button routerLink="agent/editProduct">Edit</button>
+                    <button mat-button (click)="delete(product.id)">Delete</button>
+                  </mat-card-actions>
+            </mat-card>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,53 @@
+<div class="container">
+    <mat-card>
+        <form [formGroup]="editProductForm" (ngSubmit)="onSubmit()">
+            <div id="editProductForm">
+                <div class="inputField">
+                    <mat-form-field appearance="fill" id="name-ff">
+                        <mat-label>Id</mat-label>
+                        <input matInput id="id" placeholder="Id" name="name-ff"
+                            formControlName="id" class="civca">
+                    </mat-form-field>
+                </div>
+                <div class="inputField">
+                    <mat-form-field appearance="fill" id="name-ff">
+                        <mat-label>Name</mat-label>
+                        <input matInput id="name" placeholder="Name" name="name-ff"
+                            formControlName="name" class="civca">
+                        <mat-error
+                            *ngIf="!editProductForm.get('name').valid && editProductForm.get('name').touched && editProductForm.get('name').errors['required']">
+                            Please enter name</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="inputField">
+                    <mat-form-field appearance="fill" id="quantity-ff">
+                        <mat-label>Quantity</mat-label>
+                        <input matInput id="quantity" placeholder="quantity" name="quantity-ff"
+                            formControlName="quantity" class="civca">
+                        <mat-error
+                            *ngIf="!editProductForm.get('quantity').valid && editProductForm.get('quantity').touched && editProductForm.get('quantity').errors['required']">
+                            Please enter quantity</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="inputField">
+                    <mat-form-field appearance="fill" id="price-ff">
+                        <mat-label>Price</mat-label>
+                        <input matInput id="price" placeholder="price" name="price-ff"
+                            formControlName="price" class="civca">
+                        <mat-error
+                            *ngIf="!editProductForm.get('price').valid && editProductForm.get('price').touched && editProductForm.get('price').errors['required']">
+                            Please enter price</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <br/><br/>
+    
+                <button mat-flat-button name="button-ff" style="float: right;" color="primary" type="submit"
+                    >Edit</button>
+            </div>      
+        </form>
+    </mat-card>
+</div>
+

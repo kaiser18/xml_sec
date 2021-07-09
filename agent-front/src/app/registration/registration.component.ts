@@ -13,21 +13,17 @@ export class RegistrationComponent implements OnInit {
   registerForm: FormGroup;
   user: User
 
-  firstname: string;
-  lastname: string;
-  username: string;
   email: string;
   password: string;
+  address: string;
 
   constructor(private service: UserService) { }
 
   ngOnInit(): void {
     this.registerForm = new FormGroup({
-      'firstname': new FormControl('', [Validators.required, Validators.pattern("^[A-ZŠĐŽČĆ][a-zšđćčžA-ZŠĐŽČĆ ]*$")]),
-      'lastname': new FormControl('', [Validators.required, Validators.pattern("^[A-ZŠĐŽČĆ][a-zšđćčžA-ZŠĐŽČĆ ]*$")]),
-      'username': new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]),
       'email': new FormControl('', [Validators.required, Validators.email]),
-      'password': new FormControl('', [Validators.required, Validators.pattern("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{10,}$")])
+      'password': new FormControl('', [Validators.required, Validators.pattern("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{10,}$")]),
+      'address': new FormControl('', [Validators.required])
     })
   }
 
@@ -44,13 +40,11 @@ export class RegistrationComponent implements OnInit {
   }
 
   createUser() : User {
-    this.firstname = this.registerForm.value.firstname;
-    this.lastname = this.registerForm.value.lastname;
-    this.username = this.registerForm.value.username;
     this.email = this.registerForm.value.email;
     this.password = this.registerForm.value.password;
+    this.address = this.registerForm.value.address;
 
-    this.user = new User (this.firstname, this.lastname, this.username, this.email, this.password);
+    this.user = new User (this.email, this.password, this.address);
 
     return this.user;
   }
