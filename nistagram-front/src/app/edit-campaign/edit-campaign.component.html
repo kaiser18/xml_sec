@@ -1,0 +1,23 @@
+<h1>My Campaigns</h1>
+<table>
+    <tr>
+        <td>
+            Campaign
+        </td>
+        <td>
+            Date of creation
+        </td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr *ngFor="let campaign of campaigns">
+        <td>
+            {{campaign.id}}
+        </td>
+        <td>
+            {{campaign.createdAt}}
+        </td>
+        <td><button (click)="editCampaign(campaign.id)">Edit</button></td>
+        <td><button>Delete</button></td>
+    </tr>
+</table>

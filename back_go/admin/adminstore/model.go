@@ -1,5 +1,11 @@
 package adminstore
 
+type AgentRequest struct {
+	ID       int    `json:"id"`
+	Username string `json:"username"`
+	Status   string `json:"status"`
+}
+
 type ReportRequest struct {
 	ID               int    `json:"id"`
 	PublicationID    int    `json:"PublicationId"`

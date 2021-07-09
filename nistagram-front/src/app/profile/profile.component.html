@@ -20,7 +20,8 @@
         <mat-grid-tile>
             <figure class="mat-figure nesto">
                 <h2>{{username}}</h2> &nbsp;
-                <button mat-flat-button color="primary">Follow</button>
+                <button mat-flat-button color="primary" id="followButton" (click)="followProfile()">Follow</button>
+                <button mat-flat-button color="primary" id="unfollowButton">Unfollow</button>
                 <br><div id="3dots" class="dotButton"><button class="btn btn-outline-primary" (click)="open('autofocus')"><div class="dots">...</div></button></div>
                 <br>
             </figure>
@@ -29,7 +30,7 @@
     </mat-grid-list>
 <hr>
 
-<mat-tab-group >
+<mat-tab-group *ngIf="visible">
     <mat-tab label="Post">
         <mat-grid-list cols="3" rowHeight="1:1" gutterSize="5px">
             <mat-grid-tile style="cursor: pointer;" class="profile-image" [routerLink] = "['/post', post.id]" *ngFor="let post of posts" >

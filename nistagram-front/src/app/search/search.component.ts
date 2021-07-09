@@ -1,26 +1,35 @@
 import { HttpClient } from '@angular/common/http';
+import { ConstantPool } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute , Params } from '@angular/router';
+import { ActivatedRoute , Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Post } from '../posts/post.model';
 import { PostsDbService } from '../posts/posts-db.service';
 import { PostsService } from '../posts/posts.service';
-import { User } from './search.model';
 import { SearchService } from './search.service';
+
+export interface UserSearch{
+  ID: number,
+  UserProfilePic: string,
+  Username: string
+}
+
 
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.css']
 })
+
+
 export class SearchComponent implements OnInit {
 
   posts: Post[];
-  users: User[];
+  users: UserSearch[];
   option: string;
   searchWord: string[];
   paramsSubscription: Subscription;
-  constructor(private http: HttpClient, private searchService: SearchService, private route: ActivatedRoute) { }
+  constructor(private http: HttpClient, private searchService: SearchService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
     this.paramsSubscription = this.route.params
@@ -55,16 +64,20 @@ export class SearchComponent implements OnInit {
           }else{
             this.searchService.getProfiles(this.route.snapshot.params.searchWord)
             .subscribe(
-              (users: User[]) => {
-                  this.users = users;
-                  console.log(this.users);
-                }
+              responseData => {
+                console.log(responseData);
+                this.users = responseData;
+              }
             )
           }
         }
       );
     
     
+  }
+
+  visitProfile(username: string){
+    this.router.navigate(['profile',username]);
   }
 
 }

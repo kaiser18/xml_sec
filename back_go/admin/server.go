@@ -165,6 +165,60 @@ func (s *server) GetCloser() io.Closer {
 	return s.closer
 }
 
+func (s *server) CreateAgentRequest(ctx context.Context, in *admin.AgentReq) (*admin.Identifier, error) {
+	username := GetUsernameOfLoggedUser(ctx)
+	if len(username) <= 0 {
+		return &admin.Identifier{}, status.Error(401, "401 Unauthorized")
+	}
+	id, err := s.store.CreateAgentRequest(ctx, username)
+	if err != nil {
+		log.Error(err)
+	}
+	return &admin.Identifier{
+		Id: int32(id),
+	}, err
+}
+
+func (s *server) DeleteAgentRequest(ctx context.Context, in *admin.Identifier) (*admin.Empty, error) {
+	return &admin.Empty{}, s.store.DeleteAgentRequest(ctx, int(in.Id))
+}
+
+func (s *server) ApproveAgentRequest(ctx context.Context, in *admin.Identifier) (*admin.Empty, error) {
+	return &admin.Empty{}, s.store.ApproveAgentRequest(ctx, int(in.Id))
+}
+
+func (s *server) GetAgentRequests(ctx context.Context, in *admin.Empty) (*admin.Agents, error) {
+	requests, err := s.store.GetAgentRequests(ctx)
+	if err != nil {
+		log.Error(err)
+		return &admin.Agents{}, err
+	}
+
+	ret := []*admin.AgentResponse{}
+
+	for _, request := range requests {
+		ret = append(ret, &admin.AgentResponse{
+			Id:       int32(request.ID),
+			Username: request.Username,
+			Status:   request.Status,
+		})
+	}
+
+	return &admin.Agents{
+		Agents: ret,
+	}, nil
+}
+
+func (s *server) IsUserAgent(ctx context.Context, in *admin.AgentRequest) (*admin.BooleanResponse, error) {
+	username := GetUsernameOfLoggedUser(ctx)
+	if len(username) <= 0 {
+		return &admin.BooleanResponse{}, status.Error(401, "401 Unauthorized")
+	}
+	return &admin.BooleanResponse{
+		Response: s.store.IsUserAgent(ctx, username),
+	}, nil
+}
+
 func (s *server) ReportRequest(ctx context.Context, in *admin.CreateReportRequest) (*admin.Identifier, error) {
 	username := GetUsernameOfLoggedUser(ctx)
 	if len(username) <= 0 {

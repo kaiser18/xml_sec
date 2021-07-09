@@ -121,8 +121,8 @@ margin-left: 16px;
       <mat-label>Do you want to share this story only with close friends?</mat-label>
       <br>
       <mat-radio-group aria-label="Select an option" style="margin: 0 auto;" formControlName="isCloseFriends">
-        <mat-radio-button value="true">Yes</mat-radio-button>
-        <mat-radio-button value="false">No</mat-radio-button>
+        <mat-radio-button [value]=true>Yes</mat-radio-button>
+        <mat-radio-button [value]=false>No</mat-radio-button>
     </mat-radio-group>
       <br>
       <button mat-stroked-button color="primary" style="border: none" type="submit">Save</button>

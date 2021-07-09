@@ -242,6 +242,15 @@ public class AuthenticationController {
         }
         return user.getUsername();
     }
+    
+    @GetMapping("/getIdFromUsername/{username}")
+    public Long GetIdFromUsername(@PathVariable String username) {
+        User user = userService.findByUsername(username);
+        if(user == null){
+        	return Long.valueOf(-1);
+        }
+        return user.getId();
+    }
 
 	@GetMapping("/getUserIdByToken/{token}")
     public Long getUserIdByToken(@PathVariable String token) {

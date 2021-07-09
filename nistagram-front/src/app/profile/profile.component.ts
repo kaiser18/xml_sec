@@ -11,8 +11,9 @@ import { ProfileService } from './saved/profile.service';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UserService } from '../services/user.service';
 import { UserModel } from '../model/userModel';
-import { MutedBlockedAccounts } from '../model/userProfileSettings';
+import { MutedBlockedAccounts, UserPrivacySettings } from '../model/userProfileSettings';
 import { ActivatedRoute, Params } from '@angular/router';
+import { ElementFinder } from 'protractor';
 
 export interface DialogData {
   animal: string;
@@ -39,8 +40,12 @@ export class ProfileComponent implements OnInit {
   myProfile = false;
   likedPosts: Post[];
   dislikedPosts: Post[];
-
-  constructor(private activeRoute: ActivatedRoute, private _modalService: NgbModal, public dialog: MatDialog, private profileService: ProfileService, private postDbService: PostsDbService, private postService: PostsService) {}
+  following: string[];
+  visible =  false;
+  userId;
+  userPrivacySettings: UserPrivacySettings;
+  f = false;
+  constructor(private activeRoute: ActivatedRoute, private _modalService: NgbModal, public dialog: MatDialog, private profileService: ProfileService, private postDbService: PostsDbService, private postService: PostsService, private userService: UserService) {}
 
   openDialog(): void {
     const dialogRef = this.dialog.open(ProfileImageDetailComponent, {
@@ -54,6 +59,16 @@ export class ProfileComponent implements OnInit {
       this.animal = result;
     });
   }
+
+  amIFollowing(){
+    this.following.forEach(element => {
+      console.log(element);
+      if(this.username == element)
+        return true;
+    });
+    return false;
+  }
+  
   ngOnInit(): void {
 
     this.activeRoute.params
@@ -68,10 +83,88 @@ export class ProfileComponent implements OnInit {
           responseData => {
             console.log(responseData);
             this.myUsername = responseData;
-            if(this.myUsername === this.username){
-              this.myProfile = true;
-              document.getElementById("3dots").style.display = "none";
-            }
+            this.userService.getFollowing(this.myUsername)
+            .subscribe(
+              responseData => {
+                this.following = responseData;
+                console.log( this.amIFollowing());
+                if(this.myUsername === this.username){
+                  this.myProfile = true;
+                  this.visible = true;
+                  document.getElementById("3dots").style.display = "none";
+                  document.getElementById("followButton").style.display = "none";
+                  document.getElementById("unfollowButton").style.display = "none";
+                }else{
+                  this.following.forEach(element => {
+                    console.log(element);
+                    if(this.username == element){
+                      this.f = true;
+                      console.log(this.username);                       
+                    }
+                  });
+                  this.userService.getIdFromUsername(this.username)
+                  .subscribe(
+                    responseData => {
+                      this.userId = responseData;
+                      this.userService.getUserProfileSettings(this.userId)
+                      .subscribe(
+                        responseData =>{
+                        this.userPrivacySettings = responseData;
+                        console.log("jasaaaaaar");
+                        console.log(this.f);
+                        console.log(this.userPrivacySettings.data['Private_profile']);
+                        if(this.f){
+                          console.log("pratim te");
+                          document.getElementById("unfollowButton").style.display = "block";   
+                          document.getElementById("followButton").style.display = "none"; 
+                          this.visible = true;
+                        }else if(this.f==false && this.userPrivacySettings.data['Private_profile'] == true){
+                          console.log("privatan");
+                          document.getElementById("unfollowButton").style.display = "none";   
+                          document.getElementById("followButton").style.display = "block";  
+                          document.getElementById("3dots").style.display = "none";
+                          this.visible = false;
+                        }else if(this.f == false && this.userPrivacySettings.data['Private_profile'] == false){
+                          console.log("javan");
+                          document.getElementById("unfollowButton").style.display = "none";   
+                          document.getElementById("followButton").style.display = "block";  
+                          document.getElementById("3dots").style.display = "none";
+                          this.visible = true;
+                        }
+                        })
+                    }
+                  )         
+                }
+              }
+            );
+          },
+          error => {
+            this.userService.getIdFromUsername(this.username)
+                  .subscribe(
+                    responseData => {
+                      this.userId = responseData;
+                      this.userService.getUserProfileSettings(this.userId)
+                      .subscribe(
+                        responseData =>{
+                        this.userPrivacySettings = responseData;
+                        console.log("jasaaaaaar");
+                        console.log(this.f);
+                        console.log(this.userPrivacySettings.data['Private_profile']);
+                        if(this.userPrivacySettings.data['Private_profile'] == true){
+                          document.getElementById("unfollowButton").style.display = "none";   
+                          document.getElementById("followButton").style.display = "block";  
+                          document.getElementById("3dots").style.display = "none";
+                          this.visible = false;
+                        }else{
+                          console.log("javan");
+                          document.getElementById("unfollowButton").style.display = "none";   
+                          document.getElementById("followButton").style.display = "block";  
+                          document.getElementById("3dots").style.display = "none";
+                          this.visible = true;
+                        }
+                        })
+                    }
+                  )         
           }
         );
       }
@@ -115,6 +208,21 @@ export class ProfileComponent implements OnInit {
 
   open(name: string) {
     this._modalService.open(MODALS[name]);
+  }
+
+  followProfile(){
+    if(this.userPrivacySettings.data['Private_profile'] == false){
+      this.userService.followProfile(this.username)
+      .subscribe(
+        responseData => {
+          console.log(responseData);
+        }
+      )
+    }
+  }
+
+  unfollowProfile(){
+
   }
 
 }

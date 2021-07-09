@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient } from '@angular/common/http'
+import {HttpClient, HttpHeaders } from '@angular/common/http'
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { UserModel } from '../model/userModel';
@@ -54,5 +54,22 @@ export class UserService {
 
   getMutedBlockedAccounts(user_id: number): Observable<MutedBlockedAccounts> {
     return this.http.get<MutedBlockedAccounts>(`${environment.baseUrlUser}/${environment.getUserProfileSettings}/${user_id}`);
+  }
+
+  getFollowing(username: string){
+    return this.http.get<[]>(`http://localhost:23002/followers/${username}`,
+    {
+      headers: new HttpHeaders()
+      .set('Authorization', "Bearer " + localStorage.getItem('access_token'))
+    }
+    )
+  }
+
+  getIdFromUsername(username: string){
+    return this.http.get<[]>(`http://localhost:8081/auth/getIdFromUsername/${username}`)
+  }
+
+  followProfile(username: string){
+    return this.http.post<[]>(`http://localhost:23002/user/follow/${username}`,{})
   }
 }

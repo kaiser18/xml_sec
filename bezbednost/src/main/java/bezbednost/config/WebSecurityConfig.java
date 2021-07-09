@@ -107,7 +107,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		web.ignoring().antMatchers(HttpMethod.POST, "/auth/login", "/auth/logout", "/auth/signup",
 				"/auth/resetPassword", "/auth/changePassword", "/auth/verify");
 		web.ignoring().antMatchers(HttpMethod.GET, "/", "/webjars/**", "/favicon.ico", "/**/*.png", "/**/*.css", "/**/*.js", "/**/*.woff2",
-				"/**/*.woff", "/**/*.html", "/*.html", "/static/passwordReset.html", "/auth/getUsernameByToken/**", "/auth/getUserIdByToken/**");
+				"/**/*.woff", "/**/*.html", "/*.html", "/static/passwordReset.html", "/auth/getUsernameByToken/**", "/auth/getUserIdByToken/**", "/auth/getIdFromUsername/**");
 	}
 
 

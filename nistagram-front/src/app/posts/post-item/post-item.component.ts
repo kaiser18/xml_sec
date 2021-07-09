@@ -35,6 +35,7 @@ export class PostItemComponent implements OnInit {
   loggedUser = false;
   isAdmin = false;
   action;
+  
   ngOnInit(): void {
     if(localStorage.getItem("access_token")!=null){
       this.loggedUser = true;
@@ -52,6 +53,8 @@ export class PostItemComponent implements OnInit {
       var nesto = element.substring(7, element.length);
       console.log(nesto);
       var start = "assets"
+
+      
       this.imageObject.push({image: start.concat(nesto), thumbImage: start.concat(nesto)})
     });
 

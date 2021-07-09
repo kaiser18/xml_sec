@@ -23,6 +23,8 @@ import { VerificationRequestsComponent } from './verification-requests/verificat
 import { PushNotificationsComponent } from './accounts/push-notifications/push-notifications.component';
 import { PrivacyComponent } from './accounts/privacy/privacy.component';
 import { ReportsComponent } from './reports/reports.component';
+import { NewCampaignComponent } from './new-campaign/new-campaign.component';
+import { EditCampaignComponent } from './edit-campaign/edit-campaign.component';
 
 const routes: Routes = [
     {
@@ -118,6 +120,14 @@ const routes: Routes = [
     {
       path: 'reports',
       component: ReportsComponent
+    },
+    {
+      path: 'new-campaign/:id',
+      component: NewCampaignComponent
+    },
+    {
+      path: 'edit-campaign',
+      component: EditCampaignComponent
     }
 ];
 
