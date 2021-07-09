@@ -25,6 +25,7 @@ import { PrivacyComponent } from './accounts/privacy/privacy.component';
 import { ReportsComponent } from './reports/reports.component';
 import { NewCampaignComponent } from './new-campaign/new-campaign.component';
 import { EditCampaignComponent } from './edit-campaign/edit-campaign.component';
+import { EditCampaignItemComponent } from './edit-campaign-item/edit-campaign-item.component';
 
 const routes: Routes = [
     {
@@ -110,7 +111,7 @@ const routes: Routes = [
       component: SearchComponent
     },
     {
-      path: 'profile/verify',
+      path: 'profile/account/verify',
       component: VerifyProfileComponent
     },
     {
@@ -122,12 +123,16 @@ const routes: Routes = [
       component: ReportsComponent
     },
     {
-      path: 'new-campaign/:id',
+      path: 'new-campaign',
       component: NewCampaignComponent
     },
     {
       path: 'edit-campaign',
       component: EditCampaignComponent
+    },
+    {
+      path: 'edit-campaign-item/:id',
+      component: EditCampaignItemComponent
     }
 ];
 

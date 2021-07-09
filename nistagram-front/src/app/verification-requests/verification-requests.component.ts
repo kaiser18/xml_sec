@@ -15,7 +15,9 @@ export class VerificationRequestsComponent implements OnInit {
   constructor(private adminService : AdminService) { }
 
   ngOnInit(): void {
+    this.loadAllRequests();
   }
+
 
   loadAllRequests() {
     this.adminService.getAllVerificationRequests().subscribe(data => {

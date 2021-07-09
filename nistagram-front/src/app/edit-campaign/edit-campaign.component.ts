@@ -35,6 +35,10 @@ export class EditCampaignComponent implements OnInit {
   }
 
   editCampaign(campaignId: number){
-    this.router.navigate(['new-campaign',campaignId]);
+    this.router.navigate(['edit-campaign-item',campaignId]);
+  }
+
+  deleteCampaign(id: number){
+    this.campaignService.deleteCampaign(id).subscribe();
   }
 }

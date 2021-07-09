@@ -69,7 +69,7 @@ func (ts *CampaignStore) GetCampaigns(ctx context.Context, username string) (*[]
 	ts.UpdateCampaigns(ctx)
 
 	var campaigns []Campaign
-	result := ts.db.Preload("Influensers").Preload("TargetAudience").Where("username = ?", username).Find(&campaigns)
+	result := ts.db.Preload("Influensers").Preload("TargetAudience").Where("username = ? and (edit_for IS null OR edit_for = 0)", username).Find(&campaigns)
 
 	if result.RowsAffected > 0 {
 		return &campaigns, nil
@@ -82,7 +82,7 @@ func (ts *CampaignStore) GetEditedCampaigns(ctx context.Context) []Campaign {
 	defer span.Finish()
 
 	var campaigns []Campaign
-	ts.db.Where("(edit_for IS NOT null OR edit_for = 0) AND (created_at + INTERVAL '1 day') <= now()").Order("created_at").Find(&campaigns)
+	ts.db.Where("edit_for IS NOT null AND edit_for != 0 AND (created_at + INTERVAL '1 day') <= now()").Order("created_at").Find(&campaigns)
 	return campaigns
 }
 
@@ -95,15 +95,19 @@ func (ts *CampaignStore) UpdateCampaigns(ctx context.Context) {
 	id := -1
 	for _, campaign := range campaigns {
 		id = campaign.ID
-		if i == campaign.EditFor {
+		fmt.Println("Kampanja: ", id)
+		if i != campaign.EditFor {
 			ts.db.Exec("UPDATE campaign_target_audience SET campaign_id = ? WHERE campaign_id = ?", campaign.EditFor, campaign.ID)
 			ts.db.Exec("UPDATE campaign_influenser SET campaign_id = ? WHERE campaign_id = ?", campaign.EditFor, campaign.ID)
 			campaign.ID = campaign.EditFor
 			campaign.EditFor = 0
 			ts.db.Save(campaign)
+			fmt.Println("Sacuvao sam kampanju pod brojem:", campaign.ID)
 		}
-		ts.db.Delete(&Campaign{}, id)
-		i = campaign.EditFor
+		ts.DeleteCampaign(ctx, id)
+		fmt.Println("Obrisao sam kampanju pod brojem:", id)
+		i = campaign.ID
+		fmt.Println("proiveravam za", i)
 	}
 }
 

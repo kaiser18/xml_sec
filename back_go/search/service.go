@@ -355,7 +355,7 @@ func GetFollowList(username string) []string {
 		return GetPublicList()
 	}
 	var ret []string
-	resp, err := http.Get("http://user_service:23002/followers/" + username)
+	resp, err := http.Get("http://user_service:23002/following/" + username)
 	if err != nil {
 		fmt.Println(err)
 		return []string{}

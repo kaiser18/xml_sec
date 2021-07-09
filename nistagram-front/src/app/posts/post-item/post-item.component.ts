@@ -2,6 +2,7 @@ import { ConditionalExpr } from '@angular/compiler';
 import { Component, Input, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import { UserService } from 'src/app/services/user.service';
 import { Post } from '../post.model';
 import { PostsDbService } from '../posts-db.service';
 import { AddToFavouritesDialogComponent } from './add-to-favourites-dialog/add-to-favourites-dialog.component';
@@ -35,7 +36,7 @@ export class PostItemComponent implements OnInit {
   loggedUser = false;
   isAdmin = false;
   action;
-  
+  blockedUser;
   ngOnInit(): void {
     if(localStorage.getItem("access_token")!=null){
       this.loggedUser = true;
@@ -75,7 +76,7 @@ export class PostItemComponent implements OnInit {
   }
 
   constructor(public dialog: MatDialog, private postsDbService: PostsDbService, private router: Router,
-    private route: ActivatedRoute) {}
+    private route: ActivatedRoute, private userService: UserService) {}
 
   openDialog(): void {
     const dialogRef = this.dialog.open(AddToFavouritesDialogComponent, {
@@ -157,7 +158,14 @@ export class PostItemComponent implements OnInit {
       this.postsDbService.removePublication(this.post.id);
     }
     if(this.action === "3"){
-      this.postsDbService.blockAccount(this.post.username);
+      this.userService.getIdFromUsername(this.post.username)
+        .subscribe(
+          responseData => {
+            this.blockedUser = responseData;
+            this.postsDbService.blockAccount(this.blockedUser);
+          }
+        )
+      
     }
     
   }

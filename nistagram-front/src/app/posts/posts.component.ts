@@ -38,6 +38,7 @@ export class PostsComponent implements OnInit {
   imageObject: Array<object> = [];
   myUsername;
   loadedAds: Advertisement[];
+  loadedAdStory: Advertisement[];
   constructor(private http: HttpClient, private postsService: PostsService, private postsDbService: PostsDbService, private campaignService: CampaignService) { }
 
   ngOnInit(): void {
@@ -46,11 +47,30 @@ export class PostsComponent implements OnInit {
           responseData => {
             this.myUsername = responseData;
             console.log(this.myUsername)
-            this.campaignService.getAds(this.myUsername)
+            this.campaignService.getAds(this.myUsername,0)
             .subscribe(
             
               (loadedAds: Advertisement[]) => {
                 this.loadedAds = loadedAds;
+                console.log(this.loadedAds);
+                }
+            );
+            this.campaignService.getAds(this.myUsername,1)
+            .subscribe(
+            
+              (loadedAds: Advertisement[]) => {
+                this.loadedAdStory = loadedAds;
+                console.log(this.loadedAds);
+                this.loadedAdStory.forEach(element => {
+                  element.imageUrls.forEach(image => {
+                    var nesto = image.substring(7, image.length);
+                    console.log(nesto);
+                    var start = "assets"
+              
+                    
+                    this.imageObject.push({image: start.concat(nesto), thumbImage: start.concat(nesto), title: element.link})
+                  })
+                });
                 }
             );
           }
@@ -69,6 +89,7 @@ export class PostsComponent implements OnInit {
 
     
     //this.loadedPosts = this.postsService.getNewsfeed();
+    
 
     this.subscriptionStory = this.postsService.storiesChanged
         .subscribe(

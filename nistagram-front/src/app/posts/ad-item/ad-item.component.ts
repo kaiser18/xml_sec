@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Advertisement } from 'src/app/model/advertisement';
+import { UserService } from 'src/app/services/user.service';
 import { AddToFavouritesDialogComponent } from '../post-item/add-to-favourites-dialog/add-to-favourites-dialog.component';
 import { ReportDialogComponent } from '../post-item/report-dialog/report-dialog.component';
 import { PostsDbService } from '../posts-db.service';
@@ -26,8 +27,9 @@ export class AdItemComponent implements OnInit {
   loggedUser = false;
   isAdmin = false;
   action;
+  blockedUser;
   constructor(public dialog: MatDialog, private postsDbService: PostsDbService, private router: Router,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute, private userService: UserService) { }
 
   ngOnInit(): void {
     if(localStorage.getItem("access_token")!=null){
@@ -147,7 +149,14 @@ export class AdItemComponent implements OnInit {
       this.postsDbService.removePublication(this.post.id);
     }
     if(this.action === "3"){
-      this.postsDbService.blockAccount(this.post.username);
+      this.userService.getIdFromUsername(this.post.username)
+        .subscribe(
+          responseData => {
+            this.blockedUser = responseData;
+            this.postsDbService.blockAccount(this.blockedUser);
+          }
+        )
+      
     }
     
   }

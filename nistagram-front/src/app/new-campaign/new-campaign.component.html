@@ -1,5 +1,5 @@
 <div class="container">
-    <form [formGroup]="campaignForm" (ngSubmit)="createCampaign()" *ngIf="dataLoaded">
+    <form [formGroup]="campaignForm" (ngSubmit)="createCampaign()" *ngIf="loadForm">
         <mat-form-field class="field">
             <input matInput name="start" placeholder="Start" formControlName="start" type="date"/>
         </mat-form-field>

@@ -71,9 +71,9 @@ export class CampaignService {
 
 }
 
-getAds(username: string){
+getAds(username: string, type: number){
     console.log(username);
-    return this.http.get<Advertisement[]>(`http://localhost:9011/advertisementsForUser/${username}/0`, {
+    return this.http.get<Advertisement[]>(`http://localhost:9011/advertisementsForUser/${username}/${type}`, {
       headers: new HttpHeaders()
         .set('Authorization', "Bearer " + localStorage.getItem('access_token'))
     })
@@ -102,5 +102,14 @@ getCampaignById(campaignId: number){
     })
 
 }
+
+deleteCampaign(id: number){
+  return this.http.delete(`http://localhost:9011/campaign/${id}`,
+    {
+      headers: new HttpHeaders()
+.set('Authorization', "Bearer " + localStorage.getItem('access_token'))
+    })
+}
+
 
 }

@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { FileUploadService } from './file-upload/file-upload.service';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
+import { UserService } from '../services/user.service';
 
 export interface Hashtag {
   name: string;
@@ -30,7 +31,7 @@ export interface Image {
 })
 export class NewPostComponent implements OnInit {
 
-  constructor(private newPostService: NewPostService, public dialog: MatDialog, private router: Router, private fileUploadService: FileUploadService) { }
+  constructor(private userService: UserService, private newPostService: NewPostService, public dialog: MatDialog, private router: Router, private fileUploadService: FileUploadService) { }
   postForm: FormGroup;
 
   selectedFiles: FileList;
@@ -124,6 +125,7 @@ export class NewPostComponent implements OnInit {
   }
   
   ngOnInit(){
+   
     this.fileInfos = this.fileUploadService.getFiles(); 
     this.newPostService.getLocations()
       .subscribe(

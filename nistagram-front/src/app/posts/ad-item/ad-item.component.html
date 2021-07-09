@@ -1,4 +1,4 @@
-<p>ad-item works!</p>
+
 <style>
     .example-form {
   min-width: 150px;
@@ -48,6 +48,8 @@
         <span style="font-size: medium; margin-left: 1%;">{{post.description}}</span>
         <br>
         <span style="margin-left: 1%;" *ngFor="let hashtag of post.hashtags">#{{hashtag}}</span>&nbsp;
+        <br>
+        <span style="margin-left: 1%;">Visit: <a>{{post.link}}</a></span>
     </mat-card-actions>       
     <a (click)="viewPost()" *ngIf="!isAdmin">View comments</a>
     <mat-card-footer style="margin: 0px;" *ngIf="!isAdmin">
