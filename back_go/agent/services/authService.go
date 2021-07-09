@@ -26,15 +26,15 @@ func (service *AuthService) Register(dto dto.RegisterDTO) error {
 	}
 
 	user := interfaces.User{Email: dto.Email, Password: pass,Address: dto.Address, ValidationUid: uuid.NewString(),
-		Roles: []interfaces.Role{*role}, IsValidated: false, ValidationExpire: time.Now().Add(1 * time.Hour), APIToken: helpers.EncryptedString{Data:"TNSA0ekeN6Vom5d1ytZUN5V8LSQGjgP6"}}
+		Roles: []interfaces.Role{*role}, IsValidated: true, ValidationExpire: time.Now().Add(1 * time.Hour), APIToken: helpers.EncryptedString{Data:"TNSA0ekeN6Vom5d1ytZUN5V8LSQGjgP6"}}
 	err = service.AuthRepository.CreateUser(&user)
 	if err != nil {
 		return err
 	}
-	agentHost, agentPort := helpers.GetAgentHostAndPort()
-	message := "Visit this link to validate your account(expires in 1 hour): " + helpers.GetAgentProtocol() +
-		"://" + agentHost + ":" + agentPort + "/validate/" + helpers.Uint2String(user.ID) + "/" + user.ValidationUid //+ "/" + uid
-	go helpers.SendMail(dto.Email, "Account Validation", message)
+	// agentHost, agentPort := helpers.GetAgentHostAndPort()
+	// message := "Visit this link to validate your account(expires in 1 hour): " + helpers.GetAgentProtocol() +
+	// 	"://" + agentHost + ":" + agentPort + "/validate/" + helpers.Uint2String(user.ID) + "/" + user.ValidationUid //+ "/" + uid
+	// go helpers.SendMail(dto.Email, "Account Validation", message)
 	return nil
 }
 
