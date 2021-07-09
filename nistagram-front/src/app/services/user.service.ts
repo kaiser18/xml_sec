@@ -64,4 +64,12 @@ export class UserService {
     }
     )
   }
+
+  getIdFromUsername(username: string){
+    return this.http.get<[]>(`http://localhost:8081/auth/getIdFromUsername/${username}`)
+  }
+
+  followProfile(username: string){
+    return this.http.post<[]>(`http://localhost:23002/user/follow/${username}`,{})
+  }
 }

@@ -20,8 +20,8 @@
         <mat-grid-tile>
             <figure class="mat-figure nesto">
                 <h2>{{username}}</h2> &nbsp;
-                <button mat-flat-button color="primary" id="followButton">Follow</button>
-                <button mat-flat-button color="primary" id="followingButton">Following</button>
+                <button mat-flat-button color="primary" id="followButton" (click)="followProfile()">Follow</button>
+                <button mat-flat-button color="primary" id="unfollowButton">Unfollow</button>
                 <br><div id="3dots" class="dotButton"><button class="btn btn-outline-primary" (click)="open('autofocus')"><div class="dots">...</div></button></div>
                 <br>
             </figure>

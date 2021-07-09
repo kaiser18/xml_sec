@@ -77,7 +77,12 @@ export class PostsComponent implements OnInit {
             console.log('nestoo')
             this.loadedStories.forEach(element => {
               element.imageUrls.forEach(image => {
-                this.imageObject.push({image:image, thumbImage: image, title: element.username})
+                var nesto = image.substring(7, image.length);
+                console.log(nesto);
+                var start = "assets"
+          
+                
+                this.imageObject.push({image: start.concat(nesto), thumbImage: start.concat(nesto), title: element.username})
               })
             });
             console.log(this.loadedPosts);

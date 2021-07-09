@@ -71,21 +71,7 @@ export class SearchService {
 
   getProfiles(username: string){
     console.log('hellllllo')
-      return this.http.get<User[]>(`http://localhost:9090/api/searchProfiles/${username}`)
-    .pipe(
-      map(users => {
-          console.log(users);
-        users = {...users["users"]};
-          console.log(users);
-          const postsArray: User[] = [];
-          for(const key in users){
-              if (users.hasOwnProperty(key)) {
-                  postsArray.push({ ...users[key]});
-              }
-          }
-        return postsArray;
-      })
-    )
+      return this.http.get<[]>(`http://localhost:23002/users/${username}`)
     
   }
 }

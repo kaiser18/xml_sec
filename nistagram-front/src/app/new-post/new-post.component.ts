@@ -181,7 +181,7 @@ export class NewPostComponent implements OnInit {
       
     }else{
       const newStory = {username: 'username', location_id: this.postForm.value['location'], description: this.postForm.value['description'], imageUrls: this.imageNames,
-      hashtags: this.hashtagNames, tags: this.tagNames, is_highlight: true, only_close_friends: this.postForm.value['isCloseFriends']}
+      hashtags: this.hashtagNames, tags: this.tagNames, isHighlight: this.postForm.value['isHighlights'], onlyCloseFriends: this.postForm.value['isCloseFriends']}
 
       this.newPostService.newStory(newStory)
       this.router.navigate(['/']);
