@@ -60,6 +60,8 @@ import { NewCampaignComponent } from './new-campaign/new-campaign.component';
 import { AddPostToCampaignDialogComponent } from './posts/post-page/add-post-to-campaign-dialog/add-post-to-campaign-dialog.component';
 import { AdItemComponent } from './posts/ad-item/ad-item.component';
 import { EditCampaignComponent } from './edit-campaign/edit-campaign.component';
+import { AgentRequestComponent } from './agent-request/agent-request.component';
+import { ReportRequestsComponent } from './report-requests/report-requests.component';
 
 @NgModule({
   declarations: [
@@ -97,7 +99,9 @@ import { EditCampaignComponent } from './edit-campaign/edit-campaign.component';
     NewCampaignComponent,
     AddPostToCampaignDialogComponent,
     AdItemComponent,
-    EditCampaignComponent
+    EditCampaignComponent,
+    AgentRequestComponent,
+    ReportRequestsComponent
   ],
   imports: [
     BrowserModule,
