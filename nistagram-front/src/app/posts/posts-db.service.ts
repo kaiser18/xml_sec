@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Subject, throwError } from "rxjs";
 import { catchError, map, tap } from "rxjs/operators";
+import { ReportRequest } from "../model/report-request";
 import { Post } from "./post.model";
 import { PostsService } from "./posts.service";
 import { Report } from "./report.model";
@@ -385,6 +386,29 @@ reportPost(id: number, type: string){
   getUserId(token: string){
   return this.http.get(`http://localhost:8081/auth/getUserIdByToken/${token}`, {responseType: 'text'})
 
+  }
+
+  getMyReports(){
+    return this.http.get<ReportRequest[]>(`http://localhost:9008/reportForUser`,
+    {
+      headers: new HttpHeaders()
+    .set('Authorization', "Bearer " + localStorage.getItem('access_token'))
+    })
+    .pipe(
+      map(reports => {
+          console.log(reports);
+          reports = {...reports["reports"]};
+          const reportsArray: ReportRequest[] = [];
+          for(const key in reports){
+              if (reports.hasOwnProperty(key)) {
+                reportsArray.push({ ...reports[key]});
+              }
+          }
+          console.log('helena')
+          console.log(reportsArray)
+        return reportsArray;
+      })
+    )
   }
 
 }

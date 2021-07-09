@@ -1,0 +1,7 @@
+<div class="container">
+    <div style="width: 80%; height: 100px; border-radius: 10px; background-color: red; margin-top: 20px;" *ngFor="let rep of reports; let i = index" [post]="post" [i] = "i">
+        {{rep.publicationId}}<br>
+        {{rep.publicationType}}<br>
+        {{rep.status}}<br>
+    </div>
+</div>

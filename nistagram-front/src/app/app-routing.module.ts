@@ -25,7 +25,12 @@ import { PrivacyComponent } from './accounts/privacy/privacy.component';
 import { ReportsComponent } from './reports/reports.component';
 import { NewCampaignComponent } from './new-campaign/new-campaign.component';
 import { EditCampaignComponent } from './edit-campaign/edit-campaign.component';
+<<<<<<< HEAD
 import { EditCampaignItemComponent } from './edit-campaign-item/edit-campaign-item.component';
+=======
+import { AgentRequestComponent } from './agent-request/agent-request.component';
+import { ReportRequestsComponent } from './report-requests/report-requests.component';
+>>>>>>> f650b074fc2b2eff4d551ade6cf60fe6846c8c69
 
 const routes: Routes = [
     {
@@ -131,8 +136,17 @@ const routes: Routes = [
       component: EditCampaignComponent
     },
     {
+<<<<<<< HEAD
       path: 'edit-campaign-item/:id',
       component: EditCampaignItemComponent
+=======
+      path: 'agent-request',
+      component: AgentRequestComponent
+    },
+    {
+      path: 'report-requests',
+      component: ReportRequestsComponent
+>>>>>>> f650b074fc2b2eff4d551ade6cf60fe6846c8c69
     }
 ];
 
