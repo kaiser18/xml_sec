@@ -4,6 +4,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UserPrivacySettings } from '../../model/userProfileSettings';
 import { UserService } from '../../services/user.service';
 import { PostsDbService } from '../../posts/posts-db.service';
+import { AgentRequestService } from 'src/app/agent-request/agent-request.service';
 
 
 @Component({
@@ -24,7 +25,7 @@ export class PrivacyComponent implements OnInit {
     tagging: boolean;
 
 
-  constructor(private service : UserService, private postsDbService: PostsDbService) { }
+  constructor(private service : UserService, private postsDbService: PostsDbService, private agentService: AgentRequestService) { }
 
   ngOnInit(): void {
 
@@ -128,6 +129,10 @@ export class PrivacyComponent implements OnInit {
     }
 
     return "yes";
+  }
+
+  agentRequest() {
+    this.agentService.createAgentRequest(null)
   }
 
 }
