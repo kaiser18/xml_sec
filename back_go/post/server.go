@@ -2,20 +2,25 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
+	"strconv"
 	"strings"
+	"time"
 
 	//"log"
 	"net/http"
 	"post/poststore"
+	"post/saga"
 
 	"github.com/nikolablesic/proto/helloworld"
 	"github.com/nikolablesic/proto/search"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 
+	"github.com/go-redis/redis"
 	tracer "github.com/milossimic/grpc_rest/tracer"
 	otgo "github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/ext"
@@ -51,6 +56,79 @@ func tracingWrapper(h http.Handler) http.Handler {
 			"service":  "post",
 		}).Info("request details")
 	})
+}
+
+func (os *server) RedisConnection() {
+	// create client and ping redis
+	var err error
+	fmt.Println("Krecem redis")
+	client := redis.NewClient(&redis.Options{Addr: "redis:6379", Password: "", DB: 0})
+	fmt.Println("Port prosao")
+	if _, err = client.Ping().Result(); err != nil {
+		fmt.Println("error creating redis client %s", err)
+	}
+
+	// subscribe to the required channels
+	pubsub := client.Subscribe(saga.PostChannel, saga.ReplyChannel)
+	if _, err = pubsub.Receive(); err != nil {
+		fmt.Println("error subscribing %s", err)
+	}
+	defer func() { _ = pubsub.Close() }()
+	ch := pubsub.Channel()
+
+	fmt.Println("starting the post service")
+	for {
+		select {
+		case msg := <-ch:
+			m := saga.Message{}
+			err := json.Unmarshal([]byte(msg.Payload), &m)
+			if err != nil {
+				fmt.Println(err)
+				continue
+			}
+			fmt.Println("***")
+			fmt.Println("kanal " + msg.Channel)
+			fmt.Println("reportId " + strconv.Itoa(m.ReportId))
+			fmt.Println("publicationId " + strconv.Itoa(m.PublicationId))
+			fmt.Println("publicationType " + m.PublicationType)
+			fmt.Println("***")
+
+			switch msg.Channel {
+			case saga.PostChannel:
+
+				// Happy Flow
+				if m.Action == saga.ActionStart {
+					// Check quantity of products
+					//p := m.Products
+					m.Ok = os.store.PublicationExists(m.PublicationId, m.PublicationType)
+					fmt.Printf("Current Unix Time: %v\n", time.Now().Unix())
+					time.Sleep(20 * time.Second)
+					fmt.Printf("Current Unix Time: %v\n", time.Now().Unix())
+					//provera da li je postoji objava
+					sendToReplyChannel(client, &m, saga.ActionDone, saga.ServiceAdmin, saga.ServicePost)
+					// Simulate rollback from stock-service
+					// sendToReplyChannel(client, &m, saga.ActionError, saga.ServiceOrder, saga.ServiceStock)
+				}
+
+				// Rollback flow
+				if m.Action == saga.ActionRollback {
+					// nema sta
+				}
+
+			}
+		}
+	}
+}
+
+func sendToReplyChannel(client *redis.Client, m *saga.Message, action string, service string, senderService string) {
+	var err error
+	m.Action = action
+	m.Service = service
+	m.SenderService = senderService
+	if err = client.Publish(saga.ReplyChannel, m).Err(); err != nil {
+		log.Printf("error publishing done-message to %s channel", saga.ReplyChannel)
+	}
+	log.Printf("done message published to channel :%s", saga.ReplyChannel)
 }
 
 type server struct {

@@ -31,8 +31,71 @@ func New() (*AdminStore, error) {
 		return nil, err
 	}
 	ts.db = db
-	ts.db.AutoMigrate(&ReportRequest{})
+	ts.db.AutoMigrate(&ReportRequest{}, &AgentRequest{}, &VerificationRequest{})
 	return ts, nil
+}
+
+func (ts *AdminStore) CreateAgentRequest(ctx context.Context, username string) (int, error) {
+	span := tracer.StartSpanFromContext(ctx, "CreateAgentRequest")
+	defer span.Finish()
+
+	agentReq := AgentRequest{
+		Username: username,
+		Status:   "CREATED",
+	}
+
+	ts.db.Create(&agentReq)
+
+	return agentReq.ID, nil
+}
+
+func (ts *AdminStore) DeleteAgentRequest(ctx context.Context, id int) error {
+	span := tracer.StartSpanFromContext(ctx, "DeleteAgentRequest")
+	defer span.Finish()
+
+	var request AgentRequest
+	res := ts.db.FirstOrCreate(&request, AgentRequest{ID: id})
+	if res.Error != nil {
+		log.Error(res.Error)
+		return res.Error
+	}
+	ts.db.Exec("DELETE FROM agent_requests WHERE id = ?", id)
+	return nil
+}
+
+func (ts *AdminStore) ApproveAgentRequest(ctx context.Context, id int) error {
+	span := tracer.StartSpanFromContext(ctx, "ApproveAgentRequest")
+	defer span.Finish()
+
+	var request AgentRequest
+	ts.db.Find(&request, id)
+	request.Status = "APPROVED"
+	ts.db.Save(&request)
+	return nil
+}
+
+func (ts *AdminStore) GetAgentRequests(ctx context.Context) ([]AgentRequest, error) {
+	span := tracer.StartSpanFromContext(ctx, "GetAgentRequests")
+	defer span.Finish()
+
+	var requests []AgentRequest
+	ts.db.Find(&requests)
+
+	return requests, nil
+}
+
+func (ts *AdminStore) IsUserAgent(ctx context.Context, username string) bool {
+	span := tracer.StartSpanFromContext(ctx, "IsUserAgent")
+	defer span.Finish()
+
+	var request AgentRequest
+	result := ts.db.Where("username = ?", username).Find(&request)
+
+	if result.RowsAffected > 0 && request.Status == "APPROVED" {
+		return true
+	}
+
+	return false
 }
 
 func (ts *AdminStore) CreateReport(ctx context.Context, publicationId int, reporter string, postType string) (int, error) {
@@ -43,6 +106,7 @@ func (ts *AdminStore) CreateReport(ctx context.Context, publicationId int, repor
 		PublicationID:    publicationId,
 		ReporterUsername: reporter,
 		Type:             postType,
+		Status:           "CREATED",
 	}
 
 	ts.db.Create(&reportReq)
@@ -70,6 +134,16 @@ func (ts *AdminStore) GetReports(ctx context.Context) ([]ReportRequest, error) {
 
 	var reports []ReportRequest
 	ts.db.Find(&reports)
+
+	return reports, nil
+}
+
+func (ts *AdminStore) GetReportsForUser(ctx context.Context, username string) ([]ReportRequest, error) {
+	span := tracer.StartSpanFromContext(ctx, "GetReportsForUser")
+	defer span.Finish()
+
+	var reports []ReportRequest
+	ts.db.Where("reporter_username = ?", username).Find(&reports)
 
 	return reports, nil
 }
@@ -137,6 +211,17 @@ func (ts *AdminStore) UpdateVerificationRequestStatus(ctx context.Context, id in
 	return nil
 }
 
+func (ts *AdminStore) UpdateReportRequestStatus(id int, status string) error {
+	var request ReportRequest
+	ts.db.Find(&request, id)
+
+	request.Status = status
+
+	ts.db.Save(&request)
+
+	return nil
+
+}
 func (ts *AdminStore) Close() error {
 	db, err := ts.db.DB()
 	if err != nil {

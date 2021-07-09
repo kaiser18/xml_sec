@@ -13,6 +13,12 @@ services:
         environment:
           - POSTGRES_PASSWORD=postgres
           - POSTGRES_USER=postgres
+    redis:
+        image: redis
+        ports:
+          - "6379:6379"
+        networks:
+          - backend
     user_service:
         build: ./back_go/user_service
         restart: always
@@ -122,6 +128,26 @@ services:
           - backend
         depends_on:
           - db
+    agent007:
+        build: ./back_go/agent
+        restart: always
+        environment:
+          - DBHOST=db
+          - USER=postgres
+          - PASSWORD=postgres
+          - DBNAME=agent007
+          - DBPORT=5432
+          - DB_SEC_ENC=Cr6BRANpxaVobBSUkVHQ3N04YiORWRoN
+        volumes:
+          - "./nistagram-front/src/assets:/root/upload"
+        expose:
+          - 23007
+        ports:
+          - "23007:23007"
+        networks:
+          - backend
+        depends_on:
+          - db
     search-service:
         image: search:compose_build
         build:
@@ -156,7 +182,8 @@ services:
           context: ./back_go/media
           dockerfile: Dockerfile
         volumes:
-          - "/Users/helen/Desktop/proj/xml_sec/nistagram-front/src/assets:/go/app/uploads"
+          #- "/Users/helen/Desktop/proj/xml_sec/nistagram-front/src/assets:/go/app/uploads"
+          - "./nistagram-front/src/assets:/go/app/uploads"
         restart: always
         environment:
           - PORT=9099

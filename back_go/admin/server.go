@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -9,6 +10,7 @@ import (
 
 	//"log"
 	"admin/adminstore"
+	"admin/saga"
 	"net/http"
 
 	"github.com/nikolablesic/proto/admin"
@@ -16,6 +18,7 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 
+	"github.com/go-redis/redis"
 	tracer "github.com/milossimic/grpc_rest/tracer"
 	otgo "github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/ext"
@@ -53,7 +56,78 @@ func tracingWrapper(h http.Handler) http.Handler {
 	})
 }
 
+func (oss *server) RedisConnection() {
+	// create client and ping redis
+	var err error
+	client := redis.NewClient(&redis.Options{Addr: "redis:6379", Password: "", DB: 0})
+	if _, err = client.Ping().Result(); err != nil {
+		log.Fatalf("error creating redis client %s", err)
+	}
+
+	// subscribe to the required channels
+	pubsub := client.Subscribe(saga.AdminChannel, saga.ReplyChannel)
+	if _, err = pubsub.Receive(); err != nil {
+		log.Fatalf("error subscribing %s", err)
+	}
+	defer func() { _ = pubsub.Close() }()
+	ch := pubsub.Channel()
+
+	log.Println("starting the order service")
+	for {
+		select {
+		case msg := <-ch:
+			m := saga.Message{}
+			err := json.Unmarshal([]byte(msg.Payload), &m)
+			if err != nil {
+				log.Println(err)
+				continue
+			}
+
+			switch msg.Channel {
+			case saga.AdminChannel:
+
+				// Happy Flow
+				if m.Action == saga.ActionStart {
+
+					reportId := m.ReportId
+
+					if m.SenderService == saga.ServicePost {
+						if m.Ok {
+							oss.store.UpdateReportRequestStatus(reportId, "SUCCESS")
+							sendToReplyChannel(client, &m, saga.ActionDone, saga.ServicePost, saga.ServiceAdmin)
+						} else {
+							oss.store.UpdateReportRequestStatus(reportId, "REJECTED")
+						}
+
+					} else {
+						oss.store.UpdateReportRequestStatus(reportId, "FINISHED")
+					}
+
+				}
+
+				// Rollback flow
+				if m.Action == saga.ActionRollback {
+					oss.store.UpdateReportRequestStatus(m.ReportId, "ERROR")
+				}
+
+			}
+		}
+	}
+}
+
+func sendToReplyChannel(client *redis.Client, m *saga.Message, action string, service string, senderService string) {
+	var err error
+	m.Action = action
+	m.Service = service
+	m.SenderService = senderService
+	if err = client.Publish(saga.ReplyChannel, m).Err(); err != nil {
+		log.Printf("error publishing done-message to %s channel", saga.ReplyChannel)
+	}
+	log.Printf("done message published to channel :%s", saga.ReplyChannel)
+}
+
 type server struct {
+	orchestrator *saga.Orchestrator
 	admin.UnimplementedAdminServer
 	postClient helloworld.GreeterClient
 	store      *adminstore.AdminStore
@@ -73,10 +147,11 @@ func NewServer(postClient helloworld.GreeterClient) (*server, error) {
 	tracer, closer := tracer.Init(name)
 	otgo.SetGlobalTracer(tracer)
 	return &server{
-		store:      store,
-		tracer:     tracer,
-		closer:     closer,
-		postClient: postClient,
+		orchestrator: saga.NewOrchestrator(),
+		store:        store,
+		tracer:       tracer,
+		closer:       closer,
+		postClient:   postClient,
 	}, nil
 }
 
@@ -90,6 +165,60 @@ func (s *server) GetCloser() io.Closer {
 	return s.closer
 }
 
+func (s *server) CreateAgentRequest(ctx context.Context, in *admin.AgentReq) (*admin.Identifier, error) {
+	username := GetUsernameOfLoggedUser(ctx)
+	if len(username) <= 0 {
+		return &admin.Identifier{}, status.Error(401, "401 Unauthorized")
+	}
+	id, err := s.store.CreateAgentRequest(ctx, username)
+	if err != nil {
+		log.Error(err)
+	}
+	return &admin.Identifier{
+		Id: int32(id),
+	}, err
+}
+
+func (s *server) DeleteAgentRequest(ctx context.Context, in *admin.Identifier) (*admin.Empty, error) {
+	return &admin.Empty{}, s.store.DeleteAgentRequest(ctx, int(in.Id))
+}
+
+func (s *server) ApproveAgentRequest(ctx context.Context, in *admin.Identifier) (*admin.Empty, error) {
+	return &admin.Empty{}, s.store.ApproveAgentRequest(ctx, int(in.Id))
+}
+
+func (s *server) GetAgentRequests(ctx context.Context, in *admin.Empty) (*admin.Agents, error) {
+	requests, err := s.store.GetAgentRequests(ctx)
+	if err != nil {
+		log.Error(err)
+		return &admin.Agents{}, err
+	}
+
+	ret := []*admin.AgentResponse{}
+
+	for _, request := range requests {
+		ret = append(ret, &admin.AgentResponse{
+			Id:       int32(request.ID),
+			Username: request.Username,
+			Status:   request.Status,
+		})
+	}
+
+	return &admin.Agents{
+		Agents: ret,
+	}, nil
+}
+
+func (s *server) IsUserAgent(ctx context.Context, in *admin.AgentRequest) (*admin.BooleanResponse, error) {
+	username := GetUsernameOfLoggedUser(ctx)
+	if len(username) <= 0 {
+		return &admin.BooleanResponse{}, status.Error(401, "401 Unauthorized")
+	}
+	return &admin.BooleanResponse{
+		Response: s.store.IsUserAgent(ctx, username),
+	}, nil
+}
+
 func (s *server) ReportRequest(ctx context.Context, in *admin.CreateReportRequest) (*admin.Identifier, error) {
 	username := GetUsernameOfLoggedUser(ctx)
 	if len(username) <= 0 {
@@ -99,6 +228,8 @@ func (s *server) ReportRequest(ctx context.Context, in *admin.CreateReportReques
 	if err != nil {
 		log.Error(err)
 	}
+	m := saga.Message{Service: saga.ServicePost, SenderService: saga.ServiceAdmin, Action: saga.ActionStart, ReportId: id, PublicationId: int(in.Request.Id), PublicationType: in.Request.Type}
+	s.orchestrator.Next(saga.PostChannel, saga.ServicePost, m)
 	return &admin.Identifier{
 		Id: int32(id),
 	}, err
@@ -169,6 +300,33 @@ func (s *server) GetReportsRequest(ctx context.Context, in *admin.Empty) (*admin
 	}, nil
 }
 
+func (s *server) GetReportsForUserRequest(ctx context.Context, in *admin.Empty) (*admin.ReportResponses, error) {
+	username := GetUsernameOfLoggedUser(ctx)
+	if len(username) <= 0 {
+		return &admin.ReportResponses{}, status.Error(401, "401 Unauthorized")
+	}
+	reports, err := s.store.GetReportsForUser(ctx, username)
+	if err != nil {
+		log.Error(err)
+		return &admin.ReportResponses{}, err
+	}
+
+	ret := []*admin.ReportResponse{}
+
+	for _, report := range reports {
+		ret = append(ret, &admin.ReportResponse{
+			Id:              int32(report.ID),
+			PublicationId:   int32(report.PublicationID),
+			PublicationType: report.Type,
+			Status:          report.Status,
+		})
+	}
+
+	return &admin.ReportResponses{
+		Reports: ret,
+	}, nil
+}
+
 func (s *server) BlockAccountRequest(ctx context.Context, in *admin.BlockAccountReq) (*admin.Empty, error) {
 	return &admin.Empty{}, nil
 }
@@ -178,13 +336,14 @@ func CreateReportForPost(report adminstore.ReportRequest, post *helloworld.Post)
 		Id:               report.ID,
 		ReporterUsername: report.ReporterUsername,
 		Username:         post.Username,
-		UserProfilePic:   "XXX",
+		UserProfilePic:   GetUserProfilePic(post.Username),
 		LocationName:     post.LocationName,
 		Description:      post.Description,
 		Hashtags:         post.Hashtags,
 		Tags:             post.Tags,
 		ImageUrls:        post.ImageUrls,
 		Type:             report.Type,
+		Status:           report.Status,
 	}
 }
 
@@ -193,13 +352,14 @@ func CreateReportForStory(report adminstore.ReportRequest, post *helloworld.Stor
 		Id:               report.ID,
 		ReporterUsername: report.ReporterUsername,
 		Username:         post.Username,
-		UserProfilePic:   "XXX",
+		UserProfilePic:   GetUserProfilePic(post.Username),
 		LocationName:     post.LocationName,
 		Description:      post.Description,
 		Hashtags:         post.Hashtags,
 		Tags:             post.Tags,
 		ImageUrls:        post.ImageUrls,
 		Type:             report.Type,
+		Status:           report.Status,
 	}
 }
 
@@ -215,7 +375,23 @@ func reportToProto(report Report) *admin.ReportResp {
 		Tags:             report.Tags,
 		ImageUrls:        report.ImageUrls,
 		Type:             report.Type,
+		Status:           report.Status,
 	}
+}
+
+func GetUserProfilePic(username string) string {
+	resp, err := http.Get("http://user_service:23002/userProfilePic/" + username)
+	if err != nil {
+		fmt.Println(err)
+		return ""
+	}
+	defer resp.Body.Close()
+	b, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println(err)
+		return ""
+	}
+	return string(b)
 }
 
 func GetUsernameOfLoggedUser(ctx context.Context) string {
