@@ -1,4 +1,4 @@
-<br><br>
+<br><br><br><br>
 <div class="container">
     <mat-card>
         <form [formGroup]="createProductForm" (ngSubmit)="onSubmit()">
@@ -17,7 +17,7 @@
                 <div class="inputField">
                     <mat-form-field appearance="fill" id="quantity-ff">
                         <mat-label>Quantity</mat-label>
-                        <input matInput id="quantity" placeholder="quantity" name="quantity-ff"
+                        <input matInput id="quantity" type="number" placeholder="quantity" name="quantity-ff"
                             formControlName="quantity" class="civca">
                         <mat-error
                             *ngIf="!createProductForm.get('quantity').valid && createProductForm.get('quantity').touched && createProductForm.get('quantity').errors['required']">
@@ -28,12 +28,16 @@
                 <div class="inputField">
                     <mat-form-field appearance="fill" id="price-ff">
                         <mat-label>Price</mat-label>
-                        <input matInput id="price" placeholder="price" name="price-ff"
+                        <input matInput id="price" type="number" placeholder="price" name="price-ff"
                             formControlName="price" class="civca">
                         <mat-error
                             *ngIf="!createProductForm.get('price').valid && createProductForm.get('price').touched && createProductForm.get('price').errors['required']">
                             Please enter price</mat-error>
                     </mat-form-field>
+                </div>
+
+                <div class="inputField">
+                        <input id="img" type="file" name="img" (change)="upload($event)" class="civca">
                 </div>
 
                 <br/><br/>

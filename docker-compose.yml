@@ -139,7 +139,7 @@ services:
           - DBPORT=5432
           - DB_SEC_ENC=Cr6BRANpxaVobBSUkVHQ3N04YiORWRoN
         volumes:
-          - "./nistagram-front/src/assets:/root/upload"
+          - "./agent-front/src/assets:/root/upload"
         expose:
           - 23007
         ports:

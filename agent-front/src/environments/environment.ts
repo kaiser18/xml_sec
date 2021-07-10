@@ -7,9 +7,8 @@ export const environment = {
   baseUrl: 'http://localhost:23007',
   register: 'register',
   login: 'login',
-  createProduct: 'product',
-  editProduct: 'product',
-  
+  product: 'product',
+  order: 'order'
 };
 
 /*

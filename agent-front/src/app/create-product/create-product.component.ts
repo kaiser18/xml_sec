@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { of } from 'rxjs/internal/observable/of';
 import { Product } from '../model/product';
 import { ProductService } from '../service/product.service';
 
@@ -17,25 +18,41 @@ export class CreateProductComponent implements OnInit {
 
   product: Product;
 
-  constructor(private service: ProductService) { }
+  constructor(public fb: FormBuilder, private service: ProductService) {}
 
   ngOnInit(): void {
     this.createProductForm = new FormGroup({
       'name': new FormControl('', [Validators.required]),
       'quantity': new FormControl(0, [Validators.required, Validators.min(0)]),
-      'price': new FormControl(0, [Validators.required, Validators.min(0)])
+      'price': new FormControl(0, [Validators.required, Validators.min(0)]),
+      'img': new FormControl('')
     })
   }
 
   onSubmit() {
-    this.service.createProduct(this.createProduct()).subscribe(
+    var formData: any = new FormData();
+    console.log(JSON.stringify(this.createProduct()));
+    formData.append("data", JSON.stringify(this.createProduct()));
+    formData.append("file", this.createProductForm.get('img').value)
+
+    this.service.createProduct(formData).subscribe(
       res => {this.createProductForm.reset();
-      alert("succes")
+      alert("success")
       },
       error => {
         alert("Could not create product.");
       }
     );
+  }
+
+  upload(event) {
+    console.log("ulaz")
+    if (event.target.files.length > 0) {
+      console.log("puc puc")
+      const file = event.target.files[0];
+      console.log('file', file)
+      this.createProductForm.controls['img'].setValue(file);
+    }
   }
 
   createProduct() : Product {

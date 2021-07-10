@@ -1,13 +1,13 @@
 export class UpdateProduct {
-    private id: number;
-    private name: string;
-    private quantity: number;
-    private price: number;
+    public id: number;
+    public name: string;
+    public quantity: number;
+    public pricePerItem: number;
 
     constructor(id: number, name: string, quantity: number, price: number) {
         this.id = id;
         this.name = name;
         this.quantity = quantity;
-        this.price = price;
+        this.pricePerItem = price;
     }
 }

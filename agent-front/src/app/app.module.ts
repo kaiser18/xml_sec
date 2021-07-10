@@ -16,6 +16,8 @@ import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { CreateProductComponent } from './create-product/create-product.component';
 import { EditProductComponent } from './edit-product/edit-product.component';
 import { AllProductsComponent } from './all-products/all-products.component';
+import { ShopComponent } from './shop/shop.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -25,6 +27,7 @@ import { AllProductsComponent } from './all-products/all-products.component';
     CreateProductComponent,
     EditProductComponent,
     AllProductsComponent,
+    ShopComponent,
   ],
   imports: [
     BrowserModule,
