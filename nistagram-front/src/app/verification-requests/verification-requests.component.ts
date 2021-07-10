@@ -18,6 +18,7 @@ export class VerificationRequestsComponent implements OnInit {
     this.loadAllRequests();
   }
 
+
   loadAllRequests() {
     this.adminService.getAllVerificationRequests().subscribe(data => {
       this.verificationRequests = data;

@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Campaign } from 'src/app/model/campaign';
 import { CampaignService } from 'src/app/services/campaign.service';
+import { UserService } from 'src/app/services/user.service';
 import { AddToFavouritesDialogComponent } from '../post-item/add-to-favourites-dialog/add-to-favourites-dialog.component';
 import { Post } from '../post.model';
 import { PostsDbService } from '../posts-db.service';
@@ -30,7 +31,8 @@ export class PostPageComponent implements OnInit {
   chosenCampaign: Campaign;
   myUsername;
   link;
-  constructor(private postDbService: PostsDbService, private route: ActivatedRoute, public dialog: MatDialog, private campaignService: CampaignService) { }
+  loadAd =false;
+  constructor(private postDbService: PostsDbService, private route: ActivatedRoute, public dialog: MatDialog, private campaignService: CampaignService, private userService: UserService) { }
 
   ngOnInit(): void {
     this.route.snapshot.params.id
@@ -47,6 +49,12 @@ export class PostPageComponent implements OnInit {
         .subscribe(
           responseData => {
             this.myUsername = responseData;
+            this.userService.isUserAgent(this.myUsername)
+              .subscribe(
+                responseData => {
+                  this.loadAd = responseData['response'];
+                }
+              )
             this.campaignService.getCampaignsByUser(this.myUsername)
             .subscribe( 
               responseData =>{

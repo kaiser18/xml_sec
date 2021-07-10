@@ -57,7 +57,7 @@ export class UserService {
   }
 
   getFollowing(username: string){
-    return this.http.get<[]>(`http://localhost:23002/followers/${username}`,
+    return this.http.get<[]>(`http://localhost:23002/findAllFollowings/${username}`,
     {
       headers: new HttpHeaders()
       .set('Authorization', "Bearer " + localStorage.getItem('access_token'))
@@ -71,5 +71,18 @@ export class UserService {
 
   followProfile(username: string){
     return this.http.post<[]>(`http://localhost:23002/user/follow/${username}`,{})
+  }
+
+  isUserBlocked(requester: string, username: string){
+    return this.http.get<boolean>(`http://localhost:23002/IsUserBlocked/${requester}/${username}`)
+  }
+
+  isUserAgent(username: string){
+    return this.http.get<boolean>(`http://localhost:9008/agents/${username}`,
+    {
+      headers: new HttpHeaders()
+      .set('Authorization', "Bearer " + localStorage.getItem('access_token'))
+    }
+    )
   }
 }

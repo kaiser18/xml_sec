@@ -147,7 +147,7 @@ func (s *server) GetAdvertisementsForUserRequest(ctx context.Context, in *campai
 	newList := append(cAds.Advertisements, infAds.Advertisements...)
 	ids := []int{}
 	for _, item := range newList {
-		ids = append(ids, int(item.Id))
+		ids = append(ids, int(item.CampaignId))
 	}
 	new := unique(ids)
 	s.store.SaveViews(new, in.Username)
@@ -281,7 +281,7 @@ func makeStringFromUsernames(usernames []store.Username) []string {
 }
 
 func makeCampaignFromProto(campaign *campaign.Campaign) *store.Campaign {
-	layout := "2006-01-02T15:04:05.000Z"
+	layout := "2006-01-02"
 	startTime, _ := time.Parse(layout, campaign.Start)
 	endTime, _ := time.Parse(layout, campaign.End)
 
@@ -355,7 +355,7 @@ func GetFollowList(username string) []string {
 		return GetPublicList()
 	}
 	var ret []string
-	resp, err := http.Get("http://user_service:23002/followers/" + username)
+	resp, err := http.Get("http://user_service:23002/following/" + username)
 	if err != nil {
 		fmt.Println(err)
 		return []string{}

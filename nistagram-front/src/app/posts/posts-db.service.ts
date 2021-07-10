@@ -360,15 +360,12 @@ reportPost(id: number, type: string){
   );
   }
 
-  blockAccount(username: string){
-    const block = "\"" + username + "\"";
-    return this.http.post<{}>(`http://localhost:9090/api/account`,
-    block,
+  blockAccount(id: number){
+    return this.http.get<{}>(`http://localhost:8081/auth/blockUser/${id}`,
     {
       observe: 'response',
       headers: new HttpHeaders()
         .set('Authorization', "Bearer " + localStorage.getItem('access_token'))
-        .set('Content-Type', 'text/plain; charset=utf-8')
     }
   )
   .subscribe(

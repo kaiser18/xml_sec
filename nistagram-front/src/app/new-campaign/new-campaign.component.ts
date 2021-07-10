@@ -8,6 +8,7 @@ import { Campaign } from '../model/campaign';
 import { Tag } from '../new-post/new-post.component';
 import { PostsDbService } from '../posts/posts-db.service';
 import { CampaignService } from '../services/campaign.service';
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-new-campaign',
@@ -30,8 +31,8 @@ export class NewCampaignComponent implements OnInit {
   campaignId;
   campaign: Campaign;
   dataLoaded = false;
-
-  constructor(private postDbService: PostsDbService, private campaignService: CampaignService, private route: ActivatedRoute, private router: Router) { }
+  loadForm = false;
+  constructor(private postDbService: PostsDbService, private campaignService: CampaignService, private route: ActivatedRoute, private router: Router, private userService: UserService) { }
 
   addTag(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
@@ -54,36 +55,31 @@ export class NewCampaignComponent implements OnInit {
   }
   
   ngOnInit(): void {
-
-    this.paramsSubscription = this.route.params
-    .subscribe(
-      (params: Params) => {
-        this.campaignId = params['id'];
-      });
+    
 
     this.postDbService.getUsername(localStorage.getItem("access_token"))
         .subscribe(
           responseData => {
             this.username = responseData;
+            this.userService.isUserAgent(this.username)
+              .subscribe(
+                responseData => {
+                  this.loadForm = responseData['response'];
+                  console.log(this.loadForm);
+                }
+                
+              )
           }
         );
 
-    this.campaignService.getCampaignById(this.campaignId)
-    .subscribe(
-      responseData => {
-        this.campaign = responseData;
-        this.dataLoaded = true;
-        let startDate = new Date(this.campaign.start)
-        let endDate = new Date(this.campaign.end)
         this.campaignForm = new FormGroup({
-          'start': new FormControl(this.formatDate(startDate),),
-          'end': new FormControl(this.formatDate(endDate)),
-          'number': new FormControl(this.campaign.showNumber,),
-          'targetAgeFrom': new FormControl(this.campaign.targetAgeFrom,),
-          'targetAgeTo': new FormControl(this.campaign.targetAgeTo,),
-        })
-      }
-    );
+          'start': new FormControl('',),
+          'end': new FormControl(''),
+          'number': new FormControl('',),
+          'targetAgeFrom': new FormControl('',),
+          'targetAgeTo': new FormControl('',),
+        });
+
 
 
   }

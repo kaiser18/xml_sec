@@ -60,8 +60,13 @@ import { NewCampaignComponent } from './new-campaign/new-campaign.component';
 import { AddPostToCampaignDialogComponent } from './posts/post-page/add-post-to-campaign-dialog/add-post-to-campaign-dialog.component';
 import { AdItemComponent } from './posts/ad-item/ad-item.component';
 import { EditCampaignComponent } from './edit-campaign/edit-campaign.component';
+<<<<<<< HEAD
+import { EditCampaignItemComponent } from './edit-campaign-item/edit-campaign-item.component';
+import { AddStoryToCampaignDialogComponent } from './profile/story-page/add-story-to-campaign-dialog/add-story-to-campaign-dialog.component';
+=======
 import { AgentRequestComponent } from './agent-request/agent-request.component';
 import { ReportRequestsComponent } from './report-requests/report-requests.component';
+>>>>>>> f650b074fc2b2eff4d551ade6cf60fe6846c8c69
 
 @NgModule({
   declarations: [
@@ -100,8 +105,13 @@ import { ReportRequestsComponent } from './report-requests/report-requests.compo
     AddPostToCampaignDialogComponent,
     AdItemComponent,
     EditCampaignComponent,
+<<<<<<< HEAD
+    EditCampaignItemComponent,
+    AddStoryToCampaignDialogComponent
+=======
     AgentRequestComponent,
     ReportRequestsComponent
+>>>>>>> f650b074fc2b2eff4d551ade6cf60fe6846c8c69
   ],
   imports: [
     BrowserModule,

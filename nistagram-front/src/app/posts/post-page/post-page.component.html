@@ -36,7 +36,7 @@
                     <mat-icon class="example-tab-icon">comment</mat-icon>
                 </button>
                 <button  mat-icon-button>
-                    <mat-icon class="example-tab-icon" (click)="addToCampaign()">add_circle_outline</mat-icon>
+                    <mat-icon class="example-tab-icon" (click)="addToCampaign()" *ngIf="loadAd">add_circle_outline</mat-icon>
                 </button>
                 <button  mat-icon-button style="float: right;">
                     <mat-icon class="example-tab-icon" >bookmark_border</mat-icon>
