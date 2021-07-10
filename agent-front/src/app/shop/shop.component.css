@@ -1,0 +1,11 @@
+.card-data {
+    max-height: 300px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+    mat-card {
+    padding: 10px;
+    margin: 10px;
+    background: pink;
+}
