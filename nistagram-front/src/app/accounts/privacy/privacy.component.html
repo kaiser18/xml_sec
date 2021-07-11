@@ -1,0 +1,66 @@
+<div class="container light-style flex-grow-1 container-p-y">
+   <h3 class="font-weight-bold py-3 mb-4">
+      <b>Account settings</b>
+   </h3>
+   <div class="card overflow-hidden">
+      <div class="row no-gutters row-bordered row-border-light">
+         <div class="col-md-3 pt-0">
+            <div class="list-group list-group-flush account-settings-links">
+               <a class="list-group-item list-group-item-action" data-toggle="list" href="/accounts/edit">Edit profile</a>
+               <a class="list-group-item list-group-item-action" data-toggle="list" href="#account-change-password">Change password</a>
+               <a class="list-group-item list-group-item-action active" data-toggle="list" href="/accounts/privacy">Privacy and Security</a>
+               <a class="list-group-item list-group-item-action" data-toggle="list" href="/accounts/push_notifications">Push Notifications</a>
+            </div>
+         </div>
+         <div class="col-md-9">
+            <div class="tab-content">
+               <br><hr class="border-light m-0"><br>
+               <div class="container">
+                  <mat-card>
+                     <form [formGroup]="editForm" (ngSubmit)="editUser()">
+                         <div class="ca-cont">
+                            <label for="private_acc" class="ca-margin">Account privacy: </label><br>
+                            <mat-radio-group aria-label="Select an option" formControlName="private_acc">
+                               <mat-radio-button id="caPublic" value="public">Public</mat-radio-button>
+                               <br>
+                               <mat-radio-button id="caPrivate" value="private">Private</mat-radio-button>
+                            </mat-radio-group>
+                         </div>
+                         <br><hr class="border-light m-0"><br>
+                         <div class="ca-cont">
+                            <label for="accept_msgs" class="ca-margin">Accept messages from unfollowed accounts: </label><br>
+                            <mat-radio-group aria-label="Select an option" formControlName="accept_msgs">
+                               <mat-radio-button id="caYes" value="yes">Yeah, why not</mat-radio-button>
+                               <br>
+                               <mat-radio-button id="caNo" value="no">No</mat-radio-button>
+                            </mat-radio-group>
+                         </div>
+                         <br><hr class="border-light m-0"><br>
+                         <div class="ca-cont">
+                            <label for="tagging" class="ca-margin">Can other profiles tag you on their content: </label><br>
+                            <mat-radio-group aria-label="Select an option" formControlName="tagging">
+                               <mat-radio-button id="caYes2" value="yes">Yeah, why not</mat-radio-button>
+                               <br>
+                               <mat-radio-button id="caNo2" value="no">No</mat-radio-button>
+                            </mat-radio-group>
+                         </div>
+                         <br>
+                         <div class="button">
+                            <button mat-raised-button type="submit">Save changes</button>&nbsp;
+                            <button type="button" class="btn btn-default"><a href="">Cancel</a></button>
+                         </div>
+                     </form>
+                     <br>
+                     <button type="button" class="btn btn-default" (click)="agentRequest()"><a href="">Agent request</a></button>
+                  </mat-card>
+               </div>
+
+            </div>
+         </div>
+      </div>
+   </div>
+   <!-- <div class="text-right mt-3">
+      <button type="button" class="btn btn-primary">Save changes</button>&nbsp;
+      <button type="button" class="btn btn-default">Cancel</button>
+      </div> -->
+</div>

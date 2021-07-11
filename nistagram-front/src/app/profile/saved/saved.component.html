@@ -1,0 +1,18 @@
+<mat-grid-list cols="4" rowHeight="1:2">
+    <mat-grid-tile>
+            <mat-list>
+                <div mat-subheader>Albums</div>
+                <mat-list-item *ngFor="let category of categoryNames" (click)="chooseCategory(category)">
+                  <mat-icon mat-list-icon>folder</mat-icon>
+                  <div mat-line>{{category}}</div>
+                </mat-list-item>
+              </mat-list>
+    </mat-grid-tile>
+    <mat-grid-tile colspan="3">
+      <mat-grid-list cols="4" style="width: 100%; margin: auto auto;" rowHeight="1:1" >
+        <mat-grid-tile *ngFor="let post of posts" [routerLink] = "['/post', post.id]">
+          <img [src]="post.imageUrls[0]">
+        </mat-grid-tile>
+      </mat-grid-list>
+    </mat-grid-tile>
+</mat-grid-list>

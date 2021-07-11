@@ -1,0 +1,8 @@
+<div class="container">
+    <div style="width: 80%; height: 100px; border-radius: 10px; background-color: red; margin-top: 20px;" *ngFor="let req of requests; let i = index" [post]="post" [i] = "i">
+        {{req.username}}<br>
+        {{req.status}}<br>
+        <button *ngIf="req.status == 'CREATED'" (click)="approve(req.id)">APPROVE</button>
+        <button *ngIf="req.status != 'CREATED'" (click)="delete(req.id)">DELETE</button>
+    </div>
+</div>

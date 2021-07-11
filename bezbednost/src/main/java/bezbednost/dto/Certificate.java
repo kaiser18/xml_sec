@@ -1,17 +1,18 @@
 package bezbednost.dto;
 
+import javax.validation.constraints.Email;
+
 public class Certificate {
-	private String ksName;
-	private String ksPassword;
+	private String alias;
 	private String privateKeyPassword;
 	private String commonName;
-	private String alias;
 	private String orgName;
 	private String orgUnit;
 	private String country;
+	@Email(message="Email is not in the correct format.")
 	private String email;
 	private String serialNum;
-	public String validity;
+	public int validity;
 	public String purpose;
 	
 	
@@ -20,7 +21,7 @@ public class Certificate {
 	}
 
 	public Certificate(String commonName,String alias, String orgName, String orgUnit, String country, String email,
-		    String serialNum, String ksName, String ksPassword, String privateKeyPassword, String validity, String purpose) {
+		    String serialNum, String privateKeyPassword, int validity, String purpose) {
 		super();
 		this.commonName = commonName;
 		this.alias = alias;
@@ -29,8 +30,6 @@ public class Certificate {
 		this.country = country;
 		this.email = email;
 		this.serialNum = serialNum;
-		this.ksName = ksName;
-		this.ksPassword = ksPassword;
 		this.privateKeyPassword = privateKeyPassword;
 		this.validity = validity;
 		this.purpose = purpose;
@@ -84,30 +83,6 @@ public class Certificate {
 		this.serialNum = serialNum;
 	}
 
-	public String getKsName() {
-		return ksName;
-	}
-
-	public void setKsName(String ksName) {
-		this.ksName = ksName;
-	}
-
-	public String getKsPassword() {
-		return ksPassword;
-	}
-
-	public void setKsPassword(String ksPassword) {
-		this.ksPassword = ksPassword;
-	}
-
-	public String getValidity() {
-		return validity;
-	}
-
-	public void setValidity(String validity) {
-		this.validity = validity;
-	}
-
 	public String getPurpose() {
 		return purpose;
 	}
@@ -131,4 +106,13 @@ public class Certificate {
 	public void setPrivateKeyPassword(String privateKeyPassword) {
 		this.privateKeyPassword = privateKeyPassword;
 	}
+
+	public int getValidity() {
+		return validity;
+	}
+
+	public void setValidity(int validity) {
+		this.validity = validity;
+	}
+	
 }

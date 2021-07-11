@@ -1,0 +1,50 @@
+<br><br><br><br>
+<div class="container">
+    <mat-card>
+        <form [formGroup]="createProductForm" (ngSubmit)="onSubmit()">
+            <div id="createProductForm">
+                <div class="inputField">
+                    <mat-form-field appearance="fill" id="name-ff">
+                        <mat-label>Name</mat-label>
+                        <input matInput id="name" placeholder="Name" name="name-ff"
+                            formControlName="name" class="civca">
+                        <mat-error
+                            *ngIf="!createProductForm.get('name').valid && createProductForm.get('name').touched && createProductForm.get('name').errors['required']">
+                            Please enter name</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="inputField">
+                    <mat-form-field appearance="fill" id="quantity-ff">
+                        <mat-label>Quantity</mat-label>
+                        <input matInput id="quantity" type="number" placeholder="quantity" name="quantity-ff"
+                            formControlName="quantity" class="civca">
+                        <mat-error
+                            *ngIf="!createProductForm.get('quantity').valid && createProductForm.get('quantity').touched && createProductForm.get('quantity').errors['required']">
+                            Please enter quantity</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="inputField">
+                    <mat-form-field appearance="fill" id="price-ff">
+                        <mat-label>Price</mat-label>
+                        <input matInput id="price" type="number" placeholder="price" name="price-ff"
+                            formControlName="price" class="civca">
+                        <mat-error
+                            *ngIf="!createProductForm.get('price').valid && createProductForm.get('price').touched && createProductForm.get('price').errors['required']">
+                            Please enter price</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="inputField">
+                        <input id="img" type="file" name="img" (change)="upload($event)" class="civca">
+                </div>
+
+                <br/><br/>
+    
+                <button mat-flat-button name="button-ff" style="float: right;" color="primary" type="submit"
+                    >Create</button>
+            </div>      
+        </form>
+    </mat-card>
+</div>

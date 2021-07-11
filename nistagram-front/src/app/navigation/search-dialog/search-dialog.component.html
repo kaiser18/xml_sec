@@ -1,0 +1,15 @@
+
+  <mat-form-field appearance="fill">
+    <mat-label>Choose an album</mat-label>
+    <mat-select [(value)]="data.chosenSearchOption" >
+      <mat-option *ngFor="let option of data.searchOptions" [value]="option">
+        {{option}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <div mat-dialog-actions>
+    
+    <button mat-button (click)="onNoClick()">No Thanks</button>
+    <button mat-button [mat-dialog-close]="data.chosenSearchOption" cdkFocusInitial>Ok</button>
+  </div>

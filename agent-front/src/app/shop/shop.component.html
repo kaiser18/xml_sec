@@ -1,0 +1,30 @@
+<br><br>
+
+<div class="row">
+    <div id="allProducts" [dataSource]="allProduct" class="col-4 card-data" *ngFor="let product of allProducts">
+        <mat-card class="example-card">
+            <mat-card-header>
+                <mat-card-title>{{ product.name }} </mat-card-title>
+            </mat-card-header>
+            <img mat-card-image src="../../assets/" alt="Photo of a product">
+            <mat-card-content>
+                <p> Price: {{ product.price }} </p>
+                <br>
+                <p> Quantity: {{ product.quantity }} </p>
+            </mat-card-content>
+            <mat-card-actions>
+                <button mat-button (click)="addToCart(product.id, product.quantity)">Add to cart</button>
+            </mat-card-actions>
+        </mat-card>
+    </div>
+
+    <div class="col" style="margin-left: 700px;">
+        <mat-label>Cart</mat-label>
+        <ul class="list-group">
+            <li class="list-group-item" *ngFor="let i of items">
+                Id: {{ i.id }}, Quantity: {{ i.quantity }}
+            </li>
+        </ul>
+        <button mat-button (click)="order(items)">Order</button>
+    </div>
+</div>

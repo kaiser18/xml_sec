@@ -1,0 +1,19 @@
+<h4>Add to favourites</h4>
+<mat-form-field appearance="fill">
+  <mat-label>Choose an album</mat-label>
+  <mat-select [(value)]="data.chosenAlbum" >
+    <mat-option *ngFor="let album of data.albums" [value]="album">
+      {{album}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+<h5 style="text-align: center;">OR</h5>
+<mat-form-field style="width: 100%; margin: 0 auto;">
+  <mat-label>Create a new album</mat-label>
+  <input matInput [(ngModel)]="data.chosenAlbum">
+</mat-form-field>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">No Thanks</button>
+  <button mat-button [mat-dialog-close]="data.chosenAlbum" cdkFocusInitial>Ok</button>
+</div>
+ 

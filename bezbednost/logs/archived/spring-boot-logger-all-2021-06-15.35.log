@@ -1,0 +1,8 @@
+2021-06-15 16:38:31,476 | WARN | org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration | spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2021-06-15 16:38:33,158 | INFO | org.springframework.security.web.DefaultSecurityFilterChain | Will secure Ant [pattern='/auth/login', POST] with []
+2021-06-15 16:38:33,160 | INFO | org.springframework.security.web.DefaultSecurityFilterChain | Will secure Ant [pattern='/auth/logout', POST] with []
+2021-06-15 16:38:33,160 | INFO | org.springframework.security.web.DefaultSecurityFilterChain | Will secure Ant [pattern='/auth/signup', POST] with []
+2021-06-15 16:38:33,161 | INFO | org.springframework.security.web.DefaultSecurityFilterChain | Will secure Ant [pattern='/auth/resetPassword', POST] with []
+2021-06-15 16:38:33,162 | INFO | org.springframework.security.web.DefaultSecurityFilterChain | Will secure Ant [pattern='/auth/changePassword', POST] with []
+2021-06-15 16:38:33,163 | INFO | org.springframework.security.web.DefaultSecurityFilterChain | Will secure Ant [pattern='/auth/verify', POST] with []
+2021-06-15 16:38:33,163 | INFO | org.springframework.security.web.DefaultSecurityFilterChain | Will secure Ant [pattern='/', GET] with []

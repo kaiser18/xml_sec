@@ -1,0 +1,8 @@
+2021-06-22 11:19:43,605 | INFO | org.springframework.boot.web.embedded.tomcat.TomcatWebServer | Tomcat initialized with port(s): 8081 (http)
+2021-06-22 11:19:43,653 | INFO | org.apache.juli.logging.DirectJDKLog | Initializing ProtocolHandler ["http-nio-8081"]
+2021-06-22 11:19:43,655 | INFO | org.apache.juli.logging.DirectJDKLog | Starting service [Tomcat]
+2021-06-22 11:19:43,656 | INFO | org.apache.juli.logging.DirectJDKLog | Starting Servlet engine: [Apache Tomcat/9.0.41]
+2021-06-22 11:19:44,057 | INFO | org.apache.juli.logging.DirectJDKLog | Initializing Spring embedded WebApplicationContext
+2021-06-22 11:19:44,058 | INFO | org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext | Root WebApplicationContext: initialization completed in 7241 ms
+2021-06-22 11:19:44,923 | INFO | org.hibernate.jpa.internal.util.LogHelper | HHH000204: Processing PersistenceUnitInfo [name: default]
+2021-06-22 11:19:45,147 | INFO | org.hibernate.Version | HHH000412: Hibernate ORM core version 5.4.25.Final

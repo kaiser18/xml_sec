@@ -1,0 +1,12 @@
+2021-06-15 16:38:33,164 | INFO | org.springframework.security.web.DefaultSecurityFilterChain | Will secure Ant [pattern='/webjars/**', GET] with []
+2021-06-15 16:38:33,166 | INFO | org.springframework.security.web.DefaultSecurityFilterChain | Will secure Ant [pattern='/favicon.ico', GET] with []
+2021-06-15 16:38:33,166 | INFO | org.springframework.security.web.DefaultSecurityFilterChain | Will secure Ant [pattern='/**/*.png', GET] with []
+2021-06-15 16:38:33,167 | INFO | org.springframework.security.web.DefaultSecurityFilterChain | Will secure Ant [pattern='/**/*.css', GET] with []
+2021-06-15 16:38:33,167 | INFO | org.springframework.security.web.DefaultSecurityFilterChain | Will secure Ant [pattern='/**/*.js', GET] with []
+2021-06-15 16:38:33,168 | INFO | org.springframework.security.web.DefaultSecurityFilterChain | Will secure Ant [pattern='/**/*.woff2', GET] with []
+2021-06-15 16:38:33,169 | INFO | org.springframework.security.web.DefaultSecurityFilterChain | Will secure Ant [pattern='/**/*.woff', GET] with []
+2021-06-15 16:38:33,170 | INFO | org.springframework.security.web.DefaultSecurityFilterChain | Will secure Ant [pattern='/**/*.html', GET] with []
+2021-06-15 16:38:33,170 | INFO | org.springframework.security.web.DefaultSecurityFilterChain | Will secure Ant [pattern='/*.html', GET] with []
+2021-06-15 16:38:33,171 | INFO | org.springframework.security.web.DefaultSecurityFilterChain | Will secure Ant [pattern='/static/passwordReset.html', GET] with []
+2021-06-15 16:38:33,171 | INFO | org.springframework.security.web.DefaultSecurityFilterChain | Will secure Ant [pattern='/auth/getUsernameByToken/**', GET] with []
+2021-06-15 16:38:33,459 | INFO | org.springframework.boot.actuate.endpoint.web.EndpointLinksResolver | Exposing 2 endpoint(s) beneath base path '/actuator'

@@ -1,0 +1,57 @@
+<mat-grid-list cols="2" rowHeight="100%"   style="width: 50%; margin: 0 auto; ">
+    <mat-grid-tile >
+            <ng-image-slider style="width: 100%; height: 70%; margin: auto 0;" [images]="imageObject"  [imageSize]="{width: '100%', height: '70%'}" #nav ></ng-image-slider>
+    </mat-grid-tile>
+    <mat-grid-tile> 
+      <mat-card style="background-color: white; border: 1px solid #e2e2e2; height: 65%; width: 100%;" >
+    
+        <img  style="float: left; margin-right: 2%;" mat-card-avatar src="https://images.unsplash.com/photo-1556103255-4443dbae8e5a?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cGhvdG9ncmFwaGVyfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80">
+        <mat-card-title style="font-size: medium;">{{post.username}}</mat-card-title>
+        <mat-card-subtitle style="font-size: small;">{{post.locationName}}</mat-card-subtitle>
+        <mat-card-content>
+            <span style="font-size: medium; font-weight: bold;">{{post.username}}</span> &nbsp;
+            <span style="font-size: medium;">{{post.description}}</span>
+            <br>
+        <span style="margin-left: 1%;" *ngFor="let hashtag of post.hashtags">#{{hashtag}}</span>&nbsp;
+        </mat-card-content>
+        <mat-card-content style="height: 50%;">
+            <div *ngFor="let comment of postComments">
+                <span style="font-size: medium; font-weight: bold;">{{comment.username}}</span> &nbsp;
+                <span style="font-size: medium;">{{comment.content}}</span>
+                <br>
+            </div>
+        </mat-card-content>
+        
+        <mat-card-footer style="margin: 0px;">
+            <mat-card-actions>
+                <button mat-icon-button>
+                    <mat-icon class="example-tab-icon" *ngIf="isPostLiked">thumb_up</mat-icon>
+                    <mat-icon fontSet="material-icons-outlined" (click)="like()" *ngIf="!isPostLiked">thumb_up_outlined</mat-icon>
+                </button>
+                <button mat-icon-button>
+                    <mat-icon class="example-tab-icon" *ngIf="isPostDisliked">thumb_down</mat-icon>
+                    <mat-icon fontSet="material-icons-outlined" (click)="dislike()" *ngIf="!isPostDisliked">thumb_down</mat-icon>
+                </button>
+                <button mat-icon-button>
+                    <mat-icon class="example-tab-icon">comment</mat-icon>
+                </button>
+                <button  mat-icon-button>
+                    <mat-icon class="example-tab-icon" (click)="addToCampaign()" *ngIf="loadAd">add_circle_outline</mat-icon>
+                </button>
+                <button  mat-icon-button style="float: right;">
+                    <mat-icon class="example-tab-icon" >bookmark_border</mat-icon>
+                </button>
+                
+            </mat-card-actions>
+            <mat-form-field class="example-full-width">
+                <mat-label>Leave a comment</mat-label>
+                <textarea matInput placeholder="Ex. It makes me feel..." [(ngModel)]="comment"></textarea>
+                
+              </mat-form-field>
+              <button mat-flat-button (click)="leaveComment()">
+                Post
+            </button>
+        </mat-card-footer>
+    </mat-card>
+    </mat-grid-tile>
+</mat-grid-list>

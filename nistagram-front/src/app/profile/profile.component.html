@@ -1,0 +1,71 @@
+<style>
+    .mat-grid-tile .mat-figure .nesto{
+        justify-content: end;
+        align-items: flex-start;
+        margin-top: 5%;
+    }
+</style>
+
+<div style="margin-left: 20%; margin-right: 20%;">
+    <mat-grid-list cols="2" rowHeight="2:1">
+        <mat-grid-tile>
+            <div >
+                <img style="border: 1px solid #ddd;
+                border-radius: 50%;
+                padding: 5px;
+                width: 150px;
+                height: 150px;" src="https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80">
+            </div>
+        </mat-grid-tile>
+        <mat-grid-tile>
+            <figure class="mat-figure nesto">
+                <h2>{{username}}</h2> &nbsp;
+                <button mat-flat-button color="primary" id="followButton" (click)="followProfile()">Follow</button>
+                <button mat-flat-button color="primary" id="unfollowButton">Unfollow</button>
+                <br><div id="3dots" class="dotButton"><button class="btn btn-outline-primary" (click)="open('autofocus')"><div class="dots">...</div></button></div>
+                <br>
+            </figure>
+
+        </mat-grid-tile>
+    </mat-grid-list>
+<hr>
+
+<mat-tab-group *ngIf="visible">
+    <mat-tab label="Post">
+        <mat-grid-list cols="3" rowHeight="1:1" gutterSize="5px">
+            <mat-grid-tile style="cursor: pointer;" class="profile-image" [routerLink] = "['/post', post.id]" *ngFor="let post of posts" >
+                <img [src]="post.imageUrls[0]">
+            </mat-grid-tile>
+          </mat-grid-list>
+    </mat-tab>
+    <mat-tab label="Story">
+        <mat-grid-list cols="3" rowHeight="1:1" gutterSize="5px">
+            <mat-grid-tile style="cursor: pointer;" class="profile-image"*ngFor="let story of loadedStories" [routerLink] = "['/story', story.id]">
+                <img [src]="story.imageUrls[0]">
+            </mat-grid-tile>
+          </mat-grid-list>
+    </mat-tab>
+    <mat-tab label="Story-highlights">
+        <mat-grid-list cols="3" rowHeight="1:1" gutterSize="5px">
+            <mat-grid-tile style="cursor: pointer;" class="profile-image"*ngFor="let story of loadedHighlights" [routerLink] = "['/story', story.id]">
+                <img [src]="story.imageUrls[0]">
+            </mat-grid-tile>
+        </mat-grid-list>
+    </mat-tab>
+    <mat-tab label="Saved"><app-saved></app-saved></mat-tab>
+    <mat-tab label="Liked" *ngIf="myProfile">
+        <mat-grid-list cols="3" rowHeight="1:1" gutterSize="5px">
+            <mat-grid-tile style="cursor: pointer;" class="profile-image"*ngFor="let post of likedPosts" [routerLink] = "['/post', post.id]">
+                <img [src]="post.imageUrls[0]">
+            </mat-grid-tile>
+          </mat-grid-list>
+    </mat-tab>
+    <mat-tab label="Disliked" *ngIf="myProfile">
+        <mat-grid-list cols="3" rowHeight="1:1" gutterSize="5px">
+            <mat-grid-tile style="cursor: pointer;" class="profile-image"*ngFor="let post of dislikedPosts" [routerLink] = "['/post', post.id]">
+                <img [src]="post.imageUrls[0]">
+            </mat-grid-tile>
+      </mat-grid-list>
+    </mat-tab>
+</mat-tab-group>
+</div>

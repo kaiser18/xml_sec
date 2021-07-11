@@ -1,0 +1,31 @@
+<mat-toolbar style="background-color: white; border-bottom: 1px solid #e2e2e2;">
+  <mat-toolbar style="margin-left: 22%; margin-right:22%; background-color: white;">
+    <div style="display: contents;">
+      <mat-icon>photo_camera</mat-icon>
+      <span>Nistagram</span>
+    </div>
+    <div style="margin: auto auto;">
+      <input placeholder="Search" aria-label="Search" style="border: 1px solid #e2e2e2; background-color: #fafafa; text-align: center; border-radius: 4px;" [(ngModel)]="searchWord" matInput>
+      <mat-icon (click)="openDialog()" style="cursor: pointer;">search</mat-icon>
+    </div>
+
+    <div *ngIf="loggedInUser" style="display: contents;">
+      <div>
+        <mat-icon routerLink="/" style="cursor: pointer">home</mat-icon>
+      </div>
+      <button mat-button [matMenuTriggerFor]="menu"><mat-icon>account_circle</mat-icon></button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="visitProfile()">Profile</button>
+        <button mat-menu-item routerLink="/new-post">Post</button>
+        <button mat-menu-item routerLink="/accounts/edit">Settings</button> 
+        <button *ngIf="isAdmin" mat-menu-item routerLink="/reports">Reports</button> 
+        <hr>
+        <button mat-menu-item (click)="logOut()">Log out</button>
+      </mat-menu>
+    </div>
+    <div *ngIf="!loggedInUser">
+      <button mat-stroked-button color="primary" style="border: none" routerLink="/login">Log In</button>
+      <button mat-flat-button color="primary" routerLink="/registration">Sign Up</button>
+    </div>
+  </mat-toolbar>
+  </mat-toolbar>
